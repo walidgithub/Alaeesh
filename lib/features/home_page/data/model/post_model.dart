@@ -1,5 +1,6 @@
 import 'package:alaeeeesh/features/home_page/data/model/emoji_model.dart';
 
+import '../../../../core/utils/constant/app_assets.dart';
 import 'comments_model.dart';
 
 class PostModel {
@@ -47,3 +48,26 @@ class PostModel {
     };
   }
 }
+List<PostModel> postModel = [
+  PostModel(
+      id: 1,
+      emojiDataCount: 0,
+      postAlsha:
+      " الشة رقم 1 الشة رقم 1الشة رقم 1الشة رقم 1 الشة رقم 1 الشة رقم 1 الشة رقم 1",
+      username: "walid111",
+      commentsList: [CommentsModel(id: 1, postId: 1, username: "walid2222", userImage: AppAssets.profile.toString(), time: "2h", comment: "التعليقاتتتتتتتتت",emojiDataCount: 0,emojisList: [])],
+      userImage: AppAssets.profile.toString(),
+      emojisList: [],
+      time: "2h"),
+  PostModel(
+      id: 2,
+      emojiDataCount: 0,
+      postAlsha:
+      " الشة رقم 2 الشة رقم 2الشة رقم 2الشة رقم 2 الشة رقم 2 الشة رقم 2 الشة رقم 2",
+      username: "walid2222",
+      commentsList: [],
+      userImage: AppAssets.profile.toString(),
+      emojisList: [],
+      time: "3h"),
+];
+

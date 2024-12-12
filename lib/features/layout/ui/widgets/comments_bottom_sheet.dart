@@ -62,7 +62,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return CommentView();
+                                return CommentView(id: widget.commentsList[index].id,username: widget.commentsList[index].username,time: widget.commentsList[index].time,comment: widget.commentsList[index].comment,userImage: widget.commentsList[index].userImage,emojisList: widget.commentsList[index].emojisList,emojiDataCount: widget.commentsList[index].emojiDataCount,statusBarHeight: widget.statusBarHeight,);
                               },
                               itemCount: widget.commentsList.length)
                         ],

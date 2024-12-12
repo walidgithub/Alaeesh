@@ -9,6 +9,7 @@ import '../../../../core/utils/constant/app_typography.dart';
 import '../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../core/utils/ui_components/post/post_view.dart';
 import '../../../home_page/data/model/post_model.dart';
+import '../../data/model/notifications_model.dart';
 
 class NotificationsBottomSheet extends StatefulWidget {
   double statusBarHeight;
@@ -20,29 +21,6 @@ class NotificationsBottomSheet extends StatefulWidget {
 }
 
 class _NotificationsBottomSheetState extends State<NotificationsBottomSheet> {
-  List<PostModel> postModel = [
-    PostModel(
-        id: 1,
-        emojiDataCount: 0,
-        postAlsha:
-            " الشة رقم 1 الشة رقم 1الشة رقم 1الشة رقم 1 الشة رقم 1 الشة رقم 1 الشة رقم 1",
-        username: "walid111",
-        commentsList: [CommentsModel(id: 1, postId: 1, username: "walid2222", userImage: AppAssets.profile.toString(), time: "2h", comment: "التعليقاتتتتتتتتت",emojiDataCount: 0,emojisList: [])],
-        userImage: AppAssets.profile.toString(),
-        emojisList: [],
-        time: "2h"),
-    PostModel(
-        id: 2,
-        emojiDataCount: 0,
-        postAlsha:
-            " الشة رقم 2 الشة رقم 2الشة رقم 2الشة رقم 2 الشة رقم 2 الشة رقم 2 الشة رقم 2",
-        username: "walid2222",
-        commentsList: [],
-        userImage: AppAssets.profile.toString(),
-        emojisList: [],
-        time: "3h"),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -87,17 +65,29 @@ class _NotificationsBottomSheetState extends State<NotificationsBottomSheet> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return PostView(
-                                id: postModel[index].id,
-                                time: postModel[index].time,
-                                username: postModel[index].username,
-                                userImage: postModel[index].userImage,
-                                postAlsha: postModel[index].postAlsha,
-                                emojisList: postModel[index].emojisList,
-                                commentsList: postModel[index].commentsList,
-emojiDataCount: postModel[index].emojiDataCount,
+                                id: notificationsModel[index].postModel.id,
+                                time: notificationsModel[index].postModel.time,
+                                username: notificationsModel[index]
+                                    .postModel
+                                    .username,
+                                userImage: notificationsModel[index]
+                                    .postModel
+                                    .userImage,
+                                postAlsha: notificationsModel[index]
+                                    .postModel
+                                    .postAlsha,
+                                emojisList: notificationsModel[index]
+                                    .postModel
+                                    .emojisList,
+                                commentsList: notificationsModel[index]
+                                    .postModel
+                                    .commentsList,
+                                emojiDataCount: notificationsModel[index]
+                                    .postModel
+                                    .emojiDataCount,
                                 statusBarHeight: widget.statusBarHeight);
                           },
-                          itemCount: postModel.length)
+                          itemCount: notificationsModel.length)
                     ],
                   ),
                 ),

@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../../../core/utils/constant/app_assets.dart';
+import '../../../../core/utils/constant/app_constants.dart';
+import '../../../../core/utils/constant/app_typography.dart';
+import '../../../../core/utils/style/app_colors.dart';
+import '../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../features/home_page/data/model/emoji_model.dart';
 import '../../../../features/home_page/domain/entity/emoji_entity.dart';
 import '../../../../features/layout/ui/widgets/comments_bottom_sheet.dart';
@@ -18,8 +23,9 @@ class CommentView extends StatefulWidget {
   final String time;
   final List<EmojiModel> emojisList;
   int emojiDataCount;
+  double statusBarHeight;
   CommentView(
-      {Key? key,
+      {super.key,
         required this.id,
         required this.comment,
         required this.username,
@@ -27,8 +33,8 @@ class CommentView extends StatefulWidget {
         required this.time,
         required this.emojisList,
         required this.emojiDataCount,
-      })
-      : super(key: key);
+        required this.statusBarHeight,
+      });
 
   @override
   State<CommentView> createState() => _CommentViewState();
@@ -68,7 +74,7 @@ class _CommentViewState extends State<CommentView> {
                             Row(
                               children: [
                                 CircleAvatar(
-                                    radius: 30.r,
+                                    radius: 20.r,
                                     backgroundColor: AppColors.cWhite,
                                     child: ClipOval(
                                       child: Container(
@@ -94,7 +100,7 @@ class _CommentViewState extends State<CommentView> {
                                   children: [
                                     Text(
                                       widget.username,
-                                      style: AppTypography.kBold16
+                                      style: AppTypography.kBold14
                                           .copyWith(color: AppColors.cTitle),
                                     ),
                                     Directionality(
@@ -113,7 +119,7 @@ class _CommentViewState extends State<CommentView> {
                               height: 10.h,
                             ),
                             Text(
-                              widget.postAlsha,
+                              widget.comment,
                               style: AppTypography.kLight14
                                   .copyWith(color: AppColors.cBlack),
                             ),
@@ -124,37 +130,27 @@ class _CommentViewState extends State<CommentView> {
                 const Divider(
                   color: AppColors.grey,
                 ),
+                SizedBox(
+                  height: 5.h,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    widget.commentsList.isNotEmpty ? Bounceable(
+                    Bounceable(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          constraints: BoxConstraints.expand(
-                              height: MediaQuery.sizeOf(context).height - widget.statusBarHeight - 150.h,
-                              width: MediaQuery.sizeOf(context).width
-                          ),
-                          isScrollControlled: true,
-                          barrierColor: AppColors.cTransparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(30.r),
-                            ),
-                          ),
-                          builder: (context2) {
-                            return CommentsBottomSheet(statusBarHeight: widget.statusBarHeight,commentsList: widget.commentsList);
-                          },
-                        );
+                        setState(() {
+                          if (showReactionsBox) {
+                            showReactionsBox = false;
+                          } else {
+                            showReactionsBox = true;
+                          }
+                        });
                       },
-                      child: Row(
-                        children: [
-                          Text(AppStrings.comments,style: AppTypography.kBold14.copyWith(color: AppColors.cPrimaryLight),),
-                          SizedBox(width: 5.w,),
-                          Text(widget.commentsList.length.toString(),style: AppTypography.kLight14,),
-                        ],
+                      child: SvgPicture.asset(
+                        AppAssets.emoji,
+                        width: 30.w,
                       ),
-                    ) : Container(),
+                    ),
                     widget.emojisList.isNotEmpty
                         ? Row(
                       children: [
@@ -223,69 +219,10 @@ class _CommentViewState extends State<CommentView> {
                         : Container(),
                   ],
                 ),
-                widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty ? const Divider(
-                  color: AppColors.grey,
-                ) : Container(),
                 SizedBox(
                   height: 5.h,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Bounceable(
-                          onTap: () {
-                            setState(() {
-                              if (showReactionsBox) {
-                                showReactionsBox = false;
-                              } else {
-                                showReactionsBox = true;
-                              }
-                            });
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.emoji,
-                            width: 30.w,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20.w,
-                        ),
-                        Bounceable(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              constraints: BoxConstraints.expand(
-                                  height: MediaQuery.sizeOf(context).height - widget.statusBarHeight - 100.h,
-                                  width: MediaQuery.sizeOf(context).width
-                              ),
-                              isScrollControlled: true,
-                              barrierColor: AppColors.cTransparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(30.r),
-                                ),
-                              ),
-                              builder: (context2) {
-                                return AddCommentBottomSheet(statusBarHeight: widget.statusBarHeight,username: widget.username,userImage: widget.userImage,id: widget.id);
-                              },
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.comments,
-                            width: 30.w,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  ],
-                ),
-                const Divider(
-                  thickness: 5,
-                  color: AppColors.grey,
-                )
+                const CardDivider(),
               ],
             ),
             showReactionsBox
@@ -295,7 +232,6 @@ class _CommentViewState extends State<CommentView> {
                 child: ReactionsView(
                   returnEmojiData: (EmojiEntity returnedEmojiData) {
                     bool isUserReacted = widget.emojisList.where((element) => element.username == widget.username).isNotEmpty;
-
                     if (isUserReacted) {
                       widget.emojisList.removeWhere((element) => element.username == widget.username);
                       widget.emojisList.add(EmojiModel(

@@ -25,7 +25,7 @@ class LayoutView extends StatefulWidget {
 class _LayoutViewState extends State<LayoutView> {
   String username = "بـالـزائـر";
   final int _notificationBadgeAmount = 0;
-  bool _showNotificationBadge = true;
+  final bool _showNotificationBadge = true;
 
   List<Widget> screens = [
     const HomeView(),

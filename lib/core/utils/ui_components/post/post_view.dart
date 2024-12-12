@@ -15,6 +15,7 @@ import '../../constant/app_assets.dart';
 import '../../constant/app_constants.dart';
 import '../../constant/app_typography.dart';
 import '../../style/app_colors.dart';
+import '../card_divider.dart';
 
 class PostView extends StatefulWidget {
   final int id;
@@ -77,7 +78,7 @@ class _PostViewState extends State<PostView> {
                         Row(
                           children: [
                             CircleAvatar(
-                                radius: 30.r,
+                                radius: 25.r,
                                 backgroundColor: AppColors.cWhite,
                                 child: ClipOval(
                                   child: Container(
@@ -291,10 +292,10 @@ class _PostViewState extends State<PostView> {
 
                   ],
                 ),
-                const Divider(
-                  thickness: 5,
-                  color: AppColors.grey,
-                )
+                SizedBox(
+                  height: 5.h,
+                ),
+                const CardDivider(),
               ],
             ),
             showReactionsBox
