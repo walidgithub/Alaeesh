@@ -99,7 +99,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                         listener: (context, state) async {
                           if (state is UpdateCommentSuccessState) {
                             showSnackBar(context, AppStrings.addSuccess);
-                            widget.updateComment();
+                            widget.updateComment(0);
                             Navigator.pop(context);
                           } else if (state is UpdateCommentErrorState) {
                             showSnackBar(context, state.errorMessage);

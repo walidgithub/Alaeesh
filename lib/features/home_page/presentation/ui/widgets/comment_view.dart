@@ -95,7 +95,7 @@ class _CommentViewState extends State<CommentView> {
                 child: BlocConsumer<HomePageCubit, HomePageState>(
                   listener: (context, state) {
                     if (state is DeleteCommentEmojiSuccessState) {
-                      widget.updateComment();
+                      widget.updateComment(-1);
                       _removePopup();
                     } else if (state is DeleteCommentEmojiErrorState) {
                       showSnackBar(context, state.errorMessage);
@@ -163,7 +163,7 @@ class _CommentViewState extends State<CommentView> {
                       showLoading();
                     } else if (state is DeleteCommentSuccessState) {
                       hideLoading();
-                      widget.updateComment();
+                      widget.updateComment(-1);
                       Navigator.pop(context);
                     } else if (state is DeleteCommentErrorState) {
                       hideLoading();
@@ -234,8 +234,8 @@ class _CommentViewState extends State<CommentView> {
                                       child: UpdateCommentBottomSheet(
                                           statusBarHeight:
                                               widget.statusBarHeight,
-                                          updateComment: () {
-                                            widget.updateComment();
+                                          updateComment: (int status) {
+                                            widget.updateComment(status);
                                             Navigator.pop(context);
                                           },
                                           commentModel: CommentsModel(

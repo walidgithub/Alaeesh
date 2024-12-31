@@ -241,7 +241,7 @@ class _PostViewState extends State<PostView> {
                   child: BlocConsumer<HomePageCubit, HomePageState>(
                     listener: (context, state) async {
                       if (state is AddEmojiSuccessState) {
-                        widget.addNewEmoji();
+                        widget.addNewEmoji(1);
                         _removePopup();
                       } else if (state is AddEmojiErrorState) {
                         showSnackBar(context, state.errorMessage);
@@ -458,8 +458,8 @@ class _PostViewState extends State<PostView> {
                                         userImage: widget.userImage,
                                         userName: widget.username,
                                         postId: widget.id,
-                                          addNewComment: () {
-                                            widget.addNewComment();
+                                          addNewComment: (int status) {
+                                            widget.addNewComment(status);
                                           },
                                           statusBarHeight:
                                               widget.statusBarHeight,
@@ -617,8 +617,8 @@ class _PostViewState extends State<PostView> {
                                               widget.statusBarHeight,
                                           username: widget.username,
                                           userImage: widget.userImage,
-                                          addNewComment: () {
-                                            widget.addNewComment();
+                                          addNewComment: (int status) {
+                                            widget.addNewComment(status);
                                           },
                                           id: widget.id));
                                 },

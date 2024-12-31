@@ -101,7 +101,7 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                         listener: (context, state) async {
                           if (state is AddCommentSuccessState) {
                             showSnackBar(context, AppStrings.addSuccess);
-                            widget.addNewComment();
+                            widget.addNewComment(1);
                             Navigator.pop(context);
                           } else if (state is AddCommentErrorState) {
                             showSnackBar(context, state.errorMessage);

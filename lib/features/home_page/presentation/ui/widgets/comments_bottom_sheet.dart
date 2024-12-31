@@ -180,7 +180,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       listener: (context, state) {
                     if (state is AddCommentSuccessState) {
                       showSnackBar(context, AppStrings.addSuccess);
-                      widget.addNewComment();
+                      widget.addNewComment(1);
                       Navigator.pop(context);
                     } else if (state is AddCommentErrorState) {
                       showSnackBar(context, state.errorMessage);
@@ -229,7 +229,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         child: BlocConsumer<HomePageCubit, HomePageState>(
                             listener: (context, state) {
                           if (state is AddCommentEmojiSuccessState) {
-                            widget.addNewComment();
+                            widget.addNewComment(1);
                             Navigator.pop(context);
                           } else if (state is AddCommentEmojiErrorState) {
                             showSnackBar(context, state.errorMessage);
@@ -268,8 +268,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               HomePageCubit.get(context)
                                   .addCommentEmoji(addCommentEmojiRequest);
                             },
-                            updateComment: () {
-                              widget.addNewComment();
+                            updateComment: (int status) {
+                              widget.addNewComment(status);
                               Navigator.pop(context);
                             },
                           );
