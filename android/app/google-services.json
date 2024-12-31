@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1094967881036",
+    "project_id": "alaeesh-7198f",
+    "storage_bucket": "alaeesh-7198f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094967881036:android:34450cf49dbb6ded61f3e9",
+        "android_client_info": {
+          "package_name": "com.alaeeesh.alaeeeesh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094967881036-2m3jhe55q80b65i03umlo6l8n34j1ntd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alaeeesh.alaeeeesh",
+            "certificate_hash": "74d09dc5fcb175f2b218a2d7242d160d82934d13"
+          }
+        },
+        {
+          "client_id": "1094967881036-9r0n3pvae99i411daf8o8erktiu41bak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB8ea1wRGx3e2TQXzWpyqirEQ5BzfZuFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094967881036-9r0n3pvae99i411daf8o8erktiu41bak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
