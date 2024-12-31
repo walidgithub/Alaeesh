@@ -241,24 +241,6 @@ class _PostViewState extends State<PostView> {
                   child: BlocConsumer<HomePageCubit, HomePageState>(
                     listener: (context, state) async {
                       if (state is AddEmojiSuccessState) {
-                        DeleteSubscriberRequest deleteSubscriberRequest =
-                        DeleteSubscriberRequest(
-                            subscriberModel: SubscribersModel(
-                                username: widget.username,
-                                userImage: widget.userImage,
-                                postId: widget.id));
-                        HomePageCubit.get(context)
-                            .deleteSubscriber(deleteSubscriberRequest);
-
-                        AddSubscriberRequest addSubscriberRequest =
-                            AddSubscriberRequest(
-                                subscriberModel: SubscribersModel(
-                                    username: widget.username,
-                                    userImage: widget.userImage,
-                                    postId: widget.id,));
-                        HomePageCubit.get(context)
-                            .addSubscriber(addSubscriberRequest);
-
                         widget.addNewEmoji();
                         _removePopup();
                       } else if (state is AddEmojiErrorState) {
@@ -473,6 +455,9 @@ class _PostViewState extends State<PostView> {
                                     return Directionality(
                                       textDirection: TextDirection.rtl,
                                       child: CommentsBottomSheet(
+                                        userImage: widget.userImage,
+                                        userName: widget.username,
+                                        postId: widget.id,
                                           addNewComment: () {
                                             widget.addNewComment();
                                           },

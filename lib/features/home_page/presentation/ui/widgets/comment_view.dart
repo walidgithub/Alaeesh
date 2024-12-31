@@ -162,14 +162,6 @@ class _CommentViewState extends State<CommentView> {
                     if (state is DeleteCommentLoadingState) {
                       showLoading();
                     } else if (state is DeleteCommentSuccessState) {
-                      DeleteSubscriberRequest deleteSubscriberRequest =
-                      DeleteSubscriberRequest(
-                          subscriberModel: SubscribersModel(
-                              username: widget.username,
-                              userImage: widget.userImage,
-                              postId: widget.id));
-                      HomePageCubit.get(context)
-                          .deleteSubscriber(deleteSubscriberRequest);
                       hideLoading();
                       widget.updateComment();
                       Navigator.pop(context);

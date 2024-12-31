@@ -26,6 +26,9 @@ import '../../bloc/home_page_state.dart';
 import 'comment_view.dart';
 
 class CommentsBottomSheet extends StatefulWidget {
+  String postId;
+  String userName;
+  String userImage;
   double statusBarHeight;
   List<CommentsModel> commentsList;
   Function addNewComment;
@@ -33,6 +36,9 @@ class CommentsBottomSheet extends StatefulWidget {
       {super.key,
       required this.statusBarHeight,
       required this.commentsList,
+      required this.postId,
+      required this.userName,
+      required this.userImage,
       required this.addNewComment});
 
   @override
@@ -174,16 +180,6 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       listener: (context, state) {
                     if (state is AddCommentSuccessState) {
                       showSnackBar(context, AppStrings.addSuccess);
-
-                      AddSubscriberRequest addSubscriberRequest =
-                      AddSubscriberRequest(
-                          subscriberModel: SubscribersModel(
-                            username: widget.commentsList[0].username,
-                            userImage: widget.commentsList[0].userImage,
-                            postId: widget.commentsList[0].postId,));
-                      HomePageCubit.get(context)
-                          .addSubscriber(addSubscriberRequest);
-
                       widget.addNewComment();
                       Navigator.pop(context);
                     } else if (state is AddCommentErrorState) {
@@ -202,12 +198,12 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
 
                           AddCommentRequest addCommentRequest =
                               AddCommentRequest(
-                                  postId: widget.commentsList[0].postId,
+                                  postId: widget.postId,
                                   commentsModel: CommentsModel(
-                                      postId: widget.commentsList[0].postId,
-                                      username: widget.commentsList[0].username,
+                                      postId: widget.postId,
+                                      username: widget.userName,
                                       userImage:
-                                          widget.commentsList[0].userImage,
+                                          widget.userImage,
                                       time: '$formattedDate $formattedTime',
                                       comment: _commentController.text.trim(),
                                       commentEmojiModel: []));
@@ -233,24 +229,6 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         child: BlocConsumer<HomePageCubit, HomePageState>(
                             listener: (context, state) {
                           if (state is AddCommentEmojiSuccessState) {
-                            DeleteSubscriberRequest deleteSubscriberRequest =
-                            DeleteSubscriberRequest(
-                                subscriberModel: SubscribersModel(
-                                    username: widget.commentsList[0].username,
-                                    userImage: widget.commentsList[0].userImage,
-                                    postId: widget.commentsList[0].postId));
-                            HomePageCubit.get(context)
-                                .deleteSubscriber(deleteSubscriberRequest);
-
-                            AddSubscriberRequest addSubscriberRequest =
-                            AddSubscriberRequest(
-                                subscriberModel: SubscribersModel(
-                                  username: widget.commentsList[0].username,
-                                  userImage: widget.commentsList[0].userImage,
-                                  postId: widget.commentsList[0].postId,));
-                            HomePageCubit.get(context)
-                                .addSubscriber(addSubscriberRequest);
-
                             widget.addNewComment();
                             Navigator.pop(context);
                           } else if (state is AddCommentEmojiErrorState) {

@@ -101,16 +101,6 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                         listener: (context, state) async {
                           if (state is AddCommentSuccessState) {
                             showSnackBar(context, AppStrings.addSuccess);
-
-                            AddSubscriberRequest addSubscriberRequest =
-                            AddSubscriberRequest(
-                                subscriberModel: SubscribersModel(
-                                  username: widget.username,
-                                  userImage: widget.userImage,
-                                  postId: widget.id,));
-                            HomePageCubit.get(context)
-                                .addSubscriber(addSubscriberRequest);
-
                             widget.addNewComment();
                             Navigator.pop(context);
                           } else if (state is AddCommentErrorState) {

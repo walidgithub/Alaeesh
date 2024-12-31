@@ -10,6 +10,8 @@ import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../data/model/post_model.dart';
+import '../../data/model/requests/add_subscriber_request.dart';
+import '../../data/model/subscribers_model.dart';
 import '../bloc/home_page_state.dart';
 
 class HomeView extends StatefulWidget {
@@ -44,7 +46,7 @@ class _HomeViewState extends State<HomeView> {
                   hideLoading();
                   postModel.clear();
                   postModel.addAll(state.postModel);
-                  if (showCommentBottomSheet) {
+                  if (showCommentBottomSheet && postModel[selectedPost].commentsList.isNotEmpty) {
                     showModalBottomSheet(
                       context: context,
                       constraints: BoxConstraints.expand(
@@ -63,12 +65,13 @@ class _HomeViewState extends State<HomeView> {
                         return Directionality(
                           textDirection: TextDirection.rtl,
                           child: CommentsBottomSheet(
+                            postId: postModel[selectedPost].commentsList[0].postId,
+                              userName: postModel[selectedPost].commentsList[0].username,
+                              userImage: postModel[selectedPost].commentsList[0].userImage,
                               addNewComment: () {
                                 HomePageCubit.get(context).getAllPosts();
                                 setState(() {
-                                  if (postModel[selectedPost].commentsList.length > 1) {
-                                    showCommentBottomSheet = true;
-                                  }
+                                  showCommentBottomSheet = true;
                                 });
                               },
                               statusBarHeight: statusBarHeight,
@@ -106,15 +109,32 @@ class _HomeViewState extends State<HomeView> {
                             commentsList: postModel[index].commentsList,
                             emojisList: postModel[index].emojisList,
                             addNewComment: () {
+                              AddSubscriberRequest addSubscriberRequest =
+                              AddSubscriberRequest(
+                                  subscriberModel: SubscribersModel(
+                                    username: postModel[index].username,
+                                    userImage: postModel[index].userImage,
+                                    postId: postModel[index].id!,));
+                              HomePageCubit.get(context)
+                                  .addSubscriber(addSubscriberRequest);
+
                               HomePageCubit.get(context).getAllPosts();
+
                               selectedPost = index;
                               setState(() {
-                                if (postModel[selectedPost].commentsList.length > 1) {
-                                  showCommentBottomSheet = true;
-                                }
+                                showCommentBottomSheet = true;
                               });
                             },
                             addNewEmoji: () {
+                              AddSubscriberRequest addSubscriberRequest =
+                              AddSubscriberRequest(
+                                  subscriberModel: SubscribersModel(
+                                    username: postModel[index].username,
+                                    userImage: postModel[index].userImage,
+                                    postId: postModel[index].id!,));
+                              HomePageCubit.get(context)
+                                  .addSubscriber(addSubscriberRequest);
+
                               HomePageCubit.get(context).getAllPosts();
                             },
                             statusBarHeight: statusBarHeight,
