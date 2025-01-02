@@ -39,6 +39,8 @@ class CommentView extends StatefulWidget {
   double statusBarHeight;
   Function addNewCommentEmoji;
   Function updateComment;
+  final String loggedInUserName;
+  final String loggedInUserImage;
   int index;
   CommentView({
     super.key,
@@ -53,6 +55,8 @@ class CommentView extends StatefulWidget {
     required this.addNewCommentEmoji,
     required this.index,
     required this.updateComment,
+    required this.loggedInUserName,
+    required this.loggedInUserImage,
   });
 
   @override

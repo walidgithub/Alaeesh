@@ -46,10 +46,6 @@ class _LayoutViewState extends State<LayoutView> {
   String photoUrl = "";
   bool loadingUserData = true;
 
-  List<Widget> screens = [
-    const HomeView(),
-  ];
-
   var userData;
 
   List<bool> selectedWidgets = [true, false];
@@ -63,6 +59,8 @@ class _LayoutViewState extends State<LayoutView> {
       selectScreen = index;
     });
   }
+
+  List<Widget> screens = [];
 
   Future<void> _showUserPopupMenu() async {
     await showMenu(
@@ -166,6 +164,10 @@ class _LayoutViewState extends State<LayoutView> {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     getAllPosts();
+
+    screens = [
+      HomeView(photoUrl: photoUrl,displayName: displayName),
+    ];
     super.initState();
   }
 

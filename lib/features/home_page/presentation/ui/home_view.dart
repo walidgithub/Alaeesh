@@ -5,7 +5,6 @@ import 'package:last/features/home_page/presentation/bloc/home_page_cubit.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/comments_bottom_sheet.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/post_view.dart';
 import '../../../../core/utils/constant/app_constants.dart';
-import '../../../../core/utils/constant/app_strings.dart';
 import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
@@ -16,7 +15,9 @@ import '../../data/model/subscribers_model.dart';
 import '../bloc/home_page_state.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  String displayName;
+  String photoUrl;
+  HomeView({super.key, required this.displayName, required this.photoUrl});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -25,6 +26,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int selectedPost = 0;
   bool showCommentBottomSheet = false;
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -70,19 +72,15 @@ class _HomeViewState extends State<HomeView> {
                               postId: postModel[selectedPost]
                                   .commentsList[0]
                                   .postId,
-                              userName: postModel[selectedPost]
-                                  .commentsList[0]
-                                  .username,
-                              userImage: postModel[selectedPost]
-                                  .commentsList[0]
-                                  .userImage,
+                              userName: widget.displayName,
+                              userImage: widget.photoUrl,
                               addNewComment: (int status) {
                                 if (status == 1) {
                                   AddSubscriberRequest addSubscriberRequest =
                                   AddSubscriberRequest(
                                       subscriberModel: SubscribersModel(
-                                        username: postModel[selectedPost].username,
-                                        userImage: postModel[selectedPost].userImage,
+                                        username: widget.displayName,
+                                        userImage: widget.photoUrl,
                                         postId: postModel[selectedPost].id!,
                                       ));
                                   HomePageCubit.get(context)
@@ -91,8 +89,8 @@ class _HomeViewState extends State<HomeView> {
                                   DeleteSubscriberRequest deleteSubscriberRequest =
                                   DeleteSubscriberRequest(
                                       subscriberModel: SubscribersModel(
-                                        username: postModel[selectedPost].username,
-                                        userImage: postModel[selectedPost].userImage,
+                                        username: widget.displayName,
+                                        userImage: widget.photoUrl,
                                         postId: postModel[selectedPost].id!,
                                       ));
                                   HomePageCubit.get(context)
@@ -132,8 +130,10 @@ class _HomeViewState extends State<HomeView> {
                             index: index,
                             id: postModel[index].id!,
                             time: postModel[index].time,
-                            username: postModel[index].username,
-                            userImage: postModel[index].userImage,
+                            postUsername: postModel[index].username,
+                            postUserImage: widget.photoUrl,
+                            loggedInUserName: postModel[index].userImage,
+                            loggedInUserImage: widget.displayName,
                             postAlsha: postModel[index].postAlsha,
                             commentsList: postModel[index].commentsList,
                             emojisList: postModel[index].emojisList,
@@ -142,8 +142,8 @@ class _HomeViewState extends State<HomeView> {
                                 AddSubscriberRequest addSubscriberRequest =
                                 AddSubscriberRequest(
                                     subscriberModel: SubscribersModel(
-                                      username: postModel[index].username,
-                                      userImage: postModel[index].userImage,
+                                      username: widget.displayName,
+                                      userImage: widget.photoUrl,
                                       postId: postModel[index].id!,
                                     ));
                                 HomePageCubit.get(context)
@@ -152,8 +152,8 @@ class _HomeViewState extends State<HomeView> {
                                 DeleteSubscriberRequest deleteSubscriberRequest =
                                 DeleteSubscriberRequest(
                                     subscriberModel: SubscribersModel(
-                                      username: postModel[index].username,
-                                      userImage: postModel[index].userImage,
+                                      username: widget.displayName,
+                                      userImage: widget.photoUrl,
                                       postId: postModel[index].id!,
                                     ));
                                 HomePageCubit.get(context)

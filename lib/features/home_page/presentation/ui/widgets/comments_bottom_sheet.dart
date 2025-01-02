@@ -251,6 +251,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             time: widget.commentsList[index].time,
                             comment: widget.commentsList[index].comment,
                             userImage: widget.commentsList[index].userImage,
+                            loggedInUserImage: widget.userImage,
+                            loggedInUserName: widget.userName,
                             commentEmojisModel:
                                 widget.commentsList[index].commentEmojiModel,
                             statusBarHeight: widget.statusBarHeight,

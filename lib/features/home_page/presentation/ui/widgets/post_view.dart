@@ -36,8 +36,10 @@ import 'comments_bottom_sheet.dart';
 class PostView extends StatefulWidget {
   final String id;
   final String postAlsha;
-  final String username;
-  final String userImage;
+  final String postUsername;
+  final String postUserImage;
+  final String loggedInUserName;
+  final String loggedInUserImage;
   final String time;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
@@ -51,8 +53,10 @@ class PostView extends StatefulWidget {
     super.key,
     required this.id,
     required this.postAlsha,
-    required this.username,
-    required this.userImage,
+    required this.postUsername,
+    required this.postUserImage,
+    required this.loggedInUserName,
+    required this.loggedInUserImage,
     required this.emojisList,
     required this.commentsList,
     required this.subscribersList,
@@ -174,8 +178,8 @@ class _PostViewState extends State<PostView> {
                                         postModel: PostModel(
                                             id: widget.id,
                                             postAlsha: widget.postAlsha,
-                                            username: widget.username,
-                                            userImage: widget.userImage,
+                                            username: widget.postUsername,
+                                            userImage: widget.postUserImage,
                                             emojisList: widget.emojisList,
                                             commentsList: widget.commentsList,
                                             time: widget.time,
@@ -262,15 +266,15 @@ class _PostViewState extends State<PostView> {
                       return ReactionsView(
                         returnEmojiData: (EmojiEntity returnedEmojiData) {
                           userReacted = widget.emojisList.where(
-                                  (element) => element.username == widget.username).isNotEmpty;
+                                  (element) => element.username == widget.loggedInUserName).isNotEmpty;
 
                           AddEmojiRequest addEmojiRequest = AddEmojiRequest(
                               postId: widget.id,
                               emojiModel: EmojiModel(
                                   postId: widget.id,
                                   emojiData: returnedEmojiData.emojiData,
-                                  username: widget.username,
-                                  userImage: widget.userImage));
+                                  username: widget.loggedInUserName,
+                                  userImage: widget.loggedInUserImage));
                           HomePageCubit.get(context).addEmoji(addEmojiRequest);
                         },
                         deleteEmojiData: () {
@@ -349,7 +353,7 @@ class _PostViewState extends State<PostView> {
                                                   ),
                                               errorWidget: (context, url, error) =>
                                                   Image.asset(AppAssets.profile),
-                                              imageUrl: widget.userImage,
+                                              imageUrl: widget.postUserImage,
                                             ),
                                           ))),
                                   SizedBox(
@@ -367,7 +371,7 @@ class _PostViewState extends State<PostView> {
                                           children: [
                                             Flexible(
                                               child: Text(
-                                                widget.username,
+                                                widget.postUsername,
                                                 style: AppTypography.kBold14
                                                     .copyWith(
                                                         color:
@@ -401,7 +405,7 @@ class _PostViewState extends State<PostView> {
                                         widget.subscribersList
                                                 .where((element) =>
                                                     element.username ==
-                                                    widget.username)
+                                                    widget.postUsername)
                                                 .isNotEmpty
                                             ? AppAssets.notificationOn
                                             : AppAssets.notificationOff,
@@ -465,8 +469,8 @@ class _PostViewState extends State<PostView> {
                                     return Directionality(
                                       textDirection: TextDirection.rtl,
                                       child: CommentsBottomSheet(
-                                        userImage: widget.userImage,
-                                        userName: widget.username,
+                                        userImage: widget.postUserImage,
+                                        userName: widget.postUsername,
                                         postId: widget.id,
                                           addNewComment: (int status) {
                                             widget.addNewComment(status);
@@ -625,8 +629,8 @@ class _PostViewState extends State<PostView> {
                                           postId: widget.id,
                                           statusBarHeight:
                                               widget.statusBarHeight,
-                                          username: widget.username,
-                                          userImage: widget.userImage,
+                                          username: widget.loggedInUserName,
+                                          userImage: widget.loggedInUserImage,
                                           addNewComment: (int status) {
                                             widget.addNewComment(status);
                                           },
