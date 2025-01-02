@@ -5,12 +5,12 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
 class AddCommentUseCase extends FirebaseBaseUseCase{
-  final HomePageRepository firebaseBaseRepository;
+  final HomePageRepository homePageRepository;
 
-  AddCommentUseCase(this.firebaseBaseRepository);
+  AddCommentUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {
-    return await firebaseBaseRepository.addComment(parameters);
+    return await homePageRepository.addComment(parameters);
   }
 }

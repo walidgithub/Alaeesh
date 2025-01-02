@@ -11,6 +11,7 @@ class AppStrings {
   static const String error = 'خـطـأ';
   static const String closeApp = 'هـل تـريـد إغـلاق الـتـطـبـيـق؟';
   static const String welcome = 'أهـلاً بـك فـى ';
+  static const String loginWithOtherUser = 'الـدخـول بـمـسـتـخـدم آخــر';
   static const String hello = 'أهـلاً ';
   static const String addPost = 'إضـافـة مـنـشـور';
   static const String updatePost = 'تـعـديـل مـنـشـور';
@@ -21,8 +22,10 @@ class AppStrings {
   static const String addAlsha = 'إضـافـة';
   static const String notifications = 'إشـعـارات';
   static const String logout = 'خــروج';
+  static const String switchUser = 'مـسـتـخـدم آخـر';
   static const String delete = 'حــذف';
   static const String edit = 'تـعـديـل';
+  static const String skip = ' تـراجـع  ';
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
 
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';

@@ -68,27 +68,27 @@ class _NotificationViewState extends State<NotificationView> {
                                     CircleAvatar(
                                         radius: 25.r,
                                         backgroundColor: AppColors.cWhite,
-                                        child: ClipOval(
-                                          child: Container(
-                                              padding: EdgeInsets.all(8.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: AppColors.cTitle,
-                                                  width: 2,
-                                                ),
+                                        child: Container(
+                                            padding: EdgeInsets.all(2.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.cTitle,
+                                                width: 2,
                                               ),
+                                            ),
+                                            child: ClipOval(
                                               child: CachedNetworkImage(
                                                 placeholder: (context, url) =>
                                                     CircularProgressIndicator(
                                                       strokeWidth: 2.w,
                                                       color: AppColors.cTitle,
                                                     ),
-                                                errorWidget:
-                                                    (context, url, error) =>
+                                                errorWidget: (context, url, error) =>
                                                     Image.asset(AppAssets.profile),
-                                                imageUrl: widget.userImage,)),
-                                        )),
+                                                imageUrl: widget.userImage,
+                                              ),
+                                            ))),
                                     SizedBox(
                                       width: 10.w,
                                     ),

@@ -5,12 +5,12 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
 class DeleteEmojiUseCase extends FirebaseBaseUseCase{
-  final HomePageRepository firebaseBaseRepository;
+  final HomePageRepository homePageRepository;
 
-  DeleteEmojiUseCase(this.firebaseBaseRepository);
+  DeleteEmojiUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {
-    return await firebaseBaseRepository.deleteEmoji(parameters);
+    return await homePageRepository.deleteEmoji(parameters);
   }
 }

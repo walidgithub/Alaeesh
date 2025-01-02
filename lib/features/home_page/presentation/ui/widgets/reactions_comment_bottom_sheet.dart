@@ -131,16 +131,16 @@ class _ReactionsCommentBottomSheetState extends State<ReactionsCommentBottomShee
                                   CircleAvatar(
                                       radius: 25.r,
                                       backgroundColor: AppColors.cWhite,
-                                      child: ClipOval(
-                                        child: Container(
-                                            padding: EdgeInsets.all(8.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.cTitle,
-                                                width: 2,
-                                              ),
+                                      child: Container(
+                                          padding: EdgeInsets.all(2.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.cTitle,
+                                              width: 2,
                                             ),
+                                          ),
+                                          child: ClipOval(
                                             child: CachedNetworkImage(
                                               placeholder: (context, url) =>
                                                   CircularProgressIndicator(
@@ -150,8 +150,8 @@ class _ReactionsCommentBottomSheetState extends State<ReactionsCommentBottomShee
                                               errorWidget: (context, url, error) =>
                                                   Image.asset(AppAssets.profile),
                                               imageUrl: selectedList[index].userImage,
-                                            )),
-                                      )),
+                                            ),
+                                          ))),
                                   SizedBox(
                                     width: 10.w,
                                   ),

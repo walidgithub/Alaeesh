@@ -311,29 +311,27 @@ class _CommentViewState extends State<CommentView> {
                                   CircleAvatar(
                                       radius: 25.r,
                                       backgroundColor: AppColors.cWhite,
-                                      child: ClipOval(
-                                        child: Container(
-                                            padding: EdgeInsets.all(8.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.cTitle,
-                                                width: 2,
-                                              ),
+                                      child: Container(
+                                          padding: EdgeInsets.all(2.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.cTitle,
+                                              width: 2,
                                             ),
+                                          ),
+                                          child: ClipOval(
                                             child: CachedNetworkImage(
                                               placeholder: (context, url) =>
                                                   CircularProgressIndicator(
-                                                strokeWidth: 2.w,
-                                                color: AppColors.cTitle,
-                                              ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Image.asset(
-                                                          AppAssets.profile),
+                                                    strokeWidth: 2.w,
+                                                    color: AppColors.cTitle,
+                                                  ),
+                                              errorWidget: (context, url, error) =>
+                                                  Image.asset(AppAssets.profile),
                                               imageUrl: widget.userImage,
-                                            )),
-                                      )),
+                                            ),
+                                          ))),
                                   SizedBox(
                                     width: 10.w,
                                   ),
@@ -442,11 +440,14 @@ class _CommentViewState extends State<CommentView> {
                                         ),
                                       ),
                                       builder: (context2) {
-                                        return ReactionsCommentBottomSheet(
-                                            statusBarHeight:
-                                                widget.statusBarHeight,
-                                            commentEmojiModel:
-                                                widget.commentEmojisModel);
+                                        return Directionality(
+                                          textDirection: TextDirection.rtl,
+                                          child: ReactionsCommentBottomSheet(
+                                              statusBarHeight:
+                                                  widget.statusBarHeight,
+                                              commentEmojiModel:
+                                                  widget.commentEmojisModel),
+                                        );
                                       },
                                     );
                                   },
@@ -462,29 +463,26 @@ class _CommentViewState extends State<CommentView> {
                                         int index = entry.key;
                                         return Positioned(
                                             left: index * reactPosition,
-                                            child: CircleAvatar(
+                                            child:
+                                            CircleAvatar(
                                                 radius: 15.r,
-                                                backgroundColor:
-                                                    AppColors.cWhite,
-                                                child: ClipOval(
-                                                  child: Container(
+                                                backgroundColor: AppColors.cWhite,
+                                                child: Container(
+                                                    padding: EdgeInsets.all(1.w),
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       border: Border.all(
-                                                        color: AppColors
-                                                            .cSecondary,
+                                                        color: AppColors.cSecondary,
                                                         width: 1,
                                                       ),
                                                     ),
-                                                    child: Center(
+                                                    child: ClipOval(
                                                       child: Text(
                                                         entry.value.emojiData,
                                                         style: AppTypography
                                                             .kExtraLight18,
                                                       ),
-                                                    ),
-                                                  ),
-                                                )));
+                                                    ))));
                                       }).toList(),
                                     ),
                                   ),

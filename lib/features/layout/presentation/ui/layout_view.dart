@@ -1,30 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:last/features/layout/ui/widgets/add_post_bottom_sheet.dart';
-import 'package:last/features/layout/ui/widgets/notifications_bottom_sheet.dart';
-import '../../../../core/utils/constant/app_constants.dart';
-import '../../../../core/utils/constant/app_strings.dart';
-import '../../../../core/utils/constant/app_typography.dart';
-import '../../../../core/utils/style/app_colors.dart';
+import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
+import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
+import '../../../../../core/utils/constant/app_constants.dart';
+import '../../../../../core/utils/constant/app_strings.dart';
+import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/style/app_colors.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:badges/badges.dart' as badges;
-import '../../../../core/utils/dialogs/back_dialog.dart';
-import '../../../../core/utils/ui_components/tab_icon.dart';
-import '../../../core/di/di.dart';
-import '../../../core/preferences/app_pref.dart';
-import '../../../core/preferences/secure_local_data.dart';
-import '../../../core/router/app_router.dart';
-import '../../../core/utils/constant/app_assets.dart';
-import '../../../core/utils/ui_components/loading_dialog.dart';
-import '../../../core/utils/ui_components/snackbar.dart';
-import '../../home_page/presentation/bloc/home_page_cubit.dart';
-import '../../home_page/presentation/ui/home_view.dart';
-import '../../welcome/presentation/bloc/welcome_cubit.dart';
-import '../../welcome/presentation/bloc/welcome_states.dart';
+import '../../../../../core/utils/dialogs/back_dialog.dart';
+import '../../../../../core/utils/ui_components/tab_icon.dart';
+import '../../../../core/di/di.dart';
+import '../../../../core/preferences/app_pref.dart';
+import '../../../../core/preferences/secure_local_data.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/utils/constant/app_assets.dart';
+import '../../../../core/utils/ui_components/loading_dialog.dart';
+import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../home_page/presentation/bloc/home_page_cubit.dart';
+import '../../../home_page/presentation/ui/home_view.dart';
+import '../../../welcome/presentation/bloc/welcome_cubit.dart';
+import '../../../welcome/presentation/bloc/welcome_states.dart';
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -87,6 +87,7 @@ class _LayoutViewState extends State<LayoutView> {
                       showLoading();
                     } else if (state is LogoutSuccessState) {
                       hideLoading();
+                      await _appSecureDataHelper.clearUserData();
                       await _appPreferences.setUserLoggedOut();
                       Navigator.pushReplacementNamed(
                           context, Routes.welcomeRoute);
@@ -96,32 +97,61 @@ class _LayoutViewState extends State<LayoutView> {
                     }
                   },
                   builder: (context, state) {
-                    return Bounceable(
-                      onTap: () {
-                        WelcomeCubit.get(context).logout();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10.w),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.cTitle),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.r))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset(
-                              AppAssets.logout,
-                              width: 30.w,
+                    return Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.cTitle),
+                          borderRadius: BorderRadius.all(Radius.circular(5.r))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Bounceable(
+                            onTap: () {
+                              WelcomeCubit.get(context).logout();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.logout,
+                                  width: 30.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.logout,
+                                  style: AppTypography.kLight18,
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              width: 10.w,
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.switchUserRoute);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.switchUser,
+                                  width: 25.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.switchUser,
+                                  style: AppTypography.kLight18,
+                                ),
+                              ],
                             ),
-                            Text(
-                              AppStrings.logout,
-                              style: AppTypography.kLight18,
-                            ),
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                     );
                   },
@@ -175,7 +205,7 @@ class _LayoutViewState extends State<LayoutView> {
       child: Stack(
         children: [
           Padding(
-              padding: EdgeInsets.symmetric(vertical: 80.h),
+              padding: EdgeInsets.symmetric(vertical: 85.h),
               child: screens[selectScreen]),
           Positioned(
             top: 20.h,
@@ -310,16 +340,16 @@ class _LayoutViewState extends State<LayoutView> {
                               child: CircleAvatar(
                                   radius: 30.r,
                                   backgroundColor: AppColors.cWhite,
-                                  child: ClipOval(
-                                    child: Container(
-                                        padding: EdgeInsets.all(8.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: AppColors.cTitle,
-                                            width: 2,
-                                          ),
+                                  child: Container(
+                                      padding: EdgeInsets.all(2.w),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.cTitle,
+                                          width: 2,
                                         ),
+                                      ),
+                                      child: ClipOval(
                                         child: CachedNetworkImage(
                                           placeholder: (context, url) =>
                                               CircularProgressIndicator(
@@ -329,8 +359,9 @@ class _LayoutViewState extends State<LayoutView> {
                                           errorWidget: (context, url, error) =>
                                               Image.asset(AppAssets.profile),
                                           imageUrl: photoUrl,
-                                        )),
-                                  ))),
+                                        ),
+                                      )))
+                              ),
                         ],
                       ),
                     ),

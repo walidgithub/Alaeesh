@@ -72,6 +72,8 @@ class _PostViewState extends State<PostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
 
+  bool userReacted = false;
+
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -241,10 +243,17 @@ class _PostViewState extends State<PostView> {
                   child: BlocConsumer<HomePageCubit, HomePageState>(
                     listener: (context, state) async {
                       if (state is AddEmojiSuccessState) {
-                        widget.addNewEmoji(1);
+                        if (userReacted) {
+                          widget.addNewEmoji(0);
+                        } else {
+                          widget.addNewEmoji(1);
+                        }
                         _removePopup();
                       } else if (state is AddEmojiErrorState) {
                         showSnackBar(context, state.errorMessage);
+                      } else if (state is DeleteEmojiSuccessState) {
+                        widget.addNewEmoji(-1);
+                        _removePopup();
                       } else if (state is DeleteEmojiErrorState) {
                         showSnackBar(context, state.errorMessage);
                       }
@@ -252,6 +261,9 @@ class _PostViewState extends State<PostView> {
                     builder: (context, state) {
                       return ReactionsView(
                         returnEmojiData: (EmojiEntity returnedEmojiData) {
+                          userReacted = widget.emojisList.where(
+                                  (element) => element.username == widget.username).isNotEmpty;
+
                           AddEmojiRequest addEmojiRequest = AddEmojiRequest(
                               postId: widget.id,
                               emojiModel: EmojiModel(
@@ -319,29 +331,27 @@ class _PostViewState extends State<PostView> {
                                   CircleAvatar(
                                       radius: 25.r,
                                       backgroundColor: AppColors.cWhite,
-                                      child: ClipOval(
-                                        child: Container(
-                                            padding: EdgeInsets.all(8.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.cTitle,
-                                                width: 2,
-                                              ),
+                                      child: Container(
+                                          padding: EdgeInsets.all(2.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.cTitle,
+                                              width: 2,
                                             ),
+                                          ),
+                                          child: ClipOval(
                                             child: CachedNetworkImage(
                                               placeholder: (context, url) =>
                                                   CircularProgressIndicator(
-                                                strokeWidth: 2.w,
-                                                color: AppColors.cTitle,
-                                              ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Image.asset(
-                                                          AppAssets.profile),
+                                                    strokeWidth: 2.w,
+                                                    color: AppColors.cTitle,
+                                                  ),
+                                              errorWidget: (context, url, error) =>
+                                                  Image.asset(AppAssets.profile),
                                               imageUrl: widget.userImage,
-                                            )),
-                                      )),
+                                            ),
+                                          ))),
                                   SizedBox(
                                     width: 10.w,
                                   ),
@@ -508,10 +518,13 @@ class _PostViewState extends State<PostView> {
                                         ),
                                       ),
                                       builder: (context2) {
-                                        return ReactionsBottomSheet(
-                                            statusBarHeight:
-                                                widget.statusBarHeight,
-                                            emojisList: widget.emojisList);
+                                        return Directionality(
+                                          textDirection: TextDirection.rtl,
+                                          child: ReactionsBottomSheet(
+                                              statusBarHeight:
+                                                  widget.statusBarHeight,
+                                              emojisList: widget.emojisList),
+                                        );
                                       },
                                     );
                                   },
@@ -527,29 +540,26 @@ class _PostViewState extends State<PostView> {
                                         int index = entry.key;
                                         return Positioned(
                                             left: index * reactPosition,
-                                            child: CircleAvatar(
+                                            child:
+                                            CircleAvatar(
                                                 radius: 15.r,
-                                                backgroundColor:
-                                                    AppColors.cWhite,
-                                                child: ClipOval(
-                                                  child: Container(
+                                                backgroundColor: AppColors.cWhite,
+                                                child: Container(
+                                                    padding: EdgeInsets.all(1.w),
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       border: Border.all(
-                                                        color: AppColors
-                                                            .cSecondary,
+                                                        color: AppColors.cSecondary,
                                                         width: 1,
                                                       ),
                                                     ),
-                                                    child: Center(
+                                                    child: ClipOval(
                                                       child: Text(
                                                         entry.value.emojiData,
                                                         style: AppTypography
                                                             .kExtraLight18,
                                                       ),
-                                                    ),
-                                                  ),
-                                                )));
+                                                    ))));
                                       }).toList(),
                                     ),
                                   ),

@@ -1,13 +1,13 @@
-import 'package:last/features/layout/ui/widgets/notification_view.dart';
-
-import '../../../../core/utils/constant/app_constants.dart';
-import '../../../../core/utils/constant/app_strings.dart';
-import '../../../../core/utils/constant/app_typography.dart';
-import '../../../../core/utils/style/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/utils/ui_components/custom_divider.dart';
-import '../../data/model/notifications_model.dart';
+
+import '../../../../../core/utils/constant/app_constants.dart';
+import '../../../../../core/utils/constant/app_strings.dart';
+import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/style/app_colors.dart';
+import '../../../../../core/utils/ui_components/custom_divider.dart';
+import '../../../data/model/notifications_model.dart';
+import 'notification_view.dart';
 
 class NotificationsBottomSheet extends StatefulWidget {
   double statusBarHeight;

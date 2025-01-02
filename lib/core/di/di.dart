@@ -19,7 +19,9 @@ import 'package:last/features/home_page/domain/usecases/get_top_posts_usecase.da
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import 'package:last/features/home_page/presentation/bloc/home_page_cubit.dart';
-import 'package:last/features/layout/ui/bloc/layout_cubit.dart';
+import 'package:last/features/switch_user/data/data_source/switch_user_datasource.dart';
+import 'package:last/features/switch_user/domain/repository/switch_user_repository.dart';
+import 'package:last/features/switch_user/presentation/bloc/switch_user_cubit.dart';
 import 'package:last/features/welcome/data/data_source/welcome_datasource.dart';
 import 'package:last/features/welcome/domain/repository/welcome_repository.dart';
 import 'package:last/features/welcome/domain/usecases/logout_usecase.dart';
@@ -33,6 +35,9 @@ import '../../features/layout/domain/repository/layout_repository.dart';
 import '../../features/layout/domain/usecases/add_post_usecase.dart';
 import '../../features/layout/domain/usecases/delete_notification_usecase.dart';
 import '../../features/layout/domain/usecases/get_notifications_usecase.dart';
+import '../../features/layout/presentation/bloc/layout_cubit.dart';
+import '../../features/switch_user/data/repository_impl/switch_user_repository_impl.dart';
+import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
 import '../../features/welcome/data/repository_impl/welcome_repository_impl.dart';
 import '../../features/welcome/domain/usecases/login_usecase.dart';
 import '../network/network_info.dart';
@@ -69,16 +74,20 @@ class ServiceLocator {
     sl.registerLazySingleton<WelcomeDataSource>(() => WelcomeDataSource());
     sl.registerLazySingleton<LayoutDataSource>(() => LayoutDataSource());
     sl.registerLazySingleton<HomePageDataSource>(() => HomePageDataSource());
+    sl.registerLazySingleton<SwitchUserDataSource>(() => SwitchUserDataSource());
 
     // Repositories
     sl.registerLazySingleton<WelcomeRepository>(() => WelcomeRepositoryImpl(sl()));
     sl.registerLazySingleton<LayoutRepository>(() => LayoutRepositoryImpl(sl()));
     sl.registerLazySingleton<HomePageRepository>(() => HomePageRepositoryImpl(sl()));
+    sl.registerLazySingleton<SwitchUserRepository>(() => SwitchUserRepositoryImpl(sl()));
 
     // UseCases
     // welcome useCases
     sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
     sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
+    // switch user useCases
+    sl.registerLazySingleton<SwitchUserUseCase>(() => SwitchUserUseCase(sl()));
     // layout useCases
     sl.registerLazySingleton<AddPostUseCase>(() => AddPostUseCase(sl()));
     sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
@@ -104,6 +113,7 @@ class ServiceLocator {
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
 
     // Bloc
+    sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));

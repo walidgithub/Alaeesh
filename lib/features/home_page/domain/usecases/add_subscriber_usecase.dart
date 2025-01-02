@@ -5,12 +5,12 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
 class AddSubscriberUseCase extends FirebaseBaseUseCase{
-  final HomePageRepository firebaseBaseRepository;
+  final HomePageRepository homePageRepository;
 
-  AddSubscriberUseCase(this.firebaseBaseRepository);
+  AddSubscriberUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {
-    return await firebaseBaseRepository.addSubscriber(parameters);
+    return await homePageRepository.addSubscriber(parameters);
   }
 }

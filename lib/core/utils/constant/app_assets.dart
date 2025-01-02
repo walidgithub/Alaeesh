@@ -14,6 +14,7 @@ class AppAssets {
   static const String emoji = '$imagePath/emoji.svg';
   static const String comments = '$imagePath/comments.svg';
   static const String logout = '$imagePath/logout.svg';
+  static const String switchUser = '$imagePath/switch.svg';
   static const String delete = '$imagePath/delete.svg';
   static const String edit = '$imagePath/edit.svg';
   static const String menu = '$imagePath/menu.svg';

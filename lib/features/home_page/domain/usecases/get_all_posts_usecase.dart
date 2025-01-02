@@ -5,12 +5,12 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
 class GetAllPostsUseCase extends FirebaseBaseUseCase<List<PostModel>, FirebaseNoParameters>{
-  final HomePageRepository firebaseBaseRepository;
+  final HomePageRepository homePageRepository;
 
-  GetAllPostsUseCase(this.firebaseBaseRepository);
+  GetAllPostsUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, List<PostModel>>> call(FirebaseNoParameters parameters) async {
-    return await firebaseBaseRepository.getAllPosts();
+    return await homePageRepository.getAllPosts();
   }
 }

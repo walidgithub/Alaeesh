@@ -6,12 +6,12 @@ import '../../../../core/firebase/error/firebase_failure.dart';
 import '../repository/layout_repository.dart';
 
 class GetAllNotificationsUseCase extends FirebaseBaseUseCase {
-  final LayoutRepository firebaseBaseRepository;
+  final LayoutRepository layoutRepository;
 
-  GetAllNotificationsUseCase(this.firebaseBaseRepository);
+  GetAllNotificationsUseCase(this.layoutRepository);
 
   @override
   Future<Either<FirebaseFailure, List<NotificationsModel>>> call(parameters) async {
-    return await firebaseBaseRepository.getAllNotifications(parameters);
+    return await layoutRepository.getAllNotifications(parameters);
   }
 }

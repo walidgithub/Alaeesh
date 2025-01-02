@@ -5,12 +5,12 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
 class DeleteSubscriberUseCase extends FirebaseBaseUseCase{
-  final HomePageRepository firebaseBaseRepository;
+  final HomePageRepository homePageRepository;
 
-  DeleteSubscriberUseCase(this.firebaseBaseRepository);
+  DeleteSubscriberUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {
-    return await firebaseBaseRepository.deleteSubscriber(parameters);
+    return await homePageRepository.deleteSubscriber(parameters);
   }
 }

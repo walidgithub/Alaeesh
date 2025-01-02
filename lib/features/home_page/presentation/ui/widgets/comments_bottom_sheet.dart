@@ -53,6 +53,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   bool textAutofocus = false;
   String commentId = "";
   var commentData;
+  bool userReacted = false;
 
   @override
   void initState() {
@@ -229,7 +230,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         child: BlocConsumer<HomePageCubit, HomePageState>(
                             listener: (context, state) {
                           if (state is AddCommentEmojiSuccessState) {
-                            widget.addNewComment(1);
+                            if (userReacted) {
+                              widget.addNewComment(0);
+                            } else {
+                              widget.addNewComment(1);
+                            }
                             Navigator.pop(context);
                           } else if (state is AddCommentEmojiErrorState) {
                             showSnackBar(context, state.errorMessage);
@@ -252,6 +257,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             postId: widget.commentsList[index].postId,
                             addNewCommentEmoji:
                                 (EmojiEntity returnedEmojiData) {
+                                  userReacted = widget.commentsList[0].commentEmojiModel.where(
+                                          (element) => element.username == widget.userName).isNotEmpty;
+
                               AddCommentEmojiRequest addCommentEmojiRequest =
                                   AddCommentEmojiRequest(
                                       postId: widget.commentsList[0].postId,

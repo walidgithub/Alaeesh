@@ -32,6 +32,17 @@ class SecureStorageLoginHelper {
     await _secureStorage.write(key: 'photoUrl', value: photoUrl);
   }
 
+  Future<void> clearUserData() async {
+    try {
+      await _secureStorage.delete(key: 'id');
+      await _secureStorage.delete(key: 'email');
+      await _secureStorage.delete(key: 'displayName');
+      await _secureStorage.delete(key: 'photoUrl');
+    } catch (e) {
+      print("Error removing user data: $e");
+    }
+  }
+
   // Load saved email and password
   Future<Map<String, String>> loadCommentData() async {
     final id = await _secureStorage.read(key: 'id') ?? '';
