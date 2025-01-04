@@ -97,8 +97,8 @@ class ServiceLocator {
     sl.registerLazySingleton<DeleteCommentUseCase>(() => DeleteCommentUseCase(sl()));
     sl.registerLazySingleton<UpdateCommentUseCase>(() => UpdateCommentUseCase(sl()));
 
-    sl.registerLazySingleton<AddSubscriberUseCase>(() => AddSubscriberUseCase(sl()));
-    sl.registerLazySingleton<DeleteSubscriberUseCase>(() => DeleteSubscriberUseCase(sl()));
+    sl.registerLazySingleton<AddPostSubscriberUseCase>(() => AddPostSubscriberUseCase(sl()));
+    sl.registerLazySingleton<DeletePostSubscriberUseCase>(() => DeletePostSubscriberUseCase(sl()));
 
     sl.registerLazySingleton<AddEmojiUseCase>(() => AddEmojiUseCase(sl()));
     sl.registerLazySingleton<DeleteEmojiUseCase>(() => DeleteEmojiUseCase(sl()));

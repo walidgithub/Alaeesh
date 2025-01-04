@@ -26,6 +26,8 @@ class AppStrings {
   static const String delete = 'حــذف';
   static const String edit = 'تـعـديـل';
   static const String skip = ' تـراجـع  ';
+  static const readMore = "اقـرأ الـمـزيـد";
+  static const less = " أقـل";
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
 
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';

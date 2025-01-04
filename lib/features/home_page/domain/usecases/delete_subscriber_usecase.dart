@@ -4,13 +4,13 @@ import 'package:last/features/home_page/domain/repository/home_page_repository.d
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 
-class DeleteSubscriberUseCase extends FirebaseBaseUseCase{
+class DeletePostSubscriberUseCase extends FirebaseBaseUseCase{
   final HomePageRepository homePageRepository;
 
-  DeleteSubscriberUseCase(this.homePageRepository);
+  DeletePostSubscriberUseCase(this.homePageRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {
-    return await homePageRepository.deleteSubscriber(parameters);
+    return await homePageRepository.deletePostSubscriber(parameters);
   }
 }

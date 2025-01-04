@@ -1,4 +1,4 @@
-import 'package:last/features/home_page/data/model/subscribers_model.dart';
+import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
 
 import '../../../../core/utils/constant/app_assets.dart';
 import 'comments_model.dart';

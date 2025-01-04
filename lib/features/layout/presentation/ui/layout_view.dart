@@ -45,7 +45,6 @@ class _LayoutViewState extends State<LayoutView> {
   String displayName = AppStrings.guestUsername;
   String photoUrl = "";
   bool loadingUserData = true;
-
   var userData;
 
   List<bool> selectedWidgets = [true, false];
@@ -72,7 +71,7 @@ class _LayoutViewState extends State<LayoutView> {
             textDirection: TextDirection.ltr,
             start: 0.w,
             top: 120.h,
-            end: 10.w,
+            end: 20.w,
             bottom: 0),
         items: [
           PopupMenuItem(
@@ -96,7 +95,7 @@ class _LayoutViewState extends State<LayoutView> {
                   },
                   builder: (context, state) {
                     return Container(
-                      padding: EdgeInsets.all(10.w),
+                      padding: EdgeInsets.all(5.w),
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.cTitle),
                           borderRadius: BorderRadius.all(Radius.circular(5.r))),
@@ -108,24 +107,24 @@ class _LayoutViewState extends State<LayoutView> {
                               WelcomeCubit.get(context).logout();
                             },
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.logout,
-                                  width: 30.w,
+                                  width: 25.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
                                 ),
                                 Text(
                                   AppStrings.logout,
-                                  style: AppTypography.kLight18,
+                                  style: AppTypography.kLight14,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 20.h,
+                            height: 10.h,
                           ),
                           Bounceable(
                             onTap: () {
@@ -133,18 +132,18 @@ class _LayoutViewState extends State<LayoutView> {
                                   context, Routes.switchUserRoute);
                             },
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.switchUser,
-                                  width: 25.w,
+                                  width: 20.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
                                 ),
                                 Text(
                                   AppStrings.switchUser,
-                                  style: AppTypography.kLight18,
+                                  style: AppTypography.kLight14,
                                 ),
                               ],
                             ),
@@ -166,8 +165,9 @@ class _LayoutViewState extends State<LayoutView> {
     getAllPosts();
 
     screens = [
-      HomeView(photoUrl: photoUrl,displayName: displayName),
+      HomeView(),
     ];
+
     super.initState();
   }
 

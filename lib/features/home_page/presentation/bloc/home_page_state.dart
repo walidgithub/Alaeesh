@@ -44,20 +44,20 @@ class UpdateCommentErrorState extends HomePageState{
   UpdateCommentErrorState(this.errorMessage);
 }
 
-class AddSubscriberLoadingState extends HomePageState{}
-class AddSubscriberSuccessState extends HomePageState{}
-class AddSubscriberErrorState extends HomePageState{
+class AddPostSubscriberLoadingState extends HomePageState{}
+class AddPostSubscriberSuccessState extends HomePageState{}
+class AddPostSubscriberErrorState extends HomePageState{
   final String errorMessage;
 
-  AddSubscriberErrorState(this.errorMessage);
+  AddPostSubscriberErrorState(this.errorMessage);
 }
 
-class DeleteSubscriberLoadingState extends HomePageState{}
-class DeleteSubscriberSuccessState extends HomePageState{}
-class DeleteSubscriberErrorState extends HomePageState{
+class DeletePostSubscriberLoadingState extends HomePageState{}
+class DeletePostSubscriberSuccessState extends HomePageState{}
+class DeletePostSubscriberErrorState extends HomePageState{
   final String errorMessage;
 
-  DeleteSubscriberErrorState(this.errorMessage);
+  DeletePostSubscriberErrorState(this.errorMessage);
 }
 
 class AddEmojiLoadingState extends HomePageState{}

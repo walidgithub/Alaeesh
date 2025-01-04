@@ -12,8 +12,8 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
-import '../../../data/model/requests/add_subscriber_request.dart';
-import '../../../data/model/subscribers_model.dart';
+import '../../../data/model/requests/add_post_subscriber_request.dart';
+import '../../../data/model/post_subscribers_model.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
 

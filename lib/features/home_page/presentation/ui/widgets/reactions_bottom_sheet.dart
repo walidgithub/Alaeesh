@@ -122,47 +122,54 @@ class _ReactionsBottomSheetState extends State<ReactionsBottomSheet> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          return Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CircleAvatar(
-                                      radius: 25.r,
-                                      backgroundColor: AppColors.cWhite,
-                                      child: Container(
-                                          padding: EdgeInsets.all(2.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors.cTitle,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: ClipOval(
-                                            child: CachedNetworkImage(
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(
-                                                    strokeWidth: 2.w,
-                                                    color: AppColors.cTitle,
-                                                  ),
-                                              errorWidget: (context, url, error) =>
-                                                  Image.asset(AppAssets.profile),
-                                              imageUrl: selectedList[index].userImage,
-                                            ),
-                                          ))),
-                                  SizedBox(
-                                    width: 10.w,
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                          radius: 25.r,
+                                          backgroundColor: AppColors.cWhite,
+                                          child: Container(
+                                              padding: EdgeInsets.all(2.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: AppColors.cTitle,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: CachedNetworkImage(
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2.w,
+                                                        color: AppColors.cTitle,
+                                                      ),
+                                                  errorWidget: (context, url, error) =>
+                                                      Image.asset(AppAssets.profile),
+                                                  imageUrl: selectedList[index].userImage,
+                                                ),
+                                              ))),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        selectedList[index].username,
+                                        style: AppTypography.kLight16,
+                                      ),],
                                   ),
                                   Text(
-                                    selectedList[index].username,
-                                    style: AppTypography.kLight16,
-                                  ),],
+                                    selectedList[index].emojiData,
+                                    style: AppTypography.kLight20,
+                                  ),
+                                ],
                               ),
-                              Text(
-                                selectedList[index].emojiData,
-                                style: AppTypography.kLight20,
-                              ),
+                              SizedBox(
+                                height: 10.h,
+                              )
                             ],
                           );
                         },

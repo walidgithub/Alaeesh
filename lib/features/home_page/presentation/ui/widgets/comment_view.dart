@@ -20,8 +20,6 @@ import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/comment_emoji_model.dart';
 import '../../../data/model/requests/delete_comment_request.dart';
-import '../../../data/model/requests/delete_subscriber_request.dart';
-import '../../../data/model/subscribers_model.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -117,7 +115,12 @@ class _CommentViewState extends State<CommentView> {
                             widget.addNewCommentEmoji(returnedEmojiData);
                           },
                           deleteEmojiData: () {
-                            int emojiIndex = widget.commentEmojisModel.indexWhere((element) => element.commentId == widget.id);
+                            int emojiIndex = widget.commentEmojisModel.indexWhere((element) => element.commentId == widget.id && element.username == widget.loggedInUserName);
+                            if (emojiIndex < 0) {
+                              widget.updateComment(0);
+                              _removePopup();
+                              return;
+                            }
                             DeleteCommentEmojiRequest
                                 deleteCommentEmojiRequest =
                                 DeleteCommentEmojiRequest(
@@ -245,8 +248,8 @@ class _CommentViewState extends State<CommentView> {
                                           commentModel: CommentsModel(
                                               id: widget.id,
                                               postId: widget.postId,
-                                              username: widget.username,
-                                              userImage: widget.userImage,
+                                              username: widget.loggedInUserName,
+                                              userImage: widget.loggedInUserImage,
                                               time: widget.time,
                                               comment: widget.comment,
                                               commentEmojiModel:
@@ -463,30 +466,38 @@ class _CommentViewState extends State<CommentView> {
                                       children: widget.commentEmojisModel
                                           .asMap()
                                           .entries
+                                          .toList()
+                                          .fold<List<MapEntry<int, dynamic>>>([], (acc, entry) {
+                                        if (!acc.any((e) => e.value.emojiData == entry.value.emojiData)) {
+                                          acc.add(entry);
+                                        }
+                                        return acc;
+                                      })
                                           .map((entry) {
-                                        int index = entry.key;
+                                        int index = entry.key; // Original index
                                         return Positioned(
-                                            left: index * reactPosition,
-                                            child:
-                                            CircleAvatar(
-                                                radius: 15.r,
-                                                backgroundColor: AppColors.cWhite,
-                                                child: Container(
-                                                    padding: EdgeInsets.all(1.w),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: AppColors.cSecondary,
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                    child: ClipOval(
-                                                      child: Text(
-                                                        entry.value.emojiData,
-                                                        style: AppTypography
-                                                            .kExtraLight18,
-                                                      ),
-                                                    ))));
+                                          left: index * reactPosition,
+                                          child: CircleAvatar(
+                                            radius: 15.r,
+                                            backgroundColor: AppColors.cWhite,
+                                            child: Container(
+                                              padding: EdgeInsets.all(1.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: AppColors.cSecondary,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: Text(
+                                                  entry.value.emojiData,
+                                                  style: AppTypography.kExtraLight18,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       }).toList(),
                                     ),
                                   ),

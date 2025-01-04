@@ -8,10 +8,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
-import 'package:last/features/home_page/data/model/requests/delete_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_view.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/update_post_bottom_sheet.dart';
+import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
@@ -25,8 +26,8 @@ import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/comments_model.dart';
 import '../../../data/model/emoji_model.dart';
 import '../../../data/model/requests/add_emoji_request.dart';
-import '../../../data/model/requests/add_subscriber_request.dart';
-import '../../../data/model/subscribers_model.dart';
+import '../../../data/model/requests/add_post_subscriber_request.dart';
+import '../../../data/model/post_subscribers_model.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -279,7 +280,14 @@ class _PostViewState extends State<PostView> {
                         },
                         deleteEmojiData: () {
                           int emojiIndex = widget.emojisList.indexWhere(
-                              (element) => element.postId == widget.id);
+                              (element) => element.postId == widget.id && element.username == widget.loggedInUserName);
+                          print("emojiIndex");
+                          print(emojiIndex);
+                          if (emojiIndex < 0) {
+                            widget.addNewEmoji(0);
+                            _removePopup();
+                            return;
+                          }
                           DeleteEmojiRequest deleteEmojiRequest =
                               DeleteEmojiRequest(
                                   postId: widget.id,
@@ -432,11 +440,15 @@ class _PostViewState extends State<PostView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text(
+                          ReadMoreText(
                             widget.postAlsha,
-                            style: AppTypography.kLight14
-                                .copyWith(color: AppColors.cBlack),
-                          ),
+                            style: AppTypography.kLight14,
+                            trimLines: 3,
+                            colorClickableText: AppColors.cTitle,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: AppStrings.readMore,
+                            trimExpandedText: AppStrings.less,
+                          )
                         ],
                       )),
                     ],
@@ -456,7 +468,7 @@ class _PostViewState extends State<PostView> {
                                       height:
                                           MediaQuery.sizeOf(context).height -
                                               widget.statusBarHeight -
-                                              150.h,
+                                              50.h,
                                       width: MediaQuery.sizeOf(context).width),
                                   isScrollControlled: true,
                                   barrierColor: AppColors.cTransparent,
@@ -469,8 +481,9 @@ class _PostViewState extends State<PostView> {
                                     return Directionality(
                                       textDirection: TextDirection.rtl,
                                       child: CommentsBottomSheet(
-                                        userImage: widget.postUserImage,
-                                        userName: widget.postUsername,
+                                        postAlsha: widget.postAlsha,
+                                        userImage: widget.loggedInUserImage,
+                                        userName: widget.loggedInUserName,
                                         postId: widget.id,
                                           addNewComment: (int status) {
                                             widget.addNewComment(status);
@@ -540,30 +553,38 @@ class _PostViewState extends State<PostView> {
                                       children: widget.emojisList
                                           .asMap()
                                           .entries
+                                          .toList()
+                                          .fold<List<MapEntry<int, dynamic>>>([], (acc, entry) {
+                                        if (!acc.any((e) => e.value.emojiData == entry.value.emojiData)) {
+                                          acc.add(entry);
+                                        }
+                                        return acc;
+                                      })
                                           .map((entry) {
-                                        int index = entry.key;
+                                        int index = entry.key; // Original index
                                         return Positioned(
-                                            left: index * reactPosition,
-                                            child:
-                                            CircleAvatar(
-                                                radius: 15.r,
-                                                backgroundColor: AppColors.cWhite,
-                                                child: Container(
-                                                    padding: EdgeInsets.all(1.w),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: AppColors.cSecondary,
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                    child: ClipOval(
-                                                      child: Text(
-                                                        entry.value.emojiData,
-                                                        style: AppTypography
-                                                            .kExtraLight18,
-                                                      ),
-                                                    ))));
+                                          left: index * reactPosition,
+                                          child: CircleAvatar(
+                                            radius: 15.r,
+                                            backgroundColor: AppColors.cWhite,
+                                            child: Container(
+                                              padding: EdgeInsets.all(1.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: AppColors.cSecondary,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: Text(
+                                                  entry.value.emojiData,
+                                                  style: AppTypography.kExtraLight18,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       }).toList(),
                                     ),
                                   ),

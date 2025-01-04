@@ -4,11 +4,11 @@ import 'package:last/features/home_page/data/model/requests/add_emoji_request.da
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../data/model/requests/add_comment_emoji_request.dart';
 import '../../data/model/requests/add_comment_request.dart';
-import '../../data/model/requests/add_subscriber_request.dart';
+import '../../data/model/requests/add_post_subscriber_request.dart';
 import '../../data/model/requests/delete_comment_emoji_request.dart';
 import '../../data/model/requests/delete_comment_request.dart';
 import '../../data/model/requests/delete_emoji_request.dart';
-import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/delete_post_subscriber_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../data/model/requests/update_post_request.dart';
 
@@ -20,8 +20,8 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> updateComment(UpdateCommentRequest updateCommentRequest);
   Future<Either<FirebaseFailure, void>> deleteComment(DeleteCommentRequest deleteCommentRequest);
 
-  Future<Either<FirebaseFailure, void>> addSubscriber(AddSubscriberRequest addSubscriberRequest);
-  Future<Either<FirebaseFailure, void>> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest);
+  Future<Either<FirebaseFailure, void>> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest);
+  Future<Either<FirebaseFailure, void>> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest);
 
   Future<Either<FirebaseFailure, void>> addEmoji(AddEmojiRequest addEmojiRequest);
   Future<Either<FirebaseFailure, void>> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest);

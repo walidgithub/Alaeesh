@@ -16,9 +16,9 @@ import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../data/model/requests/add_comment_request.dart';
 import '../../data/model/requests/add_emoji_request.dart';
-import '../../data/model/requests/add_subscriber_request.dart';
+import '../../data/model/requests/add_post_subscriber_request.dart';
 import '../../data/model/requests/delete_comment_emoji_request.dart';
-import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/delete_post_subscriber_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../domain/usecases/add_comment_emoji_usecase.dart';
 import '../../domain/usecases/delete_emoji_usecase.dart';
@@ -29,7 +29,7 @@ import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
   HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase,
-      this.getTopPostsUseCase,this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.deleteEmojiUseCase, this.deleteSubscriberUseCase, this.addSubscriberUseCase) : super(HomePageInitial());
+      this.getTopPostsUseCase,this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -38,8 +38,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   final UpdateCommentUseCase updateCommentUseCase;
   final DeleteCommentUseCase deleteCommentUseCase;
 
-  final AddSubscriberUseCase addSubscriberUseCase;
-  final DeleteSubscriberUseCase deleteSubscriberUseCase;
+  final AddPostSubscriberUseCase addPostSubscriberUseCase;
+  final DeletePostSubscriberUseCase deletePostSubscriberUseCase;
 
   final AddEmojiUseCase addEmojiUseCase;
   final DeleteEmojiUseCase deleteEmojiUseCase;
@@ -145,26 +145,26 @@ class HomePageCubit extends Cubit<HomePageState> {
     }
   }
 
-  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
-    emit(AddSubscriberLoadingState());
+  Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest) async {
+    emit(AddPostSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addSubscriberUseCase.call(addSubscriberRequest);
+      final signInResult = await addPostSubscriberUseCase.call(addPostSubscriberRequest);
       signInResult.fold(
-            (failure) => emit(AddSubscriberErrorState(failure.message)),
-            (emojiAdded) => emit(AddSubscriberSuccessState()),
+            (failure) => emit(AddPostSubscriberErrorState(failure.message)),
+            (emojiAdded) => emit(AddPostSubscriberSuccessState()),
       );
     } else {
       emit(NoInternetState());
     }
   }
 
-  Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
-    emit(DeleteSubscriberLoadingState());
+  Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
+    emit(DeletePostSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deleteSubscriberUseCase.call(deleteSubscriberRequest);
+      final signInResult = await deletePostSubscriberUseCase.call(deletePostSubscriberRequest);
       signInResult.fold(
-            (failure) => emit(DeleteSubscriberErrorState(failure.message)),
-            (emojiDeleted) => emit(DeleteSubscriberSuccessState()),
+            (failure) => emit(DeletePostSubscriberErrorState(failure.message)),
+            (emojiDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
     } else {
       emit(NoInternetState());

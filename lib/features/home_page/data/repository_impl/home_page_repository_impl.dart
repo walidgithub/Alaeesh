@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:last/core/firebase/error/firebase_failure.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_emoji_request.dart';
-import 'package:last/features/home_page/data/model/requests/add_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
-import 'package:last/features/home_page/data/model/requests/delete_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_post_request.dart';
 import '../../../../core/firebase/error/firebase_error_handler.dart';
@@ -177,9 +177,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, void>> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+  Future<Either<FirebaseFailure, void>> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest) async {
     try {
-      final result = await _homePageDataSource.addSubscriber(addSubscriberRequest);
+      final result = await _homePageDataSource.addPostSubscriber(addPostSubscriberRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -191,9 +191,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, void>> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
+  Future<Either<FirebaseFailure, void>> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     try {
-      final result = await _homePageDataSource.deleteSubscriber(deleteSubscriberRequest);
+      final result = await _homePageDataSource.deletePostSubscriber(deletePostSubscriberRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

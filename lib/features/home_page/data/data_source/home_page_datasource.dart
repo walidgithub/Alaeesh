@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_request.dart';
-import 'package:last/features/home_page/data/model/requests/add_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_request.dart';
-import 'package:last/features/home_page/data/model/requests/delete_subscriber_request.dart';
-import 'package:last/features/home_page/data/model/subscribers_model.dart';
+import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../model/comments_model.dart';
@@ -28,8 +28,8 @@ abstract class BaseDataSource {
   Future<void> addEmoji(AddEmojiRequest addEmojiRequest);
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest);
 
-  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest);
-  Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest);
+  Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest);
+  Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest);
 
   Future<void> addCommentEmoji(AddCommentEmojiRequest addCommentEmojiRequest);
   Future<void> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest);
@@ -252,11 +252,11 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+  Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest) async {
     try {
       final postsCollection = firestore.collection('posts');
 
-      final postDoc = await postsCollection.doc(addSubscriberRequest.subscriberModel.postId).get();
+      final postDoc = await postsCollection.doc(addPostSubscriberRequest.subscriberModel.postId).get();
 
       if (postDoc.exists) {
         List<dynamic> subscribers = postDoc.data()?['subscribersList'] ?? [];
@@ -265,12 +265,12 @@ class HomePageDataSource extends BaseDataSource {
           return SubscribersModel.fromMap(Map<String, dynamic>.from(emoji));
         }).toList();
 
-        subscribersList.add(addSubscriberRequest.subscriberModel);
+        subscribersList.add(addPostSubscriberRequest.subscriberModel);
 
         List<Map<String, dynamic>> updatedSubscribers =
         subscribersList.map((subscriber) => subscriber.toMap()).toList();
 
-        await postsCollection.doc(addSubscriberRequest.subscriberModel.postId).update({
+        await postsCollection.doc(addPostSubscriberRequest.subscriberModel.postId).update({
           'subscribersList': updatedSubscribers,
         });
       }
@@ -280,29 +280,16 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
+  Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     try {
-      // final postRef = FirebaseFirestore.instance.collection('posts').doc(deleteSubscriberRequest.subscriberModel.postId);
-      //
-      // final snapshot = await postRef.get();
-      // if (snapshot.exists) {
-      //   List<dynamic> subscribersList = snapshot['subscribersList'];
-      //
-      //   subscribersList.removeWhere((subscriber) => subscriber['username'] == deleteSubscriberRequest.subscriberModel.username).f;
-      //
-      //   await postRef.update({'subscribersList': subscribersList});
-      // } else {
-      //   print("Post document does not exist.");
-      // }
-
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(deleteSubscriberRequest.subscriberModel.postId);
+      final postRef = FirebaseFirestore.instance.collection('posts').doc(deletePostSubscriberRequest.subscriberModel.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
         List<dynamic> subscribersList = List.from(snapshot['subscribersList']);
 
         int index = subscribersList.indexWhere((subscriber) =>
-        subscriber['username'] == deleteSubscriberRequest.subscriberModel.username);
+        subscriber['username'] == deletePostSubscriberRequest.subscriberModel.username);
 
         if (index != -1) {
           subscribersList.removeAt(index);

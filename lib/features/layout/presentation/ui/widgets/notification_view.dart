@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:readmore/readmore.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -121,11 +122,15 @@ class _NotificationViewState extends State<NotificationView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text(
+                          ReadMoreText(
                             widget.postAlsha,
-                            style: AppTypography.kLight14
-                                .copyWith(color: AppColors.cBlack),
-                          ),
+                            style: AppTypography.kLight14,
+                            trimLines: 3,
+                            colorClickableText: AppColors.cTitle,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: AppStrings.readMore,
+                            trimExpandedText: AppStrings.less,
+                          )
                         ],
                       )),
                     ],

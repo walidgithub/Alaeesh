@@ -4,6 +4,8 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:last/core/preferences/app_pref.dart';
+import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
@@ -17,9 +19,9 @@ import '../../../data/model/comment_emoji_model.dart';
 import '../../../data/model/comments_model.dart';
 import '../../../data/model/requests/add_comment_emoji_request.dart';
 import '../../../data/model/requests/add_comment_request.dart';
-import '../../../data/model/requests/add_subscriber_request.dart';
-import '../../../data/model/requests/delete_subscriber_request.dart';
-import '../../../data/model/subscribers_model.dart';
+import '../../../data/model/requests/add_post_subscriber_request.dart';
+import '../../../data/model/requests/delete_post_subscriber_request.dart';
+import '../../../data/model/post_subscribers_model.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -29,6 +31,7 @@ class CommentsBottomSheet extends StatefulWidget {
   String postId;
   String userName;
   String userImage;
+  String postAlsha;
   double statusBarHeight;
   List<CommentsModel> commentsList;
   Function addNewComment;
@@ -39,6 +42,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.postId,
       required this.userName,
       required this.userImage,
+      required this.postAlsha,
       required this.addNewComment});
 
   @override
@@ -134,6 +138,18 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               child: Text(AppStrings.comments,
                   style:
                       AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
+            ),
+            SizedBox(
+              height: AppConstants.moreHeightBetweenElements,
+            ),
+            ReadMoreText(
+              widget.postAlsha,
+              style: AppTypography.kLight14,
+              trimLines: 3,
+              colorClickableText: AppColors.cTitle,
+              trimMode: TrimMode.Line,
+              trimCollapsedText: AppStrings.readMore,
+              trimExpandedText: AppStrings.less,
             ),
             SizedBox(
               height: AppConstants.moreHeightBetweenElements,
@@ -272,9 +288,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                           emojiData:
                                               returnedEmojiData.emojiData,
                                           username:
-                                              widget.commentsList[0].username,
-                                          userImage: widget
-                                              .commentsList[0].userImage));
+                                              widget.userName,
+                                          userImage: widget.userImage));
                               HomePageCubit.get(context)
                                   .addCommentEmoji(addCommentEmojiRequest);
                             },
