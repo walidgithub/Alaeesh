@@ -187,7 +187,6 @@ class _HomeViewState extends State<HomeView> {
                                     .deletePostSubscriber(deletePostSubscriberRequest);
                               } else if (status == 0) {}
 
-
                               HomePageCubit.get(context).getAllPosts();
 
                               selectedPost = index;
@@ -200,8 +199,8 @@ class _HomeViewState extends State<HomeView> {
                                 AddPostSubscriberRequest addPostSubscriberRequest =
                                 AddPostSubscriberRequest(
                                     subscriberModel: SubscribersModel(
-                                      username: postModel[index].username,
-                                      userImage: postModel[index].userImage,
+                                      username: displayName,
+                                      userImage: photoUrl,
                                       postId: postModel[index].id!,
                                     ));
                                 HomePageCubit.get(context)
@@ -210,8 +209,8 @@ class _HomeViewState extends State<HomeView> {
                                 DeletePostSubscriberRequest deletePostSubscriberRequest =
                                 DeletePostSubscriberRequest(
                                     subscriberModel: SubscribersModel(
-                                      username: postModel[index].username,
-                                      userImage: postModel[index].userImage,
+                                      username: displayName,
+                                      userImage: photoUrl,
                                       postId: postModel[index].id!,
                                     ));
                                 HomePageCubit.get(context)
