@@ -2,15 +2,20 @@ import 'package:dartz/dartz.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_emoji_request.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
+import '../../data/model/home_page_model.dart';
 import '../../data/model/requests/add_comment_emoji_request.dart';
 import '../../data/model/requests/add_comment_request.dart';
 import '../../data/model/requests/add_post_subscriber_request.dart';
+import '../../data/model/requests/add_subscriber_request.dart';
 import '../../data/model/requests/delete_comment_emoji_request.dart';
 import '../../data/model/requests/delete_comment_request.dart';
 import '../../data/model/requests/delete_emoji_request.dart';
 import '../../data/model/requests/delete_post_subscriber_request.dart';
+import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/get_subscribers_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../data/model/requests/update_post_request.dart';
+import '../../data/model/subscribers_model.dart';
 
 abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> updatePost(UpdatePostRequest updatePostRequest);
@@ -23,12 +28,19 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest);
   Future<Either<FirebaseFailure, void>> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest);
 
+
+  Future<Either<FirebaseFailure, void>> addSubscriber(AddSubscriberRequest addSubscriberRequest);
+  Future<Either<FirebaseFailure, void>> deleteSubscriber(
+      DeleteSubscriberRequest deleteSubscriberRequest);
+  Future<Either<FirebaseFailure, List<SubscribersModel>>> getSubscribers(
+      GetSubscribersRequest getSubscribersRequest);
+
   Future<Either<FirebaseFailure, void>> addEmoji(AddEmojiRequest addEmojiRequest);
   Future<Either<FirebaseFailure, void>> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest);
 
   Future<Either<FirebaseFailure, void>> addCommentEmoji(AddCommentEmojiRequest addCommentEmojiRequest);
   Future<Either<FirebaseFailure, void>> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
-  Future<Either<FirebaseFailure, List<PostModel>>> getAllPosts();
-  Future<Either<FirebaseFailure, List<PostModel>>> getTopPosts();
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(String currentUser);
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getTopPosts(String currentUser);
 }

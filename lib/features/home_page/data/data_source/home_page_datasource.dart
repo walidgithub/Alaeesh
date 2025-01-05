@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:last/features/home_page/data/model/home_page_model.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
@@ -12,10 +13,14 @@ import '../model/emoji_model.dart';
 import '../model/requests/add_comment_emoji_request.dart';
 import '../model/requests/add_emoji_request.dart';
 import 'package:uuid/uuid.dart';
+import '../model/requests/add_subscriber_request.dart';
 import '../model/requests/delete_comment_emoji_request.dart';
 import '../model/requests/delete_emoji_request.dart';
+import '../model/requests/delete_subscriber_request.dart';
+import '../model/requests/get_subscribers_request.dart';
 import '../model/requests/update_comment_request.dart';
 import '../model/requests/update_post_request.dart';
+import '../model/subscribers_model.dart';
 
 abstract class BaseDataSource {
   Future<void> updatePost(UpdatePostRequest updatePostRequest);
@@ -28,20 +33,29 @@ abstract class BaseDataSource {
   Future<void> addEmoji(AddEmojiRequest addEmojiRequest);
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest);
 
-  Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest);
-  Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest);
+  Future<void> addPostSubscriber(
+      AddPostSubscriberRequest addPostSubscriberRequest);
+  Future<void> deletePostSubscriber(
+      DeletePostSubscriberRequest deletePostSubscriberRequest);
+
+  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest);
+  Future<void> deleteSubscriber(
+      DeleteSubscriberRequest deleteSubscriberRequest);
+  Future<List<SubscribersModel>> getSubscribers(
+      GetSubscribersRequest getSubscribersRequest);
 
   Future<void> addCommentEmoji(AddCommentEmojiRequest addCommentEmojiRequest);
-  Future<void> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest);
+  Future<void> deleteCommentEmoji(
+      DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
-  Future<List<PostModel>> getAllPosts();
-  Future<List<PostModel>> getTopPosts();
+  Future<List<HomePageModel>> getAllPosts(String currentUser);
+  Future<List<HomePageModel>> getTopPosts(String currentUser);
 }
 
 class HomePageDataSource extends BaseDataSource {
   final FirebaseFirestore firestore = sl<FirebaseFirestore>();
   final SecureStorageLoginHelper _appSecureDataHelper =
-  sl<SecureStorageLoginHelper>();
+      sl<SecureStorageLoginHelper>();
 
   @override
   Future<void> updatePost(UpdatePostRequest updatePostRequest) async {
@@ -75,42 +89,49 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<List<PostModel>> getAllPosts() async {
-    List<PostModel> postsList = [];
+  Future<List<HomePageModel>> getAllPosts(String currentUser) async {
     try {
-      var docs = await firestore
-          .collection('posts')
-          .orderBy('time', descending: true)
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Fetch posts and filtered subscribers concurrently
+      final postsFuture = firestore.collection('posts').get();
+      final subscribersFuture = firestore
+          .collection('subscribers')
+          .where('username', isEqualTo: currentUser.trim())
           .get();
 
-      postsList = docs.docs.map((doc) {
-        var data = doc.data();
-        return PostModel(
-          id: doc.id,
-          postAlsha: data['postAlsha'] ?? '',
-          username: data['username'] ?? '',
-          userImage: data['userImage'] ?? '',
-          emojisList: (data['emojisList'] as List<dynamic>)
-              .map((emoji) => EmojiModel.fromMap(emoji))
-              .toList(),
-          commentsList: (data['commentsList'] as List<dynamic>)
-              .map((comment) => CommentsModel.fromMap(comment))
-              .toList(),
-          time: data['time'] ?? '',
-          subscribersList: (data['subscribersList'] as List<dynamic>)
-              .map((emoji) => SubscribersModel.fromMap(emoji))
-              .toList(),
-        );
+      final results = await Future.wait([postsFuture, subscribersFuture]);
+
+      // Parse the data
+      final postDocs = results[0].docs;
+      final subscriberDocs = results[1].docs;
+
+      // Convert Firestore documents to PostModel and SubscribersModel lists
+      final postModels = postDocs.map((doc) {
+        final postData = {'id': doc.id, ...doc.data() as Map<String, dynamic>};
+        return PostModel.fromMap(postData);
       }).toList();
 
-      return postsList;
+      final subscriberModels = subscriberDocs.map((doc) {
+        final subscriberData = {'id': doc.id, ...doc.data() as Map<String, dynamic>};
+        return SubscribersModel.fromMap(subscriberData);
+      }).toList();
+
+      // Combine data into HomePageModel
+      List<HomePageModel> homePageModels = postModels.map((post) {
+        final isSubscribed = subscriberModels.any((subscriber) =>
+        subscriber.postAuther == post.username); // Match post author
+        return HomePageModel(postModel: post, userSubscribed: isSubscribed);
+      }).toList();
+
+      return homePageModels;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<List<PostModel>> getTopPosts() async {
+  Future<List<HomePageModel>> getTopPosts(String currentUser) async {
     try {
       return [];
     } catch (e) {
@@ -137,7 +158,8 @@ class HomePageDataSource extends BaseDataSource {
         var uuid = Uuid();
         commentsList.last.id = uuid.v4();
 
-        await _appSecureDataHelper.saveCommentData(id: commentsList.last.id.toString());
+        await _appSecureDataHelper.saveCommentData(
+            id: commentsList.last.id.toString());
 
         List<Map<String, dynamic>> updatedComments =
             commentsList.map((comment) => comment.toMap()).toList();
@@ -154,7 +176,9 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> updateComment(UpdateCommentRequest updateCommentRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(updateCommentRequest.postId);
+      final postRef = FirebaseFirestore.instance
+          .collection('posts')
+          .doc(updateCommentRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
@@ -162,14 +186,15 @@ class HomePageDataSource extends BaseDataSource {
 
         for (int i = 0; i < commentsList.length; i++) {
           if (commentsList[i]['id'] == updateCommentRequest.commentsModel.id) {
-            commentsList[i]['comment'] = updateCommentRequest.commentsModel.comment; // Update the comment
+            commentsList[i]['comment'] = updateCommentRequest
+                .commentsModel.comment; // Update the comment
             break;
           }
         }
 
         await postRef.update({'commentsList': commentsList});
       } else {
-        print("Post document does not exist.");
+        throw "Post document does not exist.";
       }
     } catch (e) {
       rethrow;
@@ -179,18 +204,21 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(deleteCommentRequest.postId);
+      final postRef = FirebaseFirestore.instance
+          .collection('posts')
+          .doc(deleteCommentRequest.postId);
 
       // Fetch the post document
       final snapshot = await postRef.get();
       if (snapshot.exists) {
         List<dynamic> commentsList = snapshot['commentsList'];
 
-        commentsList.removeWhere((comment) => comment['id'] == deleteCommentRequest.commentId);
+        commentsList.removeWhere(
+            (comment) => comment['id'] == deleteCommentRequest.commentId);
 
         await postRef.update({'commentsList': commentsList});
       } else {
-        print("Post document does not exist.");
+        throw "Post document does not exist.";
       }
     } catch (e) {
       rethrow;
@@ -234,17 +262,20 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(deleteEmojiRequest.postId);
+      final postRef = FirebaseFirestore.instance
+          .collection('posts')
+          .doc(deleteEmojiRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
         List<dynamic> emojisList = snapshot['emojisList'];
 
-        emojisList.removeWhere((emoji) => emoji['id'] == deleteEmojiRequest.emojiId);
+        emojisList
+            .removeWhere((emoji) => emoji['id'] == deleteEmojiRequest.emojiId);
 
         await postRef.update({'emojisList': emojisList});
       } else {
-        print("Post document does not exist.");
+        throw "Post document does not exist.";
       }
     } catch (e) {
       rethrow;
@@ -252,25 +283,30 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest) async {
+  Future<void> addPostSubscriber(
+      AddPostSubscriberRequest addPostSubscriberRequest) async {
     try {
       final postsCollection = firestore.collection('posts');
 
-      final postDoc = await postsCollection.doc(addPostSubscriberRequest.subscriberModel.postId).get();
+      final postDoc = await postsCollection
+          .doc(addPostSubscriberRequest.postSubscribersModel.postId)
+          .get();
 
       if (postDoc.exists) {
         List<dynamic> subscribers = postDoc.data()?['subscribersList'] ?? [];
 
-        List<SubscribersModel> subscribersList = subscribers.map((emoji) {
-          return SubscribersModel.fromMap(Map<String, dynamic>.from(emoji));
+        List<PostSubscribersModel> subscribersList = subscribers.map((emoji) {
+          return PostSubscribersModel.fromMap(Map<String, dynamic>.from(emoji));
         }).toList();
 
-        subscribersList.add(addPostSubscriberRequest.subscriberModel);
+        subscribersList.add(addPostSubscriberRequest.postSubscribersModel);
 
         List<Map<String, dynamic>> updatedSubscribers =
-        subscribersList.map((subscriber) => subscriber.toMap()).toList();
+            subscribersList.map((subscriber) => subscriber.toMap()).toList();
 
-        await postsCollection.doc(addPostSubscriberRequest.subscriberModel.postId).update({
+        await postsCollection
+            .doc(addPostSubscriberRequest.postSubscribersModel.postId)
+            .update({
           'subscribersList': updatedSubscribers,
         });
       }
@@ -280,26 +316,30 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
+  Future<void> deletePostSubscriber(
+      DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(deletePostSubscriberRequest.subscriberModel.postId);
+      final postRef = FirebaseFirestore.instance
+          .collection('posts')
+          .doc(deletePostSubscriberRequest.postSubscribersModel.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
         List<dynamic> subscribersList = List.from(snapshot['subscribersList']);
 
         int index = subscribersList.indexWhere((subscriber) =>
-        subscriber['username'] == deletePostSubscriberRequest.subscriberModel.username);
+            subscriber['username'] ==
+            deletePostSubscriberRequest.postSubscribersModel.username);
 
         if (index != -1) {
           subscribersList.removeAt(index);
 
           await postRef.update({'subscribersList': subscribersList});
         } else {
-          print("Subscriber with the specified username not found.");
+          throw "Subscriber with the specified username not found.";
         }
       } else {
-        print("Post document does not exist.");
+        throw "Post document does not exist.";
       }
     } catch (e) {
       rethrow;
@@ -337,7 +377,8 @@ class HomePageDataSource extends BaseDataSource {
         var uuid = Uuid();
         targetComment.commentEmojiModel.last.id = uuid.v4();
 
-        await _appSecureDataHelper.saveCommentData(id: targetComment.id.toString());
+        await _appSecureDataHelper.saveCommentData(
+            id: targetComment.id.toString());
 
         List<Map<String, dynamic>> updatedComments =
             commentsList.map((comment) => comment.toMap()).toList();
@@ -352,9 +393,12 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
+  Future<void> deleteCommentEmoji(
+      DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance.collection('posts').doc(deleteCommentEmojiRequest.postId);
+      final postRef = FirebaseFirestore.instance
+          .collection('posts')
+          .doc(deleteCommentEmojiRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
@@ -364,7 +408,8 @@ class HomePageDataSource extends BaseDataSource {
           if (commentsList[i]['id'] == deleteCommentEmojiRequest.commentId) {
             List<dynamic> emojisList = List.from(commentsList[i]['emojisList']);
 
-            emojisList.removeWhere((emoji) => emoji['id'] == deleteCommentEmojiRequest.emojiId);
+            emojisList.removeWhere(
+                (emoji) => emoji['id'] == deleteCommentEmojiRequest.emojiId);
 
             commentsList[i]['emojisList'] = emojisList;
             break;
@@ -372,8 +417,65 @@ class HomePageDataSource extends BaseDataSource {
         }
         await postRef.update({'commentsList': commentsList});
       } else {
-        print("Post document does not exist.");
+        throw "Post document does not exist.";
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+    try {
+      final collection = FirebaseFirestore.instance.collection('subscribers');
+      final docRef = collection.doc();
+      addSubscriberRequest.id = docRef.id;
+      await docRef.set(addSubscriberRequest.toMap());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteSubscriber(
+      DeleteSubscriberRequest deleteSubscriberRequest) async {
+    try {
+      final subscribersCollection = firestore.collection('subscribers');
+      final subscriberQuery = await subscribersCollection
+          .where('username', isEqualTo: deleteSubscriberRequest.username)
+          .where('postAuther', isEqualTo: deleteSubscriberRequest.postAuther)
+          .get();
+
+      if (subscriberQuery.docs.isNotEmpty) {
+        for (var doc in subscriberQuery.docs) {
+          await subscribersCollection.doc(doc.id).delete();
+        }
+      } else {
+        throw 'No matching subscriber found.';
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<SubscribersModel>> getSubscribers(
+      GetSubscribersRequest getSubscribersRequest) async {
+    List<SubscribersModel> subscribersList = [];
+    try {
+      var docs = await firestore.collection('subscribers')
+          .where('username', isEqualTo: getSubscribersRequest.username)
+          .get();
+
+      subscribersList = docs.docs.map((doc) {
+        var data = doc.data();
+        return SubscribersModel(
+            id: doc.id,
+            postAuther: data['postAuther'] ?? '',
+            username: data['username'] ?? '');
+      }).toList();
+
+      return subscribersList;
     } catch (e) {
       rethrow;
     }

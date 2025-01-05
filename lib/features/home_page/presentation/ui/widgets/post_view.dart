@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
-import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_view.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/update_post_bottom_sheet.dart';
@@ -26,8 +25,8 @@ import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/comments_model.dart';
 import '../../../data/model/emoji_model.dart';
 import '../../../data/model/requests/add_emoji_request.dart';
-import '../../../data/model/requests/add_post_subscriber_request.dart';
 import '../../../data/model/post_subscribers_model.dart';
+import '../../../data/model/subscribers_model.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -44,11 +43,13 @@ class PostView extends StatefulWidget {
   final String time;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
-  final List<SubscribersModel> subscribersList;
+  final List<PostSubscribersModel> postSubscribersList;
+  final bool userSubscribed;
   final double statusBarHeight;
   Function addNewComment;
   Function addNewEmoji;
   Function postUpdated;
+  Function addOrRemoveSubscriber;
   int index;
   PostView({
     super.key,
@@ -60,13 +61,15 @@ class PostView extends StatefulWidget {
     required this.loggedInUserImage,
     required this.emojisList,
     required this.commentsList,
-    required this.subscribersList,
+    required this.postSubscribersList,
     required this.statusBarHeight,
     required this.addNewComment,
     required this.addNewEmoji,
     required this.time,
     required this.index,
     required this.postUpdated,
+    required this.userSubscribed,
+    required this.addOrRemoveSubscriber,
   });
 
   @override
@@ -184,8 +187,8 @@ class _PostViewState extends State<PostView> {
                                             emojisList: widget.emojisList,
                                             commentsList: widget.commentsList,
                                             time: widget.time,
-                                            subscribersList:
-                                                widget.subscribersList),
+                                            postSubscribersList:
+                                                widget.postSubscribersList),
                                         statusBarHeight: widget.statusBarHeight,
                                         postUpdated: () {
                                           widget.postUpdated();
@@ -266,8 +269,10 @@ class _PostViewState extends State<PostView> {
                     builder: (context, state) {
                       return ReactionsView(
                         returnEmojiData: (EmojiEntity returnedEmojiData) {
-                          userReacted = widget.emojisList.where(
-                                  (element) => element.username == widget.loggedInUserName).isNotEmpty;
+                          userReacted = widget.emojisList
+                              .where((element) =>
+                                  element.username == widget.loggedInUserName)
+                              .isNotEmpty;
 
                           AddEmojiRequest addEmojiRequest = AddEmojiRequest(
                               postId: widget.id,
@@ -280,9 +285,9 @@ class _PostViewState extends State<PostView> {
                         },
                         deleteEmojiData: () {
                           int emojiIndex = widget.emojisList.indexWhere(
-                              (element) => element.postId == widget.id && element.username == widget.loggedInUserName);
-                          print("emojiIndex");
-                          print(emojiIndex);
+                              (element) =>
+                                  element.postId == widget.id &&
+                                  element.username == widget.loggedInUserName);
                           if (emojiIndex < 0) {
                             widget.addNewEmoji(0);
                             _removePopup();
@@ -314,383 +319,420 @@ class _PostViewState extends State<PostView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<HomePageCubit>(),
-      child: FadeInUp(
-        duration: Duration(milliseconds: AppConstants.animation),
-        child: Container(
-          width: MediaQuery.sizeOf(context).width,
-          padding: EdgeInsets.all(8.w),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                      radius: 25.r,
-                                      backgroundColor: AppColors.cWhite,
-                                      child: Container(
-                                          padding: EdgeInsets.all(2.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors.cTitle,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: ClipOval(
-                                            child: CachedNetworkImage(
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(
-                                                    strokeWidth: 2.w,
-                                                    color: AppColors.cTitle,
-                                                  ),
-                                              errorWidget: (context, url, error) =>
-                                                  Image.asset(AppAssets.profile),
-                                              imageUrl: widget.postUserImage,
-                                            ),
-                                          ))),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.50,
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                widget.postUsername,
-                                                style: AppTypography.kBold14
-                                                    .copyWith(
-                                                        color:
-                                                            AppColors.cTitle),
-                                                overflow: TextOverflow.ellipsis,
-                                                textDirection:
-                                                    TextDirection.ltr,
+    return FadeInUp(
+      duration: Duration(milliseconds: AppConstants.animation),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        padding: EdgeInsets.all(8.w),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 25.r,
+                                        backgroundColor: AppColors.cWhite,
+                                        child: Container(
+                                            padding: EdgeInsets.all(2.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.cTitle,
+                                                width: 2,
                                               ),
                                             ),
-                                          ],
+                                            child: ClipOval(
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2.w,
+                                                      color: AppColors.cTitle,
+                                                    ),
+                                                errorWidget: (context, url,
+                                                    error) =>
+                                                    Image.asset(
+                                                        AppAssets.profile),
+                                                imageUrl:
+                                                widget.postUserImage,
+                                              ),
+                                            ))),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.sizeOf(context)
+                                              .width *
+                                              0.50,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  widget.postUsername,
+                                                  style: AppTypography.kBold14
+                                                      .copyWith(
+                                                      color: AppColors
+                                                          .cTitle),
+                                                  overflow:
+                                                  TextOverflow.ellipsis,
+                                                  textDirection:
+                                                  TextDirection.ltr,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Directionality(
-                                        textDirection: TextDirection.ltr,
-                                        child: Text(
-                                          timeAgoText,
-                                          style: AppTypography.kLight12
-                                              .copyWith(
-                                                  color: AppColors.cBlack),
+                                        Directionality(
+                                          textDirection: TextDirection.ltr,
+                                          child: Text(
+                                            timeAgoText,
+                                            style: AppTypography.kLight12
+                                                .copyWith(
+                                                color: AppColors.cBlack),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                      onTap: () {},
-                                      child: SvgPicture.asset(
-                                        widget.subscribersList
-                                                .where((element) =>
-                                                    element.username ==
-                                                    widget.postUsername)
-                                                .isNotEmpty
-                                            ? AppAssets.notificationOn
-                                            : AppAssets.notificationOff,
-                                        width: 25.w,
-                                      )),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  GestureDetector(
-                                      onTapDown: (TapDownDetails details) {
-                                        _showPostPopupMenu(
-                                            context,
-                                            details.globalPosition,
-                                            widget.index);
-                                      },
-                                      child: SvgPicture.asset(
-                                        AppAssets.menu,
-                                        width: 25.w,
-                                      ))
-                                ],
-                              )
-                            ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    widget.loggedInUserName !=
+                                        widget.postUsername
+                                        ? GestureDetector(
+                                        onTap: () {
+                                          if (widget.userSubscribed) {
+                                            widget.addOrRemoveSubscriber(-1);
+                                          } else {
+                                            widget.addOrRemoveSubscriber(1);
+                                          }
+                                        },
+                                        child: SvgPicture.asset(
+                                          widget.userSubscribed
+                                              ? AppAssets.notificationOn
+                                              : AppAssets.notificationOff,
+                                          width: 25.w,
+                                        ))
+                                        : Container(),
+                                    widget.loggedInUserName ==
+                                        widget.postUsername
+                                        ? SizedBox(
+                                      width: 10.w,
+                                    )
+                                        : Container(),
+                                    widget.loggedInUserName ==
+                                        widget.postUsername
+                                        ? GestureDetector(
+                                        onTapDown:
+                                            (TapDownDetails details) {
+                                          _showPostPopupMenu(
+                                              context,
+                                              details.globalPosition,
+                                              widget.index);
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppAssets.menu,
+                                          width: 25.w,
+                                        ))
+                                        : Container()
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            ReadMoreText(
+                              widget.postAlsha,
+                              style: AppTypography.kLight14,
+                              trimLines: 3,
+                              colorClickableText: AppColors.cTitle,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: AppStrings.readMore,
+                              trimExpandedText: AppStrings.less,
+                            )
+                          ],
+                        )),
+                  ],
+                ),
+                const Divider(
+                  color: AppColors.grey,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    widget.commentsList.isNotEmpty
+                        ? Bounceable(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          constraints: BoxConstraints.expand(
+                              height: MediaQuery.sizeOf(context)
+                                  .height -
+                                  widget.statusBarHeight -
+                                  50.h,
+                              width:
+                              MediaQuery.sizeOf(context).width),
+                          isScrollControlled: true,
+                          barrierColor: AppColors.cTransparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30.r),
+                            ),
+                          ),
+                          builder: (context2) {
+                            return Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: CommentsBottomSheet(
+                                  addOrRemoveSubscriber:
+                                      (int status) {
+                                    widget.addOrRemoveSubscriber(
+                                        status);
+                                  },
+                                  postAlsha: widget.postAlsha,
+                                  userImage:
+                                  widget.loggedInUserImage,
+                                  userName: widget.loggedInUserName,
+                                  postId: widget.id,
+                                  addNewComment: (int status) {
+                                    widget.addNewComment(status);
+                                  },
+                                  statusBarHeight:
+                                  widget.statusBarHeight,
+                                  commentsList:
+                                  widget.commentsList),
+                            );
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            widget.commentsList.length.toString(),
+                            style: AppTypography.kLight14,
                           ),
                           SizedBox(
-                            height: 10.h,
+                            width: 5.w,
                           ),
-                          ReadMoreText(
-                            widget.postAlsha,
-                            style: AppTypography.kLight14,
-                            trimLines: 3,
-                            colorClickableText: AppColors.cTitle,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: AppStrings.readMore,
-                            trimExpandedText: AppStrings.less,
-                          )
+                          Text(
+                            AppStrings.comments,
+                            style: AppTypography.kBold14
+                                .copyWith(color: AppColors.cTitle),
+                          ),
                         ],
-                      )),
-                    ],
-                  ),
-                  const Divider(
-                    color: AppColors.grey,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      widget.commentsList.isNotEmpty
-                          ? Bounceable(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  constraints: BoxConstraints.expand(
-                                      height:
-                                          MediaQuery.sizeOf(context).height -
-                                              widget.statusBarHeight -
-                                              50.h,
-                                      width: MediaQuery.sizeOf(context).width),
-                                  isScrollControlled: true,
-                                  barrierColor: AppColors.cTransparent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(30.r),
-                                    ),
-                                  ),
-                                  builder: (context2) {
-                                    return Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: CommentsBottomSheet(
-                                        postAlsha: widget.postAlsha,
-                                        userImage: widget.loggedInUserImage,
-                                        userName: widget.loggedInUserName,
-                                        postId: widget.id,
-                                          addNewComment: (int status) {
-                                            widget.addNewComment(status);
-                                          },
-                                          statusBarHeight:
-                                              widget.statusBarHeight,
-                                          commentsList: widget.commentsList),
-                                    );
-                                  },
+                      ),
+                    )
+                        : Container(),
+                    widget.emojisList.isNotEmpty
+                        ? Row(
+                      children: [
+                        Bounceable(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              constraints: BoxConstraints.expand(
+                                  height: MediaQuery.sizeOf(context)
+                                      .height -
+                                      widget.statusBarHeight -
+                                      300.h,
+                                  width: MediaQuery.sizeOf(context)
+                                      .width),
+                              isScrollControlled: true,
+                              barrierColor: AppColors.cTransparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30.r),
+                                ),
+                              ),
+                              builder: (context2) {
+                                return Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: ReactionsBottomSheet(
+                                      statusBarHeight:
+                                      widget.statusBarHeight,
+                                      emojisList:
+                                      widget.emojisList),
                                 );
                               },
-                              child: Row(
-                                children: [
-                                  Text(
-                                    widget.commentsList.length.toString(),
-                                    style: AppTypography.kLight14,
-                                  ),
-                                  SizedBox(
-                                    width: 5.w,
-                                  ),
-                                  Text(
-                                    AppStrings.comments,
-                                    style: AppTypography.kBold14
-                                        .copyWith(color: AppColors.cTitle),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(),
-                      widget.emojisList.isNotEmpty
-                          ? Row(
-                              children: [
-                                Bounceable(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      constraints: BoxConstraints.expand(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height -
-                                              widget.statusBarHeight -
-                                              300.h,
-                                          width:
-                                              MediaQuery.sizeOf(context).width),
-                                      isScrollControlled: true,
-                                      barrierColor: AppColors.cTransparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(30.r),
+                            );
+                          },
+                          child: SizedBox(
+                            width:
+                            MediaQuery.sizeOf(context).width *
+                                0.5,
+                            height: 30.h,
+                            child: Stack(
+                              children: widget.emojisList
+                                  .asMap()
+                                  .entries
+                                  .toList()
+                                  .fold<
+                                  List<
+                                      MapEntry<int,
+                                          dynamic>>>([],
+                                      (acc, entry) {
+                                    if (!acc.any((e) =>
+                                    e.value.emojiData ==
+                                        entry.value.emojiData)) {
+                                      acc.add(entry);
+                                    }
+                                    return acc;
+                                  }).map((entry) {
+                                int index =
+                                    entry.key; // Original index
+                                return Positioned(
+                                  left: index * reactPosition,
+                                  child: CircleAvatar(
+                                    radius: 15.r,
+                                    backgroundColor:
+                                    AppColors.cWhite,
+                                    child: Container(
+                                      padding: EdgeInsets.all(1.w),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color:
+                                          AppColors.cSecondary,
+                                          width: 1,
                                         ),
                                       ),
-                                      builder: (context2) {
-                                        return Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: ReactionsBottomSheet(
-                                              statusBarHeight:
-                                                  widget.statusBarHeight,
-                                              emojisList: widget.emojisList),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.5,
-                                    height: 30.h,
-                                    child: Stack(
-                                      children: widget.emojisList
-                                          .asMap()
-                                          .entries
-                                          .toList()
-                                          .fold<List<MapEntry<int, dynamic>>>([], (acc, entry) {
-                                        if (!acc.any((e) => e.value.emojiData == entry.value.emojiData)) {
-                                          acc.add(entry);
-                                        }
-                                        return acc;
-                                      })
-                                          .map((entry) {
-                                        int index = entry.key; // Original index
-                                        return Positioned(
-                                          left: index * reactPosition,
-                                          child: CircleAvatar(
-                                            radius: 15.r,
-                                            backgroundColor: AppColors.cWhite,
-                                            child: Container(
-                                              padding: EdgeInsets.all(1.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: AppColors.cSecondary,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: ClipOval(
-                                                child: Text(
-                                                  entry.value.emojiData,
-                                                  style: AppTypography.kExtraLight18,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
+                                      child: ClipOval(
+                                        child: Text(
+                                          entry.value.emojiData,
+                                          style: AppTypography
+                                              .kExtraLight18,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                Text(widget.emojisList.length.toString()),
-                              ],
-                            )
-                          : Container(),
-                    ],
-                  ),
-                  widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty
-                      ? const Divider(
-                          color: AppColors.grey,
-                        )
-                      : Container(),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTapDown: (details) {
-                              if (_overlayEntry == null) {
-                                _showPopup(context, details.globalPosition);
-                              } else {
-                                _removePopup();
-                              }
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.emoji,
-                              width: 25.w,
+                                );
+                              }).toList(),
                             ),
                           ),
-                          SizedBox(
+                        ),
+                        SizedBox(
+                          width: 5.w,
+                        ),
+                        Text(widget.emojisList.length.toString()),
+                      ],
+                    )
+                        : Container(),
+                  ],
+                ),
+                widget.commentsList.isNotEmpty ||
+                    widget.emojisList.isNotEmpty
+                    ? const Divider(
+                  color: AppColors.grey,
+                )
+                    : Container(),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTapDown: (details) {
+                            if (_overlayEntry == null) {
+                              _showPopup(context, details.globalPosition);
+                            } else {
+                              _removePopup();
+                            }
+                          },
+                          child: SvgPicture.asset(
+                            AppAssets.emoji,
+                            width: 25.w,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Bounceable(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              constraints: BoxConstraints.expand(
+                                  height:
+                                  MediaQuery.sizeOf(context).height -
+                                      widget.statusBarHeight -
+                                      100.h,
+                                  width:
+                                  MediaQuery.sizeOf(context).width),
+                              isScrollControlled: true,
+                              barrierColor: AppColors.cTransparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30.r),
+                                ),
+                              ),
+                              builder: (context2) {
+                                return Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: AddCommentBottomSheet(
+                                        postId: widget.id,
+                                        statusBarHeight:
+                                        widget.statusBarHeight,
+                                        username: widget.loggedInUserName,
+                                        userImage:
+                                        widget.loggedInUserImage,
+                                        addNewComment: (int status) {
+                                          widget.addNewComment(status);
+                                        },
+                                        id: widget.id));
+                              },
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            AppAssets.comments,
                             width: 30.w,
                           ),
-                          Bounceable(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context).height -
-                                        widget.statusBarHeight -
-                                        100.h,
-                                    width: MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: AddCommentBottomSheet(
-                                          postId: widget.id,
-                                          statusBarHeight:
-                                              widget.statusBarHeight,
-                                          username: widget.loggedInUserName,
-                                          userImage: widget.loggedInUserImage,
-                                          addNewComment: (int status) {
-                                            widget.addNewComment(status);
-                                          },
-                                          id: widget.id));
-                                },
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.comments,
-                              width: 30.w,
-                            ),
+                        ),
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Bounceable(
+                          onTap: () {
+                            Share.share(
+                              widget.postAlsha,
+                              subject: AppStrings.appName,
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            AppAssets.share,
+                            width: 25.w,
                           ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Bounceable(
-                            onTap: () {
-                              Share.share(
-                                widget.postAlsha,
-                                subject: AppStrings.appName,
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.share,
-                              width: 25.w,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  const CardDivider(),
-                ],
-              ),
-            ],
-          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                const CardDivider(),
+              ],
+            ),
+          ],
         ),
       ),
     );

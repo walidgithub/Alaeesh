@@ -114,7 +114,7 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                                   postAlsha: _postController.text.trim(),
                                   commentsList: [],
                                   emojisList: [],
-                                  subscribersList: [],
+                                  postSubscribersList: [],
                                   time: '$formattedDate $formattedTime');
                               LayoutCubit.get(context).addPost(postModel);
                             },

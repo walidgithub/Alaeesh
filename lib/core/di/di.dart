@@ -8,12 +8,12 @@ import 'package:last/features/home_page/data/repository_impl/home_page_repositor
 import 'package:last/features/home_page/domain/usecases/add_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/add_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/add_emoji_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/add_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/add_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/delete_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_top_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
@@ -29,6 +29,9 @@ import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/preferences/app_pref.dart';
 import '../../features/home_page/domain/repository/home_page_repository.dart';
+import '../../features/home_page/domain/usecases/add_subscriber_usecase.dart';
+import '../../features/home_page/domain/usecases/delete_subscriber_usecase.dart';
+import '../../features/home_page/domain/usecases/get_subscribers_usecase.dart';
 import '../../features/layout/data/data_source/layout_datasource.dart';
 import '../../features/layout/data/repository_impl/layout_repository_impl.dart';
 import '../../features/layout/domain/repository/layout_repository.dart';
@@ -100,6 +103,10 @@ class ServiceLocator {
     sl.registerLazySingleton<AddPostSubscriberUseCase>(() => AddPostSubscriberUseCase(sl()));
     sl.registerLazySingleton<DeletePostSubscriberUseCase>(() => DeletePostSubscriberUseCase(sl()));
 
+    sl.registerLazySingleton<AddSubscriberUseCase>(() => AddSubscriberUseCase(sl()));
+    sl.registerLazySingleton<DeleteSubscriberUseCase>(() => DeleteSubscriberUseCase(sl()));
+    sl.registerLazySingleton<GetSubscribersUseCase>(() => GetSubscribersUseCase(sl()));
+
     sl.registerLazySingleton<AddEmojiUseCase>(() => AddEmojiUseCase(sl()));
     sl.registerLazySingleton<DeleteEmojiUseCase>(() => DeleteEmojiUseCase(sl()));
 
@@ -116,6 +123,6 @@ class ServiceLocator {
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
-    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

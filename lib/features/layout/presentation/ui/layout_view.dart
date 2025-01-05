@@ -21,6 +21,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../home_page/data/model/requests/get_subscribers_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
@@ -162,12 +163,9 @@ class _LayoutViewState extends State<LayoutView> {
     toggleIcon(0);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
-    getAllPosts();
-
     screens = [
       HomeView(),
     ];
-
     super.initState();
   }
 
@@ -182,8 +180,8 @@ class _LayoutViewState extends State<LayoutView> {
     });
   }
 
-  getAllPosts() {
-    HomePageCubit.get(context).getAllPosts();
+  getAllPosts(String displayName) {
+    HomePageCubit.get(context).getAllPosts(displayName);
   }
 
   @override
@@ -294,7 +292,7 @@ class _LayoutViewState extends State<LayoutView> {
                                         userImage: photoUrl,
                                         statusBarHeight: statusBarHeight,
                                         postAdded: () {
-                                          getAllPosts();
+                                          getAllPosts(displayName);
                                         },
                                       ));
                                 },

@@ -1,19 +1,17 @@
 
-import '../../../welcome/data/model/user_model.dart';
-
-class SubscribersModel {
+class PostSubscribersModel {
   final String postId;
   final String username;
   final String userImage;
-  SubscribersModel({required this.username, required this.userImage, required this.postId});
+  PostSubscribersModel({required this.username, required this.userImage, required this.postId});
 
-  static SubscribersModel fromMap(Map<String, dynamic> map) {
-    SubscribersModel subscribersModel = SubscribersModel(
+  static PostSubscribersModel fromMap(Map<String, dynamic> map) {
+    PostSubscribersModel postSubscribersModel = PostSubscribersModel(
       username: map['username'],
       userImage: map['userImage'],
       postId: map['postId'],
     );
-    return subscribersModel;
+    return postSubscribersModel;
   }
 
   Map<String, dynamic> toMap() {

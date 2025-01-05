@@ -6,10 +6,10 @@ import 'package:last/features/home_page/data/model/requests/delete_emoji_request
 import 'package:last/features/home_page/data/model/requests/update_post_request.dart';
 import 'package:last/features/home_page/domain/usecases/add_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/add_emoji_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/add_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/add_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/delete_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import '../../../../core/di/di.dart';
@@ -17,19 +17,25 @@ import '../../../../core/network/network_info.dart';
 import '../../data/model/requests/add_comment_request.dart';
 import '../../data/model/requests/add_emoji_request.dart';
 import '../../data/model/requests/add_post_subscriber_request.dart';
+import '../../data/model/requests/add_subscriber_request.dart';
 import '../../data/model/requests/delete_comment_emoji_request.dart';
 import '../../data/model/requests/delete_post_subscriber_request.dart';
+import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/get_subscribers_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../domain/usecases/add_comment_emoji_usecase.dart';
+import '../../domain/usecases/add_subscriber_usecase.dart';
 import '../../domain/usecases/delete_emoji_usecase.dart';
 import '../../domain/usecases/delete_post_usecase.dart';
+import '../../domain/usecases/delete_subscriber_usecase.dart';
 import '../../domain/usecases/get_all_posts_usecase.dart';
 import '../../domain/usecases/get_top_posts_usecase.dart';
+import '../../domain/usecases/get_subscribers_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
   HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase,
-      this.getTopPostsUseCase,this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+      this.getTopPostsUseCase,this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -40,6 +46,10 @@ class HomePageCubit extends Cubit<HomePageState> {
 
   final AddPostSubscriberUseCase addPostSubscriberUseCase;
   final DeletePostSubscriberUseCase deletePostSubscriberUseCase;
+
+  final AddSubscriberUseCase addSubscriberUseCase;
+  final DeleteSubscriberUseCase deleteSubscriberUseCase;
+  final GetSubscribersUseCase getSubscribersUseCase;
 
   final AddEmojiUseCase addEmojiUseCase;
   final DeleteEmojiUseCase deleteEmojiUseCase;
@@ -54,10 +64,10 @@ class HomePageCubit extends Cubit<HomePageState> {
 
   final NetworkInfo _networkInfo = sl<NetworkInfo>();
 
-  Future<void> getAllPosts() async {
+  Future<void> getAllPosts(String currentUser) async {
     emit(GetAllPostsLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getAllPostsUseCase.call(const FirebaseNoParameters());
+      final signInResult = await getAllPostsUseCase.call(currentUser);
       signInResult.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
@@ -67,10 +77,10 @@ class HomePageCubit extends Cubit<HomePageState> {
     }
   }
 
-  Future<void> getTopPosts() async {
+  Future<void> getTopPosts(String currentUser) async {
     emit(GetTopPostsLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getTopPostsUseCase.call(const FirebaseNoParameters());
+      final signInResult = await getTopPostsUseCase.call(currentUser);
       signInResult.fold(
             (failure) => emit(GetTopPostsErrorState(failure.message)),
             (posts) => emit(GetTopPostsSuccessState(posts)),
@@ -99,7 +109,7 @@ class HomePageCubit extends Cubit<HomePageState> {
       final signInResult = await updatePostUseCase.call(updatePostRequest);
       signInResult.fold(
             (failure) => emit(UpdatePostErrorState(failure.message)),
-            (postDeleted) => emit(UpdatePostSuccessState()),
+            (postUpdated) => emit(UpdatePostSuccessState()),
       );
     } else {
       emit(NoInternetState());
@@ -151,7 +161,7 @@ class HomePageCubit extends Cubit<HomePageState> {
       final signInResult = await addPostSubscriberUseCase.call(addPostSubscriberRequest);
       signInResult.fold(
             (failure) => emit(AddPostSubscriberErrorState(failure.message)),
-            (emojiAdded) => emit(AddPostSubscriberSuccessState()),
+            (postSubscriberAdded) => emit(AddPostSubscriberSuccessState()),
       );
     } else {
       emit(NoInternetState());
@@ -164,7 +174,46 @@ class HomePageCubit extends Cubit<HomePageState> {
       final signInResult = await deletePostSubscriberUseCase.call(deletePostSubscriberRequest);
       signInResult.fold(
             (failure) => emit(DeletePostSubscriberErrorState(failure.message)),
-            (emojiDeleted) => emit(DeletePostSubscriberSuccessState()),
+            (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+    emit(AddSubscriberLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await addSubscriberUseCase.call(addSubscriberRequest);
+      signInResult.fold(
+            (failure) => emit(AddSubscriberErrorState(failure.message)),
+            (subscriberAdded) => emit(AddSubscriberSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
+    emit(DeleteSubscriberLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await deleteSubscriberUseCase.call(deleteSubscriberRequest);
+      signInResult.fold(
+            (failure) => emit(DeleteSubscriberErrorState(failure.message)),
+            (subscriberDeleted) => emit(DeleteSubscriberSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> getSubscribers(GetSubscribersRequest getSubscribersRequest) async {
+    emit(GetSubscribersLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await getSubscribersUseCase.call(getSubscribersRequest);
+      signInResult.fold(
+            (failure) => emit(GetSubscribersErrorState(failure.message)),
+            (subscribers) => emit(GetSubscribersSuccessState(subscribers)),
       );
     } else {
       emit(NoInternetState());

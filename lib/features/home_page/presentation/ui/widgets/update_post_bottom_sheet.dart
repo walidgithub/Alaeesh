@@ -133,7 +133,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                                               widget.postModel.commentsList,
                                           emojisList:
                                               widget.postModel.emojisList,
-                                          subscribersList: widget.postModel.subscribersList,
+                                          postSubscribersList: widget.postModel.postSubscribersList,
                                           time:
                                               '$formattedDate $formattedTime'));
                               HomePageCubit.get(context)

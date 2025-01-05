@@ -35,6 +35,7 @@ class CommentsBottomSheet extends StatefulWidget {
   double statusBarHeight;
   List<CommentsModel> commentsList;
   Function addNewComment;
+  Function addOrRemoveSubscriber;
   CommentsBottomSheet(
       {super.key,
       required this.statusBarHeight,
@@ -43,6 +44,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.userName,
       required this.userImage,
       required this.postAlsha,
+      required this.addOrRemoveSubscriber,
       required this.addNewComment});
 
   @override
@@ -102,8 +104,6 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
-      } else {
-        print("No item with the comment '$targetComment' found");
       }
     });
   }
@@ -261,6 +261,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           }
                         }, builder: (context, state) {
                           return CommentView(
+                            addOrRemoveSubscriber: (int status) {
+                              widget.addOrRemoveSubscriber(status);
+                            },
                             index: index,
                             id: widget.commentsList[index].id!,
                             username: widget.commentsList[index].username,

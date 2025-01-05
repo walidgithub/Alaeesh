@@ -5,14 +5,19 @@ import 'package:last/core/firebase/error/firebase_failure.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/add_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/delete_subscriber_request.dart';
+import 'package:last/features/home_page/data/model/requests/get_subscribers_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_post_request.dart';
+import 'package:last/features/home_page/data/model/subscribers_model.dart';
 import '../../../../core/firebase/error/firebase_error_handler.dart';
 import '../../domain/repository/home_page_repository.dart';
 import '../data_source/home_page_datasource.dart';
+import '../model/home_page_model.dart';
 import '../model/requests/add_comment_request.dart';
 import '../model/requests/add_emoji_request.dart';
 import '../model/requests/delete_comment_request.dart';
@@ -51,9 +56,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, List<PostModel>>> getAllPosts() async {
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(String currentUser) async {
     try {
-      final result = await _homePageDataSource.getAllPosts();
+      final result = await _homePageDataSource.getAllPosts(currentUser);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -65,9 +70,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, List<PostModel>>> getTopPosts() async {
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getTopPosts(String currentUser) async {
     try {
-      final result = await _homePageDataSource.getTopPosts();
+      final result = await _homePageDataSource.getTopPosts(currentUser);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -194,6 +199,48 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<FirebaseFailure, void>> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     try {
       final result = await _homePageDataSource.deletePostSubscriber(deletePostSubscriberRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+    try {
+      final result = await _homePageDataSource.addSubscriber(addSubscriberRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
+    try {
+      final result = await _homePageDataSource.deleteSubscriber(deleteSubscriberRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, List<SubscribersModel>>> getSubscribers(GetSubscribersRequest getSubscribersRequest) async {
+    try {
+      final result = await _homePageDataSource.getSubscribers(getSubscribersRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

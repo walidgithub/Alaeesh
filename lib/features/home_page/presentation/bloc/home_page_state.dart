@@ -1,3 +1,6 @@
+import 'package:last/features/home_page/data/model/subscribers_model.dart';
+
+import '../../data/model/home_page_model.dart';
 import '../../data/model/post_model.dart';
 
 abstract class HomePageState{}
@@ -60,6 +63,34 @@ class DeletePostSubscriberErrorState extends HomePageState{
   DeletePostSubscriberErrorState(this.errorMessage);
 }
 
+class AddSubscriberLoadingState extends HomePageState{}
+class AddSubscriberSuccessState extends HomePageState{}
+class AddSubscriberErrorState extends HomePageState{
+  final String errorMessage;
+
+  AddSubscriberErrorState(this.errorMessage);
+}
+
+class DeleteSubscriberLoadingState extends HomePageState{}
+class DeleteSubscriberSuccessState extends HomePageState{}
+class DeleteSubscriberErrorState extends HomePageState{
+  final String errorMessage;
+
+  DeleteSubscriberErrorState(this.errorMessage);
+}
+
+class GetSubscribersLoadingState extends HomePageState{}
+class GetSubscribersSuccessState extends HomePageState{
+  final List<SubscribersModel> subscribersModel;
+
+  GetSubscribersSuccessState(this.subscribersModel);
+}
+class GetSubscribersErrorState extends HomePageState{
+  final String errorMessage;
+
+  GetSubscribersErrorState(this.errorMessage);
+}
+
 class AddEmojiLoadingState extends HomePageState{}
 class AddEmojiSuccessState extends HomePageState{}
 class AddEmojiErrorState extends HomePageState{
@@ -78,9 +109,9 @@ class DeleteEmojiErrorState extends HomePageState{
 
 class GetAllPostsLoadingState extends HomePageState{}
 class GetAllPostsSuccessState extends HomePageState{
-  final List<PostModel> postModel;
+  final List<HomePageModel> homePageModel;
 
-  GetAllPostsSuccessState(this.postModel);
+  GetAllPostsSuccessState(this.homePageModel);
 }
 class GetAllPostsErrorState extends HomePageState{
   final String errorMessage;
@@ -90,9 +121,9 @@ class GetAllPostsErrorState extends HomePageState{
 
 class GetTopPostsLoadingState extends HomePageState{}
 class GetTopPostsSuccessState extends HomePageState{
-  final List<PostModel> postModel;
+  final List<HomePageModel> homePageModel;
 
-  GetTopPostsSuccessState(this.postModel);
+  GetTopPostsSuccessState(this.homePageModel);
 }
 class GetTopPostsErrorState extends HomePageState{
   final String errorMessage;
