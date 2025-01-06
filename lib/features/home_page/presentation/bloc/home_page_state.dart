@@ -1,7 +1,6 @@
 import 'package:last/features/home_page/data/model/subscribers_model.dart';
 
 import '../../data/model/home_page_model.dart';
-import '../../data/model/post_model.dart';
 
 abstract class HomePageState{}
 
@@ -117,18 +116,6 @@ class GetAllPostsErrorState extends HomePageState{
   final String errorMessage;
 
   GetAllPostsErrorState(this.errorMessage);
-}
-
-class GetTopPostsLoadingState extends HomePageState{}
-class GetTopPostsSuccessState extends HomePageState{
-  final List<HomePageModel> homePageModel;
-
-  GetTopPostsSuccessState(this.homePageModel);
-}
-class GetTopPostsErrorState extends HomePageState{
-  final String errorMessage;
-
-  GetTopPostsErrorState(this.errorMessage);
 }
 
 class DeleteCommentEmojiLoadingState extends HomePageState{}

@@ -24,10 +24,14 @@ class AppStrings {
   static const String logout = 'خــروج';
   static const String switchUser = 'مـسـتـخـدم آخـر';
   static const String delete = 'حــذف';
+  static const String profile = 'مـنـشـوراتـى';
   static const String edit = 'تـعـديـل';
   static const String skip = ' تـراجـع  ';
   static const readMore = "اقـرأ الـمـزيـد";
   static const less = " أقـل";
+  static const showAll = "عـرض الـكـل";
+  static const suggestedUsers = "أصـدقـاء مـقـتـرحـيـن";
+  static const topPosts = "أعـلـى مـنـشـورات";
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
 
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';

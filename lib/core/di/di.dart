@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
-import 'package:last/features/home_page/data/model/requests/update_comment_request.dart';
 import 'package:last/features/home_page/data/repository_impl/home_page_repository_impl.dart';
 import 'package:last/features/home_page/domain/usecases/add_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/add_comment_usecase.dart';
@@ -15,13 +14,17 @@ import 'package:last/features/home_page/domain/usecases/delete_emoji_usecase.dar
 import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/get_top_posts_usecase.dart';
+import 'package:last/features/trending/data/data_source/trending_datasouce.dart';
+import 'package:last/features/trending/data/repository_impl/trending_repository_impl.dart';
+import 'package:last/features/trending/domain/repository/trending_repository.dart';
+import 'package:last/features/trending/domain/usecases/get_top_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import 'package:last/features/home_page/presentation/bloc/home_page_cubit.dart';
 import 'package:last/features/switch_user/data/data_source/switch_user_datasource.dart';
 import 'package:last/features/switch_user/domain/repository/switch_user_repository.dart';
 import 'package:last/features/switch_user/presentation/bloc/switch_user_cubit.dart';
+import 'package:last/features/trending/presentation/bloc/trending_cubit.dart';
 import 'package:last/features/welcome/data/data_source/welcome_datasource.dart';
 import 'package:last/features/welcome/domain/repository/welcome_repository.dart';
 import 'package:last/features/welcome/domain/usecases/logout_usecase.dart';
@@ -78,12 +81,14 @@ class ServiceLocator {
     sl.registerLazySingleton<LayoutDataSource>(() => LayoutDataSource());
     sl.registerLazySingleton<HomePageDataSource>(() => HomePageDataSource());
     sl.registerLazySingleton<SwitchUserDataSource>(() => SwitchUserDataSource());
+    sl.registerLazySingleton<TrendingDataSource>(() => TrendingDataSource());
 
     // Repositories
     sl.registerLazySingleton<WelcomeRepository>(() => WelcomeRepositoryImpl(sl()));
     sl.registerLazySingleton<LayoutRepository>(() => LayoutRepositoryImpl(sl()));
     sl.registerLazySingleton<HomePageRepository>(() => HomePageRepositoryImpl(sl()));
     sl.registerLazySingleton<SwitchUserRepository>(() => SwitchUserRepositoryImpl(sl()));
+    sl.registerLazySingleton<TrendingRepository>(() => TrendingRepositoryImpl(sl()));
 
     // UseCases
     // welcome useCases
@@ -117,12 +122,15 @@ class ServiceLocator {
     sl.registerLazySingleton<DeleteCommentEmojiUseCase>(() => DeleteCommentEmojiUseCase(sl()));
 
     sl.registerLazySingleton<GetAllPostsUseCase>(() => GetAllPostsUseCase(sl()));
+
+    // trending useCases
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
-    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => TrendingCubit(sl()));
+    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

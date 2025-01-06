@@ -36,6 +36,7 @@ class CommentsBottomSheet extends StatefulWidget {
   List<CommentsModel> commentsList;
   Function addNewComment;
   Function addOrRemoveSubscriber;
+  Function getUserPosts;
   CommentsBottomSheet(
       {super.key,
       required this.statusBarHeight,
@@ -45,6 +46,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.userImage,
       required this.postAlsha,
       required this.addOrRemoveSubscriber,
+        required this.getUserPosts,
       required this.addNewComment});
 
   @override
@@ -261,6 +263,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           }
                         }, builder: (context, state) {
                           return CommentView(
+                            getUserPosts: () {
+                              widget.getUserPosts();
+                            },
                             addOrRemoveSubscriber: (int status) {
                               widget.addOrRemoveSubscriber(status);
                             },

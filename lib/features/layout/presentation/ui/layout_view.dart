@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:last/features/home_page/data/model/requests/get_posts_request.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
 import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
+import 'package:last/features/trending/presentation/ui/trending_view.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
@@ -47,8 +49,9 @@ class _LayoutViewState extends State<LayoutView> {
   String photoUrl = "";
   bool loadingUserData = true;
   var userData;
+  bool showAll = true;
 
-  List<bool> selectedWidgets = [true, false];
+  List<bool> selectedWidgets = [false, false, true];
   int selectScreen = 0;
   void toggleIcon(int index) {
     setState(() {
@@ -96,7 +99,7 @@ class _LayoutViewState extends State<LayoutView> {
                   },
                   builder: (context, state) {
                     return Container(
-                      padding: EdgeInsets.all(5.w),
+                      padding: EdgeInsets.all(10.w),
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.cTitle),
                           borderRadius: BorderRadius.all(Radius.circular(5.r))),
@@ -148,6 +151,42 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+                              setState(() {
+                                if (showAll) {
+                                  showAll = false;
+                                } else {
+                                  showAll = true;
+                                }
+                              });
+                              Navigator.pop(context);
+                              if (showAll) {
+                                getAllPosts(displayName,allPosts: true);
+                              } else {
+                                getAllPosts(displayName,allPosts: false,username: displayName);
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  showAll ? AppAssets.profileIcon : AppAssets.all,
+                                  width: 25.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  showAll ? AppStrings.profile : AppStrings.showAll,
+                                  style: AppTypography.kLight14,
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -160,11 +199,13 @@ class _LayoutViewState extends State<LayoutView> {
 
   @override
   void initState() {
-    toggleIcon(0);
+    toggleIcon(2);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
       HomeView(),
+      HomeView(),
+      TrendingView(),
     ];
     super.initState();
   }
@@ -180,8 +221,8 @@ class _LayoutViewState extends State<LayoutView> {
     });
   }
 
-  getAllPosts(String displayName) {
-    HomePageCubit.get(context).getAllPosts(displayName);
+  getAllPosts(String displayName, {bool? allPosts,String? username}) {
+    HomePageCubit.get(context).getAllPosts(GetPostsRequest(currentUser: displayName, allPosts: allPosts!,username: username));
   }
 
   @override
@@ -380,6 +421,20 @@ class _LayoutViewState extends State<LayoutView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  GestureDetector(
+                      onTap: () {
+                        toggleIcon(2);
+                      },
+                      child: TabIcon(
+                        selectedWidgets: selectedWidgets,
+                        selectScreen: selectScreen,
+                        index: 2,
+                        heightSize: 50.h,
+                        widthSize: 50.w,
+                        blueIcon: AppAssets.trending,
+                        whiteIcon: AppAssets.trendingWhite,
+                        padding: 5.w,
+                      )),
                   GestureDetector(
                       onTap: () {
                         toggleIcon(1);

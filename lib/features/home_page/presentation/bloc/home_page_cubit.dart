@@ -21,6 +21,7 @@ import '../../data/model/requests/add_subscriber_request.dart';
 import '../../data/model/requests/delete_comment_emoji_request.dart';
 import '../../data/model/requests/delete_post_subscriber_request.dart';
 import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/get_posts_request.dart';
 import '../../data/model/requests/get_subscribers_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../domain/usecases/add_comment_emoji_usecase.dart';
@@ -29,13 +30,12 @@ import '../../domain/usecases/delete_emoji_usecase.dart';
 import '../../domain/usecases/delete_post_usecase.dart';
 import '../../domain/usecases/delete_subscriber_usecase.dart';
 import '../../domain/usecases/get_all_posts_usecase.dart';
-import '../../domain/usecases/get_top_posts_usecase.dart';
+import '../../../trending/domain/usecases/get_top_posts_usecase.dart';
 import '../../domain/usecases/get_subscribers_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
-  HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase,
-      this.getTopPostsUseCase,this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+  HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -58,32 +58,18 @@ class HomePageCubit extends Cubit<HomePageState> {
   final DeleteCommentEmojiUseCase deleteCommentEmojiUseCase;
 
   final GetAllPostsUseCase getAllPostsUseCase;
-  final GetTopPostsUseCase getTopPostsUseCase;
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
   final NetworkInfo _networkInfo = sl<NetworkInfo>();
 
-  Future<void> getAllPosts(String currentUser) async {
+  Future<void> getAllPosts(GetPostsRequest getPostsRequest) async {
     emit(GetAllPostsLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getAllPostsUseCase.call(currentUser);
+      final signInResult = await getAllPostsUseCase.call(getPostsRequest);
       signInResult.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
-      );
-    } else {
-      emit(NoInternetState());
-    }
-  }
-
-  Future<void> getTopPosts(String currentUser) async {
-    emit(GetTopPostsLoadingState());
-    if (await _networkInfo.isConnected) {
-      final signInResult = await getTopPostsUseCase.call(currentUser);
-      signInResult.fold(
-            (failure) => emit(GetTopPostsErrorState(failure.message)),
-            (posts) => emit(GetTopPostsSuccessState(posts)),
       );
     } else {
       emit(NoInternetState());

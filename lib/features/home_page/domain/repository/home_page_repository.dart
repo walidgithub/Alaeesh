@@ -12,6 +12,7 @@ import '../../data/model/requests/delete_comment_request.dart';
 import '../../data/model/requests/delete_emoji_request.dart';
 import '../../data/model/requests/delete_post_subscriber_request.dart';
 import '../../data/model/requests/delete_subscriber_request.dart';
+import '../../data/model/requests/get_posts_request.dart';
 import '../../data/model/requests/get_subscribers_request.dart';
 import '../../data/model/requests/update_comment_request.dart';
 import '../../data/model/requests/update_post_request.dart';
@@ -41,6 +42,5 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> addCommentEmoji(AddCommentEmojiRequest addCommentEmojiRequest);
   Future<Either<FirebaseFailure, void>> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(String currentUser);
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getTopPosts(String currentUser);
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest);
 }

@@ -17,6 +17,7 @@ import '../model/requests/add_subscriber_request.dart';
 import '../model/requests/delete_comment_emoji_request.dart';
 import '../model/requests/delete_emoji_request.dart';
 import '../model/requests/delete_subscriber_request.dart';
+import '../model/requests/get_posts_request.dart';
 import '../model/requests/get_subscribers_request.dart';
 import '../model/requests/update_comment_request.dart';
 import '../model/requests/update_post_request.dart';
@@ -48,8 +49,7 @@ abstract class BaseDataSource {
   Future<void> deleteCommentEmoji(
       DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
-  Future<List<HomePageModel>> getAllPosts(String currentUser);
-  Future<List<HomePageModel>> getTopPosts(String currentUser);
+  Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest);
 }
 
 class HomePageDataSource extends BaseDataSource {
@@ -89,15 +89,22 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<List<HomePageModel>> getAllPosts(String currentUser) async {
+  Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest) async {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       // Fetch posts and filtered subscribers concurrently
-      final postsFuture = firestore.collection('posts').get();
+      final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
+      if (getPostsRequest.allPosts) {
+        postsFuture = firestore.collection('posts').get();
+      } else {
+        postsFuture = firestore.collection('posts')
+            .where('username', isEqualTo: getPostsRequest.username!.trim())
+            .get();
+      }
       final subscribersFuture = firestore
           .collection('subscribers')
-          .where('username', isEqualTo: currentUser.trim())
+          .where('username', isEqualTo: getPostsRequest.currentUser.trim())
           .get();
 
       final results = await Future.wait([postsFuture, subscribersFuture]);
@@ -125,15 +132,6 @@ class HomePageDataSource extends BaseDataSource {
       }).toList();
 
       return homePageModels;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<List<HomePageModel>> getTopPosts(String currentUser) async {
-    try {
-      return [];
     } catch (e) {
       rethrow;
     }

@@ -21,6 +21,7 @@ import '../model/home_page_model.dart';
 import '../model/requests/add_comment_request.dart';
 import '../model/requests/add_emoji_request.dart';
 import '../model/requests/delete_comment_request.dart';
+import '../model/requests/get_posts_request.dart';
 
 class HomePageRepositoryImpl extends HomePageRepository {
   final HomePageDataSource _homePageDataSource;
@@ -56,23 +57,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(String currentUser) async {
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest) async {
     try {
-      final result = await _homePageDataSource.getAllPosts(currentUser);
-      return Right(result);
-    } on FirebaseAuthException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
-    } on FirebaseException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
-    } catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
-    }
-  }
-
-  @override
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getTopPosts(String currentUser) async {
-    try {
-      final result = await _homePageDataSource.getTopPosts(currentUser);
+      final result = await _homePageDataSource.getAllPosts(getPostsRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

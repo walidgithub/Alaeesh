@@ -9,13 +9,17 @@ class TabIcon extends StatelessWidget {
   int index;
   String whiteIcon;
   String blueIcon;
-  TabIcon({super.key, required this.selectedWidgets, required this.selectScreen, required this.index, required this.blueIcon, required this.whiteIcon});
+  double? widthSize;
+  double? heightSize;
+  double? padding;
+  TabIcon({super.key, required this.selectedWidgets, required this.selectScreen, required this.index, required this.blueIcon, required this.whiteIcon, this.widthSize, this.heightSize, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50.h,
-      width: 50.w,
+      padding: EdgeInsets.all(padding ?? 0),
+      height: heightSize ?? 50.h,
+      width: widthSize ?? 50.w,
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: selectedWidgets[index] ? AppColors.cTitle : AppColors.cWhite

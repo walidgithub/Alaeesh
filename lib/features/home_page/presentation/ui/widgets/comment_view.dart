@@ -42,6 +42,7 @@ class CommentView extends StatefulWidget {
   final String loggedInUserName;
   final String loggedInUserImage;
   Function addOrRemoveSubscriber;
+  Function getUserPosts;
   int index;
   CommentView({
     super.key,
@@ -58,6 +59,7 @@ class CommentView extends StatefulWidget {
     required this.updateComment,
     required this.loggedInUserName,
     required this.loggedInUserImage,
+    required this.getUserPosts,
     required this.addOrRemoveSubscriber
   });
 
@@ -324,59 +326,64 @@ class _CommentViewState extends State<CommentView> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                          radius: 25.r,
-                                          backgroundColor: AppColors.cWhite,
-                                          child: Container(
-                                              padding: EdgeInsets.all(2.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: AppColors.cTitle,
-                                                  width: 2,
+                                  Bounceable(
+                                    onTap: () {
+                                      widget.getUserPosts();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                            radius: 25.r,
+                                            backgroundColor: AppColors.cWhite,
+                                            child: Container(
+                                                padding: EdgeInsets.all(2.w),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: AppColors.cTitle,
+                                                    width: 2,
+                                                  ),
                                                 ),
-                                              ),
-                                              child: ClipOval(
-                                                child: CachedNetworkImage(
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2.w,
-                                                        color: AppColors.cTitle,
-                                                      ),
-                                                  errorWidget: (context, url,
-                                                      error) =>
-                                                      Image.asset(
-                                                          AppAssets.profile),
-                                                  imageUrl: widget.userImage,
-                                                ),
-                                              ))),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget.username,
-                                            style: AppTypography.kBold14
-                                                .copyWith(
-                                                color: AppColors.cTitle),
-                                          ),
-                                          Directionality(
-                                            textDirection: TextDirection.ltr,
-                                            child: Text(
-                                              timeAgoText,
-                                              style: AppTypography.kLight12
+                                                child: ClipOval(
+                                                  child: CachedNetworkImage(
+                                                    placeholder: (context, url) =>
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2.w,
+                                                          color: AppColors.cTitle,
+                                                        ),
+                                                    errorWidget: (context, url,
+                                                        error) =>
+                                                        Image.asset(
+                                                            AppAssets.profile),
+                                                    imageUrl: widget.userImage,
+                                                  ),
+                                                ))),
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.username,
+                                              style: AppTypography.kBold14
                                                   .copyWith(
-                                                  color: AppColors.cBlack),
+                                                  color: AppColors.cTitle),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: Text(
+                                                timeAgoText,
+                                                style: AppTypography.kLight12
+                                                    .copyWith(
+                                                    color: AppColors.cBlack),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Row(
                                     children: [
