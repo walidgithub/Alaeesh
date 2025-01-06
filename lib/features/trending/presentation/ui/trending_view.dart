@@ -14,6 +14,7 @@ import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../../home_page/data/model/home_page_model.dart';
+import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/data/model/subscribers_model.dart';
 import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
@@ -44,11 +45,6 @@ class _TrendingViewState extends State<TrendingView> {
     super.initState();
   }
 
-  getTopPosts(String displayName, {bool? allPosts, String? username}) {
-    // TrendingCubit.get(context)
-    //     .getAllPosts(GetPostsRequest(currentUser: displayName, allPosts: true));
-  }
-
   Future<void> _loadSavedUserData() async {
     userData = await _appSecureDataHelper.loadUserData();
     setState(() {
@@ -70,15 +66,15 @@ class _TrendingViewState extends State<TrendingView> {
 
   Widget bodyContent(BuildContext context, double statusBarHeight) {
     return BlocProvider(
-      create: (context) => sl<TrendingCubit>(),
+      create: (context) => sl<TrendingCubit>()..getTopPosts(GetPostsRequest(currentUser: displayName, allPosts: true)),
       child: BlocConsumer<TrendingCubit, TrendingState>(
         listener: (context, state) async {
           if (state is GetTopPostsLoadingState) {
             showLoading();
           } else if (state is GetTopPostsSuccessState) {
             hideLoading();
-            // homePageModel.clear();
-            // homePageModel.addAll(state.homePageModel);
+            homePageModel.clear();
+            homePageModel.addAll(state.homePageModel);
           } else if (state is GetTopPostsErrorState) {
             showSnackBar(context, state.errorMessage);
             hideLoading();
