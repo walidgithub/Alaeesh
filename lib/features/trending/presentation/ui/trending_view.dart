@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:last/features/trending/presentation/ui/widgets/suggested_user_view.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_view.dart';
 
 import '../../../../core/di/di.dart';
@@ -98,43 +99,16 @@ class _TrendingViewState extends State<TrendingView> {
                   ),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width,
-                    height: 60.h,
+                    height: 150.h,
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            CircleAvatar(
-                                radius: 25.r,
-                                backgroundColor: AppColors.cWhite,
-                                child: Container(
-                                    padding: EdgeInsets.all(2.w),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.cTitle,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: ClipOval(
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            CircularProgressIndicator(
-                                              strokeWidth: 2.w,
-                                              color: AppColors.cTitle,
-                                            ),
-                                        errorWidget: (context, url, error) =>
-                                            Image.asset(AppAssets.profile),
-                                        imageUrl:
-                                        "https://lh3.googleusercontent.com/a/ACg8ocIv2ap8Ovmh0Yk6xst0Ebt6niVU9q4_F8bXTpqq86XPN5hZ8_Q=s96-c",
-                                      ),
-                                    ))),
-                            SizedBox(
-                              width: 10.w,
-                            )
-                          ],
+                        return SuggestedUserView(
+                          userImage: "https://lh3.googleusercontent.com/a/ACg8ocIv2ap8Ovmh0Yk6xst0Ebt6niVU9q4_F8bXTpqq86XPN5hZ8_Q=s96-c",
+                          userName: "myassistant program",
+                          getUserPosts: () {},
                         );
                       },
                       itemCount: 10,
@@ -165,6 +139,8 @@ class _TrendingViewState extends State<TrendingView> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return TopPostView(
+                                  getUserPosts: () {},
+                                  getPostData: () {},
                                   index: index,
                                   id: homePageModel[index].postModel.id!,
                                   time: homePageModel[index].postModel.time,
