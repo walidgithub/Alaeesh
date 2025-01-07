@@ -153,14 +153,14 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
                           )),
                     ],
                   ),
-                  const Divider(
+                  widget.commentEmojisModel.isNotEmpty ? Divider(
                     color: AppColors.grey,
-                  ),
+                  ) : Container(),
                   SizedBox(
                     height: 5.h,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       widget.commentEmojisModel.isNotEmpty
                           ? Row(

@@ -5,13 +5,13 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../../home_page/data/model/home_page_model.dart';
 
-class GetTopPostsUseCase extends FirebaseBaseUseCase{
+class GetTopPostsUseCase extends FirebaseBaseUseCase<List<HomePageModel>, FirebaseNoParameters>{
   final TrendingRepository trendingRepository;
 
   GetTopPostsUseCase(this.trendingRepository);
 
   @override
-  Future<Either<FirebaseFailure, List<HomePageModel>>> call(parameters) async {
-    return await trendingRepository.getTopPosts(parameters);
+  Future<Either<FirebaseFailure, List<HomePageModel>>> call(FirebaseNoParameters parameters) async {
+    return await trendingRepository.getTopPosts();
   }
 }

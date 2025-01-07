@@ -483,169 +483,172 @@ class _PostViewState extends State<PostView> {
                 const Divider(
                   color: AppColors.grey,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    widget.commentsList.isNotEmpty
-                        ? Bounceable(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          constraints: BoxConstraints.expand(
-                              height: MediaQuery.sizeOf(context)
-                                  .height -
-                                  widget.statusBarHeight -
-                                  50.h,
-                              width:
-                              MediaQuery.sizeOf(context).width),
-                          isScrollControlled: true,
-                          barrierColor: AppColors.cTransparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(30.r),
+                SizedBox(
+                  height: widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty ? 40.h : 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      widget.commentsList.isNotEmpty
+                          ? Bounceable(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            constraints: BoxConstraints.expand(
+                                height: MediaQuery.sizeOf(context)
+                                    .height -
+                                    widget.statusBarHeight -
+                                    50.h,
+                                width:
+                                MediaQuery.sizeOf(context).width),
+                            isScrollControlled: true,
+                            barrierColor: AppColors.cTransparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30.r),
+                              ),
                             ),
-                          ),
-                          builder: (context2) {
-                            return Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: CommentsBottomSheet(
-                                  addOrRemoveSubscriber:
-                                      (int status) {
-                                    widget.addOrRemoveSubscriber(
-                                        status);
-                                  },
-                                  postAlsha: widget.postAlsha,
-                                  userImage:
-                                  widget.loggedInUserImage,
-                                  userName: widget.loggedInUserName,
-                                  postId: widget.id,
-                                  addNewComment: (int status) {
-                                    widget.addNewComment(status);
-                                  },
-                                  statusBarHeight:
-                                  widget.statusBarHeight,
-                                  commentsList:
-                                  widget.commentsList,
-                                getUserPosts: () {
-                                widget.getUserPosts();
-                              },),
-                            );
-                          },
-                        );
-                      },
-                      child: Row(
+                            builder: (context2) {
+                              return Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: CommentsBottomSheet(
+                                    addOrRemoveSubscriber:
+                                        (int status) {
+                                      widget.addOrRemoveSubscriber(
+                                          status);
+                                    },
+                                    postAlsha: widget.postAlsha,
+                                    userImage:
+                                    widget.loggedInUserImage,
+                                    userName: widget.loggedInUserName,
+                                    postId: widget.id,
+                                    addNewComment: (int status) {
+                                      widget.addNewComment(status);
+                                    },
+                                    statusBarHeight:
+                                    widget.statusBarHeight,
+                                    commentsList:
+                                    widget.commentsList,
+                                  getUserPosts: () {
+                                  widget.getUserPosts();
+                                },),
+                              );
+                            },
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              widget.commentsList.length.toString(),
+                              style: AppTypography.kLight14,
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Text(
+                              AppStrings.comments,
+                              style: AppTypography.kBold14
+                                  .copyWith(color: AppColors.cTitle),
+                            ),
+                          ],
+                        ),
+                      )
+                          : Container(),
+                      widget.emojisList.isNotEmpty
+                          ? Row(
                         children: [
-                          Text(
-                            widget.commentsList.length.toString(),
-                            style: AppTypography.kLight14,
+                          Bounceable(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                constraints: BoxConstraints.expand(
+                                    height: MediaQuery.sizeOf(context)
+                                        .height -
+                                        widget.statusBarHeight -
+                                        300.h,
+                                    width: MediaQuery.sizeOf(context)
+                                        .width),
+                                isScrollControlled: true,
+                                barrierColor: AppColors.cTransparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30.r),
+                                  ),
+                                ),
+                                builder: (context2) {
+                                  return Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: ReactionsBottomSheet(
+                                        statusBarHeight:
+                                        widget.statusBarHeight,
+                                        emojisList:
+                                        widget.emojisList),
+                                  );
+                                },
+                              );
+                            },
+                            child: SizedBox(
+                              width:
+                              MediaQuery.sizeOf(context).width *
+                                  0.5,
+                              height: 30.h,
+                              child: Stack(
+                                children: widget.emojisList
+                                    .asMap()
+                                    .entries
+                                    .toList()
+                                    .fold<
+                                    List<
+                                        MapEntry<int,
+                                            dynamic>>>([],
+                                        (acc, entry) {
+                                      if (!acc.any((e) =>
+                                      e.value.emojiData ==
+                                          entry.value.emojiData)) {
+                                        acc.add(entry);
+                                      }
+                                      return acc;
+                                    }).map((entry) {
+                                  int index =
+                                      entry.key; // Original index
+                                  return Positioned(
+                                    left: index * reactPosition,
+                                    child: CircleAvatar(
+                                      radius: 15.r,
+                                      backgroundColor:
+                                      AppColors.cWhite,
+                                      child: Container(
+                                        padding: EdgeInsets.all(1.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color:
+                                            AppColors.cSecondary,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Text(
+                                            entry.value.emojiData,
+                                            style: AppTypography
+                                                .kExtraLight18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                           ),
                           SizedBox(
                             width: 5.w,
                           ),
-                          Text(
-                            AppStrings.comments,
-                            style: AppTypography.kBold14
-                                .copyWith(color: AppColors.cTitle),
-                          ),
+                          Text(widget.emojisList.length.toString()),
                         ],
-                      ),
-                    )
-                        : Container(),
-                    widget.emojisList.isNotEmpty
-                        ? Row(
-                      children: [
-                        Bounceable(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              constraints: BoxConstraints.expand(
-                                  height: MediaQuery.sizeOf(context)
-                                      .height -
-                                      widget.statusBarHeight -
-                                      300.h,
-                                  width: MediaQuery.sizeOf(context)
-                                      .width),
-                              isScrollControlled: true,
-                              barrierColor: AppColors.cTransparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(30.r),
-                                ),
-                              ),
-                              builder: (context2) {
-                                return Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: ReactionsBottomSheet(
-                                      statusBarHeight:
-                                      widget.statusBarHeight,
-                                      emojisList:
-                                      widget.emojisList),
-                                );
-                              },
-                            );
-                          },
-                          child: SizedBox(
-                            width:
-                            MediaQuery.sizeOf(context).width *
-                                0.5,
-                            height: 30.h,
-                            child: Stack(
-                              children: widget.emojisList
-                                  .asMap()
-                                  .entries
-                                  .toList()
-                                  .fold<
-                                  List<
-                                      MapEntry<int,
-                                          dynamic>>>([],
-                                      (acc, entry) {
-                                    if (!acc.any((e) =>
-                                    e.value.emojiData ==
-                                        entry.value.emojiData)) {
-                                      acc.add(entry);
-                                    }
-                                    return acc;
-                                  }).map((entry) {
-                                int index =
-                                    entry.key; // Original index
-                                return Positioned(
-                                  left: index * reactPosition,
-                                  child: CircleAvatar(
-                                    radius: 15.r,
-                                    backgroundColor:
-                                    AppColors.cWhite,
-                                    child: Container(
-                                      padding: EdgeInsets.all(1.w),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color:
-                                          AppColors.cSecondary,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: ClipOval(
-                                        child: Text(
-                                          entry.value.emojiData,
-                                          style: AppTypography
-                                              .kExtraLight18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(widget.emojisList.length.toString()),
-                      ],
-                    )
-                        : Container(),
-                  ],
+                      )
+                          : Container(),
+                    ],
+                  ),
                 ),
                 widget.commentsList.isNotEmpty ||
                     widget.emojisList.isNotEmpty

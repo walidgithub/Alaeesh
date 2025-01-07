@@ -17,6 +17,7 @@ import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.da
 import 'package:last/features/trending/data/data_source/trending_datasouce.dart';
 import 'package:last/features/trending/data/repository_impl/trending_repository_impl.dart';
 import 'package:last/features/trending/domain/repository/trending_repository.dart';
+import 'package:last/features/trending/domain/usecases/get_suggested_user_posts_usecase.dart';
 import 'package:last/features/trending/domain/usecases/get_top_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
@@ -44,6 +45,8 @@ import '../../features/layout/domain/usecases/get_notifications_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
 import '../../features/switch_user/data/repository_impl/switch_user_repository_impl.dart';
 import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
+import '../../features/trending/domain/usecases/get_post_data_usecase.dart';
+import '../../features/trending/domain/usecases/get_suggested_users_usecase.dart';
 import '../../features/welcome/data/repository_impl/welcome_repository_impl.dart';
 import '../../features/welcome/domain/usecases/login_usecase.dart';
 import '../network/network_info.dart';
@@ -125,12 +128,15 @@ class ServiceLocator {
 
     // trending useCases
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
+    sl.registerLazySingleton<GetSuggestedUsersUseCase>(() => GetSuggestedUsersUseCase(sl()));
+    sl.registerLazySingleton<GetSuggestedUserPostsUseCase>(() => GetSuggestedUserPostsUseCase(sl()));
+    sl.registerLazySingleton<GetPostDataUseCase>(() => GetPostDataUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
-    sl.registerFactory(() => TrendingCubit(sl()));
+    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

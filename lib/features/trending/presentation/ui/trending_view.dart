@@ -14,7 +14,6 @@ import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../../home_page/data/model/home_page_model.dart';
-import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/data/model/subscribers_model.dart';
 import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
@@ -66,7 +65,7 @@ class _TrendingViewState extends State<TrendingView> {
 
   Widget bodyContent(BuildContext context, double statusBarHeight) {
     return BlocProvider(
-      create: (context) => sl<TrendingCubit>()..getTopPosts(GetPostsRequest(currentUser: displayName, allPosts: true)),
+      create: (context) => sl<TrendingCubit>()..getTopPosts(),
       child: BlocConsumer<TrendingCubit, TrendingState>(
         listener: (context, state) async {
           if (state is GetTopPostsLoadingState) {
