@@ -91,8 +91,6 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest) async {
     try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-
       // Fetch posts and filtered subscribers concurrently
       final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
       if (getPostsRequest.allPosts) {
@@ -115,12 +113,12 @@ class HomePageDataSource extends BaseDataSource {
 
       // Convert Firestore documents to PostModel and SubscribersModel lists
       final postModels = postDocs.map((doc) {
-        final postData = {'id': doc.id, ...doc.data() as Map<String, dynamic>};
+        final postData = {'id': doc.id, ...doc.data()};
         return PostModel.fromMap(postData);
       }).toList();
 
       final subscriberModels = subscriberDocs.map((doc) {
-        final subscriberData = {'id': doc.id, ...doc.data() as Map<String, dynamic>};
+        final subscriberData = {'id': doc.id, ...doc.data()};
         return SubscribersModel.fromMap(subscriberData);
       }).toList();
 

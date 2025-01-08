@@ -54,4 +54,20 @@ class GetSuggestedUserPostsErrorState extends TrendingState{
   GetSuggestedUserPostsErrorState(this.errorMessage);
 }
 
+class AddSubscriberLoadingState extends TrendingState{}
+class AddSubscriberSuccessState extends TrendingState{}
+class AddSubscriberErrorState extends TrendingState{
+  final String errorMessage;
+
+  AddSubscriberErrorState(this.errorMessage);
+}
+
+class DeleteSubscriberLoadingState extends TrendingState{}
+class DeleteSubscriberSuccessState extends TrendingState{}
+class DeleteSubscriberErrorState extends TrendingState{
+  final String errorMessage;
+
+  DeleteSubscriberErrorState(this.errorMessage);
+}
+
 class NoInternetState extends TrendingState{}

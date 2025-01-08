@@ -2,35 +2,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/trending/data/model/requests/get_suggested_user_posts_request.dart';
 import 'package:last/features/trending/domain/usecases/get_suggested_user_posts_usecase.dart';
 import 'package:last/features/trending/presentation/bloc/trending_state.dart';
-
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
-import '../../../home_page/data/model/requests/get_posts_request.dart';
+import '../../../home_page/data/model/requests/add_subscriber_request.dart';
+import '../../../home_page/data/model/requests/delete_subscriber_request.dart';
+import '../../../home_page/domain/usecases/add_subscriber_usecase.dart';
+import '../../../home_page/domain/usecases/delete_subscriber_usecase.dart';
 import '../../data/model/requests/get_post_data_request.dart';
+import '../../data/model/requests/get_top_posts_request.dart';
 import '../../domain/usecases/get_post_data_usecase.dart';
 import '../../domain/usecases/get_suggested_users_usecase.dart';
 import '../../domain/usecases/get_top_posts_usecase.dart';
 
 class TrendingCubit extends Cubit<TrendingState> {
   TrendingCubit(
-      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.getSuggestedUserPostsUseCase, this.getPostDataUseCase)
+      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.getSuggestedUserPostsUseCase, this.getPostDataUseCase, this.addSubscriberUseCase, this.deleteSubscriberUseCase)
       : super(TrendingInitial());
 
   final GetTopPostsUseCase getTopPostsUseCase;
   final GetSuggestedUsersUseCase getSuggestedUsersUseCase;
   final GetSuggestedUserPostsUseCase getSuggestedUserPostsUseCase;
   final GetPostDataUseCase getPostDataUseCase;
+  final AddSubscriberUseCase addSubscriberUseCase;
+  final DeleteSubscriberUseCase deleteSubscriberUseCase;
 
   static TrendingCubit get(context) => BlocProvider.of(context);
 
   final NetworkInfo _networkInfo = sl<NetworkInfo>();
 
 
-  Future<void> getTopPosts() async {
+  Future<void> getTopPosts(GetTopPostsRequest getTopPostsRequest) async {
     emit(GetTopPostsLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getTopPostsUseCase.call(const FirebaseNoParameters());
+      final signInResult = await getTopPostsUseCase.call(getTopPostsRequest);
       signInResult.fold(
             (failure) => emit(GetTopPostsErrorState(failure.message)),
             (posts) => emit(GetTopPostsSuccessState(posts)),
@@ -73,6 +78,32 @@ class TrendingCubit extends Cubit<TrendingState> {
       signInResult.fold(
             (failure) => emit(GetPostDataErrorState(failure.message)),
             (postData) => emit(GetPostDataSuccessState(postData)),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
+    emit(AddSubscriberLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await addSubscriberUseCase.call(addSubscriberRequest);
+      signInResult.fold(
+            (failure) => emit(AddSubscriberErrorState(failure.message)),
+            (subscriberAdded) => emit(AddSubscriberSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
+    emit(DeleteSubscriberLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await deleteSubscriberUseCase.call(deleteSubscriberRequest);
+      signInResult.fold(
+            (failure) => emit(DeleteSubscriberErrorState(failure.message)),
+            (subscriberDeleted) => emit(DeleteSubscriberSuccessState()),
       );
     } else {
       emit(NoInternetState());

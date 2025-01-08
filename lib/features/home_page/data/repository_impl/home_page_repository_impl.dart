@@ -71,9 +71,9 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest AddCommentRequest) async {
+  Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest addCommentRequest) async {
     try {
-      final result = await _homePageDataSource.addComment(AddCommentRequest);
+      final result = await _homePageDataSource.addComment(addCommentRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

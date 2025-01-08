@@ -27,11 +27,14 @@ class AppStrings {
   static const String profile = 'مـنـشـوراتـى';
   static const String edit = 'تـعـديـل';
   static const String skip = ' تـراجـع  ';
-  static const readMore = "اقـرأ الـمـزيـد";
-  static const less = " أقـل";
-  static const showAll = "عـرض الـكـل";
-  static const suggestedUsers = "أصـدقـاء مـقـتـرحـيـن";
-  static const topPosts = "أعـلـى مـنـشـورات";
+  static const String readMore = "اقـرأ الـمـزيـد";
+  static const String less = " أقـل";
+  static const String userSubscriptions = "مـشـاركـات الـمـسـتـخـدمـيـن";
+  static const String showAll = "عـرض الـكـل";
+  static const String goToPost = "الـذهـاب إلـى الـمـنـشـور";
+  static const String subscriptions = "مـشـاركــات";
+  static const String suggestedUsers = "أصـدقـاء مـقـتـرحـيـن";
+  static const String topPosts = "أعـلـى مـنـشـورات";
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
 
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';

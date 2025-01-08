@@ -30,7 +30,7 @@ import '../../../data/model/subscribers_model.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
-import 'add_comment_bottom_sheet.dart';
+import 'add_comment_view.dart';
 import 'comments_bottom_sheet.dart';
 
 class PostView extends StatefulWidget {

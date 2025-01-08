@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_comments_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
+
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
@@ -17,8 +17,9 @@ import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
 import '../../../../home_page/data/model/post_subscribers_model.dart';
+import '../../../../home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 
-class TopPostView extends StatefulWidget {
+class UserSubscriptionsPostView extends StatefulWidget {
   final String id;
   final String postAlsha;
   final String postUsername;
@@ -34,7 +35,7 @@ class TopPostView extends StatefulWidget {
   Function getUserPosts;
   Function addOrRemoveSubscriber;
   int index;
-  TopPostView({
+  UserSubscriptionsPostView({
     super.key,
     required this.id,
     required this.postAlsha,
@@ -54,13 +55,12 @@ class TopPostView extends StatefulWidget {
   });
 
   @override
-  State<TopPostView> createState() => _TopPostViewState();
+  State<UserSubscriptionsPostView> createState() => _UserSubscriptionsPostViewState();
 }
 
-class _TopPostViewState extends State<TopPostView> {
-  double reactPosition = 20.0;
+class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
   String timeAgoText = "";
-
+  double reactPosition = 20.0;
   bool userReacted = false;
 
   @override
@@ -259,15 +259,17 @@ class _TopPostViewState extends State<TopPostView> {
                               return Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: TopPostCommentsBottomSheet(
-                                  postAlsha: widget.postAlsha,
-                                  userImage:
-                                  widget.loggedInUserImage,
-                                  userName: widget.loggedInUserName,
-                                  postId: widget.id,
-                                  statusBarHeight:
-                                  widget.statusBarHeight,
-                                  commentsList:
-                                  widget.commentsList),
+
+                                    postAlsha: widget.postAlsha,
+                                    userImage:
+                                    widget.loggedInUserImage,
+                                    userName: widget.loggedInUserName,
+                                    postId: widget.id,
+
+                                    statusBarHeight:
+                                    widget.statusBarHeight,
+                                    commentsList:
+                                    widget.commentsList),
                               );
                             },
                           );

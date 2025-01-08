@@ -14,7 +14,7 @@ import 'package:last/features/home_page/domain/usecases/delete_emoji_usecase.dar
 import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
-import 'package:last/features/trending/data/data_source/trending_datasouce.dart';
+import 'package:last/features/trending/data/data_source/trending_datasource.dart';
 import 'package:last/features/trending/data/repository_impl/trending_repository_impl.dart';
 import 'package:last/features/trending/domain/repository/trending_repository.dart';
 import 'package:last/features/trending/domain/usecases/get_suggested_user_posts_usecase.dart';
@@ -91,7 +91,7 @@ class ServiceLocator {
     sl.registerLazySingleton<LayoutRepository>(() => LayoutRepositoryImpl(sl()));
     sl.registerLazySingleton<HomePageRepository>(() => HomePageRepositoryImpl(sl()));
     sl.registerLazySingleton<SwitchUserRepository>(() => SwitchUserRepositoryImpl(sl()));
-    sl.registerLazySingleton<TrendingRepository>(() => TrendingRepositoryImpl(sl()));
+    sl.registerLazySingleton<TrendingRepository>(() => TrendingRepositoryImpl(sl(), sl()));
 
     // UseCases
     // welcome useCases
@@ -136,7 +136,7 @@ class ServiceLocator {
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
-    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

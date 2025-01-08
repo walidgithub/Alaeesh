@@ -22,7 +22,7 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> updatePost(UpdatePostRequest updatePostRequest);
   Future<Either<FirebaseFailure, void>> deletePost(String postId);
 
-  Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest AddCommentRequest);
+  Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest addCommentRequest);
   Future<Either<FirebaseFailure, void>> updateComment(UpdateCommentRequest updateCommentRequest);
   Future<Either<FirebaseFailure, void>> deleteComment(DeleteCommentRequest deleteCommentRequest);
 

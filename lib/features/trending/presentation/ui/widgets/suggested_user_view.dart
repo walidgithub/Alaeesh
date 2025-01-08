@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:last/core/utils/constant/app_strings.dart';
 import 'package:last/core/utils/constant/app_typography.dart';
 
 import '../../../../../core/utils/constant/app_assets.dart';
@@ -10,8 +11,9 @@ import '../../../../../core/utils/style/app_colors.dart';
 class SuggestedUserView extends StatefulWidget {
   String userImage;
   String userName;
+  int subscriptionsCount;
   Function getUserPosts;
-  SuggestedUserView({super.key, required this.userName, required this.userImage, required this.getUserPosts});
+  SuggestedUserView({super.key, required this.userName, required this.userImage, required this.getUserPosts, required this.subscriptionsCount});
 
   @override
   State<SuggestedUserView> createState() => _SuggestedUserViewState();
@@ -30,7 +32,7 @@ class _SuggestedUserViewState extends State<SuggestedUserView> {
           },
           child: Container(
             width: 160.w,
-            height: 140.h,
+            height: 160.h,
             padding: EdgeInsets.all(5.w),
             decoration: BoxDecoration(
                 border: Border.all(color: AppColors.cSecondary),
@@ -62,7 +64,8 @@ class _SuggestedUserViewState extends State<SuggestedUserView> {
                             widget.userImage,
                           ),
                         ))),
-                Flexible(child: Text(widget.userName, style: AppTypography.kLight14.copyWith(color: AppColors.cTitle),overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,),)
+                Flexible(child: Text(widget.userName, style: AppTypography.kLight14.copyWith(color: AppColors.cTitle),overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,),),
+                Text("${widget.subscriptionsCount} ${AppStrings.subscriptions}", style: AppTypography.kLight13.copyWith(color: AppColors.grey),)
               ],
             ),
           ),

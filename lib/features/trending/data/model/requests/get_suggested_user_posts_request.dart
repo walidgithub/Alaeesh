@@ -1,4 +1,5 @@
 class GetSuggestedUserPostsRequest {
   String userName;
-  GetSuggestedUserPostsRequest({required this.userName});
+  String currentUser;
+  GetSuggestedUserPostsRequest({required this.userName, required this.currentUser});
 }
