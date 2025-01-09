@@ -49,12 +49,6 @@ class TrendingRepositoryImpl extends TrendingRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, HomePageModel>> getPostData(GetPostDataRequest getPostDataRequest) async {
-    // TODO: implement getPostData
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<FirebaseFailure, List<HomePageModel>>> getSuggestedUserPosts(GetSuggestedUserPostsRequest getSuggestedUserPostsRequest) async {
     try {
       final result = await _trendingDataSource.getSuggestedUserPosts(getSuggestedUserPostsRequest);

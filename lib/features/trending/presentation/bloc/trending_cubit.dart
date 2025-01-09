@@ -11,19 +11,17 @@ import '../../../home_page/domain/usecases/add_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_subscriber_usecase.dart';
 import '../../data/model/requests/get_post_data_request.dart';
 import '../../data/model/requests/get_top_posts_request.dart';
-import '../../domain/usecases/get_post_data_usecase.dart';
 import '../../domain/usecases/get_suggested_users_usecase.dart';
 import '../../domain/usecases/get_top_posts_usecase.dart';
 
 class TrendingCubit extends Cubit<TrendingState> {
   TrendingCubit(
-      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.getSuggestedUserPostsUseCase, this.getPostDataUseCase, this.addSubscriberUseCase, this.deleteSubscriberUseCase)
+      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.getSuggestedUserPostsUseCase, this.addSubscriberUseCase, this.deleteSubscriberUseCase)
       : super(TrendingInitial());
 
   final GetTopPostsUseCase getTopPostsUseCase;
   final GetSuggestedUsersUseCase getSuggestedUsersUseCase;
   final GetSuggestedUserPostsUseCase getSuggestedUserPostsUseCase;
-  final GetPostDataUseCase getPostDataUseCase;
   final AddSubscriberUseCase addSubscriberUseCase;
   final DeleteSubscriberUseCase deleteSubscriberUseCase;
 
@@ -65,19 +63,6 @@ class TrendingCubit extends Cubit<TrendingState> {
       signInResult.fold(
             (failure) => emit(GetSuggestedUserPostsErrorState(failure.message)),
             (suggestedUserPosts) => emit(GetSuggestedUserPostsSuccessState(suggestedUserPosts)),
-      );
-    } else {
-      emit(NoInternetState());
-    }
-  }
-
-  Future<void> getPostData(GetPostDataRequest getPostDataRequest) async {
-    emit(GetPostDataLoadingState());
-    if (await _networkInfo.isConnected) {
-      final signInResult = await getPostDataUseCase.call(getPostDataRequest);
-      signInResult.fold(
-            (failure) => emit(GetPostDataErrorState(failure.message)),
-            (postData) => emit(GetPostDataSuccessState(postData)),
       );
     } else {
       emit(NoInternetState());

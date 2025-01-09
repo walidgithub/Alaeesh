@@ -26,6 +26,8 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
   List<HomePageModel> homePageModel;
   final String postUsername;
   final String postUserImage;
+  final String loggedInUserName;
+  final String loggedInUserImage;
   final double statusBarHeight;
   Function getPostData;
   Function getUserPosts;
@@ -35,6 +37,8 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
     required this.homePageModel,
     required this.postUsername,
     required this.postUserImage,
+    required this.loggedInUserName,
+    required this.loggedInUserImage,
     required this.statusBarHeight,
     required this.getPostData,
     required this.getUserPosts,
@@ -89,24 +93,24 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                               return UserSubscriptionsPostView(
                                   id: widget.homePageModel[index].postModel.id.toString(),
                                   postAlsha: widget.homePageModel[index].postModel.postAlsha,
-                                  postUsername: widget.homePageModel[index].postModel.username,
-                                  postUserImage: widget.homePageModel[index].postModel.userImage,
-                                  loggedInUserName: widget.postUsername,
-                                  loggedInUserImage: widget.postUserImage,
+                                  postUsername: widget.postUsername,
+                                  postUserImage: widget.postUserImage,
+                                  loggedInUserName: widget.loggedInUserName,
+                                  loggedInUserImage: widget.loggedInUserImage,
                                   emojisList: widget.homePageModel[index].postModel.emojisList,
                                   commentsList: widget.homePageModel[index].postModel.commentsList,
                                   statusBarHeight: widget.statusBarHeight,
                                   time: widget.homePageModel[0].postModel.time,
                                   index: 0,
                                   userSubscribed: widget.homePageModel[index].userSubscribed,
-                                  getPostData: () {
-                                    widget.getPostData();
+                                  getPostData: (String postId) {
+                                    widget.getPostData(postId);
                                   },
-                                  getUserPosts: () {
-                                    widget.getUserPosts();
+                                  getUserPosts: (String username) {
+                                    widget.getUserPosts(username);
                                   },
-                                  addOrRemoveSubscriber: () {
-                                    widget.addOrRemoveSubscriber();
+                                  addOrRemoveSubscriber: (int status) {
+                                    widget.addOrRemoveSubscriber(status);
                                   });
                             },
                             itemCount: widget.homePageModel.length),

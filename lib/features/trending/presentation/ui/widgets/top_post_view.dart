@@ -98,7 +98,7 @@ class _TopPostViewState extends State<TopPostView> {
                               children: [
                                 Bounceable(
                                   onTap: () {
-                                    widget.getUserPosts();
+                                    widget.getUserPosts(widget.postUsername);
                                   },
                                   child: Row(
                                     children: [
@@ -215,7 +215,7 @@ class _TopPostViewState extends State<TopPostView> {
                             ),
                             Bounceable(
                               onTap: () {
-                                widget.getPostData();
+                                widget.getPostData(widget.id);
                               },
                               child: Text("${AppStrings.goToPost} >>", style: AppTypography.kBold14
                                   .copyWith(

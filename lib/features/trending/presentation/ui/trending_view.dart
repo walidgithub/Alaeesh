@@ -1,11 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:last/features/trending/presentation/ui/widgets/suggested_user_view.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_view.dart';
 import 'package:last/features/trending/presentation/ui/widgets/user_subscriptions_bottom_sheet.dart';
-
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/utils/constant/app_constants.dart';
@@ -25,7 +23,9 @@ import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
 
 class TrendingView extends StatefulWidget {
-  const TrendingView({super.key});
+  Function getPostData;
+  Function getUserPosts;
+  TrendingView({super.key, required this.getUserPosts, required this.getPostData});
 
   @override
   State<TrendingView> createState() => _TrendingViewState();
@@ -33,6 +33,7 @@ class TrendingView extends StatefulWidget {
 
 class _TrendingViewState extends State<TrendingView> {
   int selectedPost = 0;
+  bool showUserSubscriptionsSheet = false;
   final SecureStorageLoginHelper _appSecureDataHelper =
   sl<SecureStorageLoginHelper>();
 
@@ -105,11 +106,23 @@ class _TrendingViewState extends State<TrendingView> {
           hideLoading();
         } else if (state is AddSubscriberLoadingState) {
         } else if (state is AddSubscriberSuccessState) {
+          if (showUserSubscriptionsSheet) {
+            Navigator.pop(context);
+            setState(() {
+              showUserSubscriptionsSheet = false;
+            });
+          }
           TrendingCubit.get(context).getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is AddSubscriberErrorState) {
           showSnackBar(context, state.errorMessage);
         } else if (state is DeleteSubscriberLoadingState) {
         } else if (state is DeleteSubscriberSuccessState) {
+          if (showUserSubscriptionsSheet) {
+            Navigator.pop(context);
+            setState(() {
+              showUserSubscriptionsSheet = false;
+            });
+          }
           TrendingCubit.get(context).getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is DeleteSubscriberErrorState) {
           showSnackBar(context, state.errorMessage);
@@ -117,6 +130,9 @@ class _TrendingViewState extends State<TrendingView> {
           showLoading();
         } else if (state is GetSuggestedUserPostsSuccessState) {
           hideLoading();
+          setState(() {
+            showUserSubscriptionsSheet = true;
+          });
           showModalBottomSheet(
             context: context,
             constraints: BoxConstraints.expand(
@@ -137,9 +153,36 @@ class _TrendingViewState extends State<TrendingView> {
               return Directionality(
                 textDirection: TextDirection.rtl,
                 child: UserSubscriptionsBottomSheet(
-                    getUserPosts: () {},
-                  addOrRemoveSubscriber: () {},
-                  getPostData: () {},
+                    getUserPosts: (String username) {
+                      widget.getUserPosts(username);
+                    },
+                  addOrRemoveSubscriber: (int status) {
+                    if (status == -1) {
+                      DeleteSubscriberRequest
+                      deleteSubscriberRequest =
+                      DeleteSubscriberRequest(
+                          username: displayName,
+                          postAuther: homePageModel[selectedPost]
+                              .postModel
+                              .username);
+                      TrendingCubit.get(context)
+                          .deleteSubscriber(deleteSubscriberRequest);
+                    } else if (status == 1) {
+                      AddSubscriberRequest addSubscriberRequest =
+                      AddSubscriberRequest(
+                          username: displayName,
+                          postAuther: homePageModel[selectedPost]
+                              .postModel
+                              .username);
+                      TrendingCubit.get(context)
+                          .addSubscriber(addSubscriberRequest);
+                    }
+                  },
+                  getPostData: (String postId) {
+                      widget.getUserPosts(postId);
+                  },
+                  loggedInUserName: displayName,
+                  loggedInUserImage: photoUrl,
                   statusBarHeight: statusBarHeight,
                   homePageModel: state.homePageModel,
                   postUserImage: state.homePageModel[0].postModel.userImage,
@@ -218,8 +261,12 @@ class _TrendingViewState extends State<TrendingView> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               return TopPostView(
-                                getUserPosts: () {},
-                                getPostData: () {},
+                                getUserPosts: (String username) {
+                                  widget.getUserPosts(username);
+                                },
+                                getPostData: (String postId) {
+                                  widget.getPostData(postId);
+                                },
                                 addOrRemoveSubscriber: (int status) {
                                   if (status == -1) {
                                     DeleteSubscriberRequest

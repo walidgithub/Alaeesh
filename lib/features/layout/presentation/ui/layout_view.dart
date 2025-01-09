@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/home_page/data/model/requests/get_posts_request.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
 import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
+import 'package:last/features/my_activities/presentation/ui/myactivity_view.dart';
 import 'package:last/features/trending/presentation/ui/trending_view.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -23,7 +24,6 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
-import '../../../home_page/data/model/requests/get_subscribers_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
@@ -39,6 +39,9 @@ class LayoutView extends StatefulWidget {
 class _LayoutViewState extends State<LayoutView> {
   final int _notificationBadgeAmount = 0;
   final bool _showNotificationBadge = true;
+  String returnedUserName = '';
+  String returnedUsePostId = '';
+  bool addPost = true;
 
   final AppPreferences _appPreferences = sl<AppPreferences>();
   final SecureStorageLoginHelper _appSecureDataHelper =
@@ -155,7 +158,7 @@ class _LayoutViewState extends State<LayoutView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Bounceable(
+                          addPost ? Bounceable(
                             onTap: () {
                               setState(() {
                                 if (showAll) {
@@ -187,7 +190,7 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                               ],
                             ),
-                          )
+                          ) : Container()
                         ],
                       ),
                     );
@@ -199,13 +202,29 @@ class _LayoutViewState extends State<LayoutView> {
 
   @override
   void initState() {
-    toggleIcon(2);
+    toggleIcon(0);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
-      HomeView(),
-      HomeView(),
-      TrendingView(),
+      HomeView(
+        returnedUserName: returnedUserName,
+      ),
+      MyActivityView(),
+      TrendingView(
+        getPostData: (String postId) {
+          setState(() {
+            addPost = true;
+          });
+          toggleIcon(0);
+        },
+        getUserPosts: (String username) {
+          setState(() {
+            addPost = true;
+            returnedUserName = username;
+          });
+          toggleIcon(0);
+        },
+      ),
     ];
     super.initState();
   }
@@ -309,7 +328,7 @@ class _LayoutViewState extends State<LayoutView> {
                           SizedBox(
                             width: 10.w,
                           ),
-                          Bounceable(
+                          addPost ? Bounceable(
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
@@ -343,7 +362,7 @@ class _LayoutViewState extends State<LayoutView> {
                               AppAssets.addPost,
                               width: 30.w,
                             ),
-                          ),
+                          ) : Container(),
                         ],
                       ),
                     ),
@@ -423,6 +442,9 @@ class _LayoutViewState extends State<LayoutView> {
                 children: [
                   GestureDetector(
                       onTap: () {
+                        setState(() {
+                          addPost = false;
+                        });
                         toggleIcon(2);
                       },
                       child: TabIcon(
@@ -437,6 +459,9 @@ class _LayoutViewState extends State<LayoutView> {
                       )),
                   GestureDetector(
                       onTap: () {
+                        setState(() {
+                          addPost = false;
+                        });
                         toggleIcon(1);
                       },
                       child: TabIcon(
@@ -448,6 +473,9 @@ class _LayoutViewState extends State<LayoutView> {
                       )),
                   GestureDetector(
                       onTap: () {
+                        setState(() {
+                          addPost = true;
+                        });
                         toggleIcon(0);
                       },
                       child: TabIcon(

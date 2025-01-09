@@ -98,7 +98,7 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                               children: [
                                 Bounceable(
                                   onTap: () {
-                                    widget.getUserPosts();
+                                    widget.getUserPosts(widget.postUsername);
                                   },
                                   child: Row(
                                     children: [
@@ -215,7 +215,7 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                             ),
                             Bounceable(
                               onTap: () {
-                                widget.getPostData();
+                                widget.getPostData(widget.id);
                               },
                               child: Text("${AppStrings.goToPost} >>", style: AppTypography.kBold14
                                   .copyWith(
@@ -259,13 +259,11 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                               return Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: TopPostCommentsBottomSheet(
-
                                     postAlsha: widget.postAlsha,
                                     userImage:
                                     widget.loggedInUserImage,
                                     userName: widget.loggedInUserName,
                                     postId: widget.id,
-
                                     statusBarHeight:
                                     widget.statusBarHeight,
                                     commentsList:

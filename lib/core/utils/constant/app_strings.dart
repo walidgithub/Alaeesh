@@ -29,7 +29,7 @@ class AppStrings {
   static const String skip = ' تـراجـع  ';
   static const String readMore = "اقـرأ الـمـزيـد";
   static const String less = " أقـل";
-  static const String userSubscriptions = "مـشـاركـات الـمـسـتـخـدمـيـن";
+  static const String userSubscriptions = "مـشـاركـات الـمـسـتـخـدم";
   static const String showAll = "عـرض الـكـل";
   static const String goToPost = "الـذهـاب إلـى الـمـنـشـور";
   static const String subscriptions = "مـشـاركــات";

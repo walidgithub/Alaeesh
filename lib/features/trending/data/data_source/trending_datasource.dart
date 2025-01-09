@@ -14,7 +14,6 @@ abstract class BaseDataSource {
   Future<List<SuggestedUserModel>> getSuggestedUsers();
   Future<List<HomePageModel>> getSuggestedUserPosts(
       GetSuggestedUserPostsRequest getSuggestedUserPostsRequest);
-  Future<HomePageModel> getPostData(GetPostDataRequest getPostDataRequest);
 }
 
 class TrendingDataSource extends BaseDataSource {
@@ -103,17 +102,6 @@ class TrendingDataSource extends BaseDataSource {
         ..sort((a, b) => b.subscriptionsCount.compareTo(a.subscriptionsCount));
 
       return suggestedUsers;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<HomePageModel> getPostData(
-      GetPostDataRequest getPostDataRequest) async {
-    HomePageModel? homePageModel;
-    try {
-      return homePageModel!;
     } catch (e) {
       rethrow;
     }

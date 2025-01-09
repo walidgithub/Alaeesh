@@ -30,18 +30,6 @@ class GetSuggestedUsersErrorState extends TrendingState{
   GetSuggestedUsersErrorState(this.errorMessage);
 }
 
-class GetPostDataLoadingState extends TrendingState{}
-class GetPostDataSuccessState extends TrendingState{
-  final HomePageModel homePageModel;
-
-  GetPostDataSuccessState(this.homePageModel);
-}
-class GetPostDataErrorState extends TrendingState{
-  final String errorMessage;
-
-  GetPostDataErrorState(this.errorMessage);
-}
-
 class GetSuggestedUserPostsLoadingState extends TrendingState{}
 class GetSuggestedUserPostsSuccessState extends TrendingState{
   final List<HomePageModel> homePageModel;

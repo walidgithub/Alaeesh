@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:last/core/utils/constant/app_typography.dart';
+import 'package:last/core/utils/ui_components/primary_button.dart';
 import 'package:last/features/home_page/data/model/home_page_model.dart';
 import 'package:last/features/home_page/presentation/bloc/home_page_cubit.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/comments_bottom_sheet.dart';
@@ -24,7 +25,8 @@ import '../../data/model/subscribers_model.dart';
 import '../bloc/home_page_state.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({super.key});
+  String returnedUserName;
+  HomeView({super.key, required this.returnedUserName});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -46,6 +48,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
+    print(widget.returnedUserName);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     super.initState();
@@ -64,7 +67,14 @@ class _HomeViewState extends State<HomeView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
     });
-    getAllPosts(displayName);
+    if (widget.returnedUserName != "") {
+      setState(() {
+        showAll = false;
+      });
+      getAllPosts(displayName, allPosts: false,username: widget.returnedUserName);
+    } else {
+      getAllPosts(displayName);
+    }
   }
 
   @override
@@ -86,20 +96,14 @@ class _HomeViewState extends State<HomeView> {
                   SizedBox(
                     height: AppConstants.heightBetweenElements,
                   ),
-                  Bounceable(
-                      onTap: () {
-                        setState(() {
-                          showAll = true;
-                        });
-                        HomePageCubit.get(context).getAllPosts(GetPostsRequest(
-                            currentUser: displayName,
-                            allPosts: true));
-                      },
-                      child: Text(
-                        AppStrings.showAll,
-                        style: AppTypography.kBold16
-                            .copyWith(color: AppColors.cTitle),
-                      )),
+                  PrimaryButton(onTap: () {
+                    setState(() {
+                      showAll = true;
+                    });
+                    HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                        currentUser: displayName,
+                        allPosts: true));
+                  }, text: AppStrings.showAll,width: 120.w,gradient: false,fontSize: 18.sp,height: 50.h,),
                   SizedBox(
                     height: AppConstants.heightBetweenElements,
                   ),

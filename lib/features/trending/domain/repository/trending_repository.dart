@@ -13,7 +13,6 @@ abstract class TrendingRepository {
   Future<Either<FirebaseFailure, List<HomePageModel>>> getTopPosts(GetTopPostsRequest getTopPostsRequest);
   Future<Either<FirebaseFailure, List<SuggestedUserModel>>> getSuggestedUsers();
   Future<Either<FirebaseFailure, List<HomePageModel>>> getSuggestedUserPosts(GetSuggestedUserPostsRequest getSuggestedUserPostsRequest);
-  Future<Either<FirebaseFailure, HomePageModel>> getPostData(GetPostDataRequest getPostDataRequest);
   Future<Either<FirebaseFailure, void>> addSubscriber(AddSubscriberRequest addSubscriberRequest);
   Future<Either<FirebaseFailure, void>> deleteSubscriber(
       DeleteSubscriberRequest deleteSubscriberRequest);
