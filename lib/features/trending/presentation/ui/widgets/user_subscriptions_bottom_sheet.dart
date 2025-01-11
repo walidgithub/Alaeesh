@@ -29,7 +29,6 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
   final String loggedInUserName;
   final String loggedInUserImage;
   final double statusBarHeight;
-  Function getPostData;
   Function getUserPosts;
   Function addOrRemoveSubscriber;
   UserSubscriptionsBottomSheet({
@@ -40,7 +39,6 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
     required this.loggedInUserName,
     required this.loggedInUserImage,
     required this.statusBarHeight,
-    required this.getPostData,
     required this.getUserPosts,
     required this.addOrRemoveSubscriber,
   });
@@ -50,7 +48,12 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
 }
 
 class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSheet> {
-
+  bool userSubscribed = false;
+  @override
+  void initState() {
+    userSubscribed = widget.homePageModel[0].userSubscribed;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -81,6 +84,31 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                 SizedBox(
                   height: AppConstants.moreHeightBetweenElements,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    widget.loggedInUserName !=
+                        widget.postUsername
+                        ? GestureDetector(
+                        onTap: () {
+                          if (userSubscribed) {
+                            widget.addOrRemoveSubscriber(-1);
+                          } else {
+                            widget.addOrRemoveSubscriber(1);
+                          }
+                        },
+                        child: SvgPicture.asset(
+                          userSubscribed
+                              ? AppAssets.notificationOn
+                              : AppAssets.notificationOff,
+                          width: 30.w,
+                        ))
+                        : Container(),
+                  ],
+                ),
+                SizedBox(
+                  height: AppConstants.moreHeightBetweenElements,
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -103,14 +131,8 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                                   time: widget.homePageModel[0].postModel.time,
                                   index: 0,
                                   userSubscribed: widget.homePageModel[index].userSubscribed,
-                                  getPostData: (String postId) {
-                                    widget.getPostData(postId);
-                                  },
                                   getUserPosts: (String username) {
                                     widget.getUserPosts(username);
-                                  },
-                                  addOrRemoveSubscriber: (int status) {
-                                    widget.addOrRemoveSubscriber(status);
                                   });
                             },
                             itemCount: widget.homePageModel.length),

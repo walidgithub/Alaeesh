@@ -31,9 +31,7 @@ class UserSubscriptionsPostView extends StatefulWidget {
   final List<CommentsModel> commentsList;
   final bool userSubscribed;
   final double statusBarHeight;
-  Function getPostData;
   Function getUserPosts;
-  Function addOrRemoveSubscriber;
   int index;
   UserSubscriptionsPostView({
     super.key,
@@ -49,9 +47,7 @@ class UserSubscriptionsPostView extends StatefulWidget {
     required this.time,
     required this.index,
     required this.userSubscribed,
-    required this.getPostData,
-    required this.getUserPosts,
-    required this.addOrRemoveSubscriber,
+    required this.getUserPosts
   });
 
   @override
@@ -172,33 +168,6 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    widget.loggedInUserName !=
-                                        widget.postUsername
-                                        ? GestureDetector(
-                                        onTap: () {
-                                          if (widget.userSubscribed) {
-                                            widget.addOrRemoveSubscriber(-1);
-                                          } else {
-                                            widget.addOrRemoveSubscriber(1);
-                                          }
-                                        },
-                                        child: SvgPicture.asset(
-                                          widget.userSubscribed
-                                              ? AppAssets.notificationOn
-                                              : AppAssets.notificationOff,
-                                          width: 25.w,
-                                        ))
-                                        : Container(),
-                                    widget.loggedInUserName ==
-                                        widget.postUsername
-                                        ? SizedBox(
-                                      width: 10.w,
-                                    )
-                                        : Container(),
-                                  ],
-                                )
                               ],
                             ),
                             SizedBox(
@@ -213,20 +182,11 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                               trimCollapsedText: AppStrings.readMore,
                               trimExpandedText: AppStrings.less,
                             ),
-                            Bounceable(
-                              onTap: () {
-                                widget.getPostData(widget.id);
-                              },
-                              child: Text("${AppStrings.goToPost} >>", style: AppTypography.kBold14
-                                  .copyWith(
-                                  color: AppColors
-                                      .cTitle)),
-                            )
                           ],
                         )),
                   ],
                 ),
-                widget.commentsList.isNotEmpty ? Divider(
+                widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty ? Divider(
                   color: AppColors.grey,
                 ) : SizedBox(
                   height: 10.h,

@@ -30,7 +30,6 @@ class TopPostView extends StatefulWidget {
   final List<CommentsModel> commentsList;
   final bool userSubscribed;
   final double statusBarHeight;
-  Function getPostData;
   Function getUserPosts;
   Function addOrRemoveSubscriber;
   int index;
@@ -48,7 +47,6 @@ class TopPostView extends StatefulWidget {
     required this.time,
     required this.index,
     required this.userSubscribed,
-    required this.getPostData,
     required this.getUserPosts,
     required this.addOrRemoveSubscriber,
   });
@@ -213,20 +211,11 @@ class _TopPostViewState extends State<TopPostView> {
                               trimCollapsedText: AppStrings.readMore,
                               trimExpandedText: AppStrings.less,
                             ),
-                            Bounceable(
-                              onTap: () {
-                                widget.getPostData(widget.id);
-                              },
-                              child: Text("${AppStrings.goToPost} >>", style: AppTypography.kBold14
-                                  .copyWith(
-                                  color: AppColors
-                                      .cTitle)),
-                            )
                           ],
                         )),
                   ],
                 ),
-                widget.commentsList.isNotEmpty ? Divider(
+                widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty ? Divider(
                   color: AppColors.grey,
                 ) : SizedBox(
                   height: 10.h,

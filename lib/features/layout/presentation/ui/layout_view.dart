@@ -202,7 +202,7 @@ class _LayoutViewState extends State<LayoutView> {
 
   @override
   void initState() {
-    toggleIcon(0);
+    toggleIcon(2);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
@@ -211,12 +211,6 @@ class _LayoutViewState extends State<LayoutView> {
       ),
       MyActivityView(),
       TrendingView(
-        getPostData: (String postId) {
-          setState(() {
-            addPost = true;
-          });
-          toggleIcon(0);
-        },
         getUserPosts: (String username) {
           setState(() {
             addPost = true;

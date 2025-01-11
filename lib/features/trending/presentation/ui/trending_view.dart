@@ -23,9 +23,8 @@ import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
 
 class TrendingView extends StatefulWidget {
-  Function getPostData;
   Function getUserPosts;
-  TrendingView({super.key, required this.getUserPosts, required this.getPostData});
+  TrendingView({super.key, required this.getUserPosts});
 
   @override
   State<TrendingView> createState() => _TrendingViewState();
@@ -101,6 +100,7 @@ class _TrendingViewState extends State<TrendingView> {
           hideLoading();
           suggestedUserModel.clear();
           suggestedUserModel.addAll(state.suggestedUserModel);
+          suggestedUserModel.removeWhere((element) => element.userName == displayName);
         } else if (state is GetSuggestedUsersErrorState) {
           showSnackBar(context, state.errorMessage);
           hideLoading();
@@ -177,9 +177,6 @@ class _TrendingViewState extends State<TrendingView> {
                       TrendingCubit.get(context)
                           .addSubscriber(addSubscriberRequest);
                     }
-                  },
-                  getPostData: (String postId) {
-                      widget.getUserPosts(postId);
                   },
                   loggedInUserName: displayName,
                   loggedInUserImage: photoUrl,
@@ -263,9 +260,6 @@ class _TrendingViewState extends State<TrendingView> {
                               return TopPostView(
                                 getUserPosts: (String username) {
                                   widget.getUserPosts(username);
-                                },
-                                getPostData: (String postId) {
-                                  widget.getPostData(postId);
                                 },
                                 addOrRemoveSubscriber: (int status) {
                                   if (status == -1) {
