@@ -8,3 +8,4 @@ class HomePageModel {
 }
 
 List<HomePageModel> homePageModel = [];
+List<HomePageModel> trendingModel = [];

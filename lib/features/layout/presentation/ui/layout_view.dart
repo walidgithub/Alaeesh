@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:last/features/home_page/data/model/requests/get_posts_request.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
 import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
 import 'package:last/features/my_activities/presentation/ui/myactivity_view.dart';
@@ -24,6 +23,10 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../home_page/data/model/post_subscribers_model.dart';
+import '../../../home_page/data/model/requests/add_post_subscriber_request.dart';
+import '../../../home_page/data/model/requests/add_subscriber_request.dart';
+import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
@@ -202,13 +205,11 @@ class _LayoutViewState extends State<LayoutView> {
 
   @override
   void initState() {
-    toggleIcon(2);
+    toggleIcon(0);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
-      HomeView(
-        returnedUserName: returnedUserName,
-      ),
+      HomeView(),
       MyActivityView(),
       TrendingView(
         getUserPosts: (String username) {
@@ -345,8 +346,21 @@ class _LayoutViewState extends State<LayoutView> {
                                         username: displayName,
                                         userImage: photoUrl,
                                         statusBarHeight: statusBarHeight,
-                                        postAdded: () {
-                                          getAllPosts(displayName);
+                                        postAdded: (String postId) {
+                                          AddPostSubscriberRequest
+                                          addPostSubscriberRequest =
+                                          AddPostSubscriberRequest(
+                                              postSubscribersModel:
+                                              PostSubscribersModel(
+                                                username: displayName,
+                                                userImage: photoUrl,
+                                                postId: postId,
+                                              ));
+                                          HomePageCubit.get(context)
+                                              .addPostSubscriber(
+                                              addPostSubscriberRequest);
+
+                                          getAllPosts(displayName, allPosts: true);
                                         },
                                       ));
                                 },

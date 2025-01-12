@@ -36,6 +36,7 @@ class AppStrings {
   static const String suggestedUsers = "أصـدقـاء مـقـتـرحـيـن";
   static const String topPosts = "أعـلـى مـنـشـورات";
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
+  static const String noPosts = 'لـم يـتـم إضـافـة مـنـشـورات بـعـد، قـم أنـت بـهـذه الـخـطـوة';
 
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';
 }

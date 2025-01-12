@@ -2,15 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:last/features/trending/data/model/requests/get_suggested_user_posts_request.dart';
 import 'package:last/features/trending/data/model/suggested_user_model.dart';
 import '../../../../core/di/di.dart';
+import '../../../home_page/data/model/comments_model.dart';
 import '../../../home_page/data/model/home_page_model.dart';
 import '../../../home_page/data/model/post_model.dart';
 import '../../../home_page/data/model/subscribers_model.dart';
+import '../model/requests/check_if_user_subscribed_request.dart';
 import '../model/requests/get_post_data_request.dart';
 import '../model/requests/get_top_posts_request.dart';
 
 abstract class BaseDataSource {
   Future<List<HomePageModel>> getTopPosts(
       GetTopPostsRequest getTopPostsRequest);
+  Future<bool> checkIfUserSubscribed(CheckIfUserSubscribedRequest checkIfUserSubscribedRequest);
   Future<List<SuggestedUserModel>> getSuggestedUsers();
   Future<List<HomePageModel>> getSuggestedUserPosts(
       GetSuggestedUserPostsRequest getSuggestedUserPostsRequest);
@@ -111,69 +114,71 @@ class TrendingDataSource extends BaseDataSource {
   Future<List<HomePageModel>> getSuggestedUserPosts(
       GetSuggestedUserPostsRequest getSuggestedUserPostsRequest) async {
     try {
+      final collection = firestore.collection('posts');
 
-      // Fetch posts based on username or all posts
-      final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
-       postsFuture = firestore
-            .collection('posts')
-            .where('username', isEqualTo: getSuggestedUserPostsRequest.userName)
-            .get();
-
-
-      // Fetch subscriber documents for the current user
-      final subscribersFuture = firestore
-          .collection('subscribers')
-          .where('username', isEqualTo: getSuggestedUserPostsRequest.currentUser)
+      // Fetch posts where username matches
+      final usernameQuerySnapshot = await collection
+          .where('username', isEqualTo: getSuggestedUserPostsRequest.userName)
           .get();
+      final postsByUsername = usernameQuerySnapshot.docs.map((doc) => PostModel.fromMap(doc.data())).toList();
 
-      // Wait for both queries to complete
-      final results = await Future.wait([postsFuture, subscribersFuture]);
+      // Fetch all posts (for filtering in array fields)
+      final allPostsSnapshot = await collection.get();
+      final allPosts = allPostsSnapshot.docs.map((doc) => PostModel.fromMap(doc.data())).toList();
 
-      // Parse the data
-      final postDocs = results[0].docs;
-      final subscriberDocs = results[1].docs;
-
-      // Convert Firestore documents to PostModel and SubscribersModel lists
-      final postModels = postDocs.map((doc) {
-        final postData = {'id': doc.id, ...doc.data()};
-        return PostModel.fromMap(postData);
+      // Search in commentsList
+      final postsByComments = allPosts.where((post) {
+        return post.commentsList.any((comment) => comment.username == getSuggestedUserPostsRequest.userName);
       }).toList();
 
-      final subscriberModels = subscriberDocs.map((doc) {
-        final subscriberData = {'id': doc.id, ...doc.data()};
-        return SubscribersModel.fromMap(subscriberData);
+      // Search in emojisList
+      final postsByEmojis = allPosts.where((post) {
+        return post.emojisList.any((emoji) => emoji.username == getSuggestedUserPostsRequest.userName);
       }).toList();
 
-      // Extract post IDs from the subscribers list
-      final postIdsFromSubscribers = subscriberModels.map((subscriber) => subscriber.id).toSet();
-
-      // Fetch additional posts based on `postId` from the `subscribersList`
-      QuerySnapshot<Map<String, dynamic>>? subscribedPostsSnapshot;
-      if (postIdsFromSubscribers.isNotEmpty) {
-        subscribedPostsSnapshot = await firestore
-            .collection('posts')
-            .where(FieldPath.documentId, whereIn: postIdsFromSubscribers.toList())
-            .get();
-      }
-
-      // Convert additional fetched posts to PostModel
-      final subscribedPostModels = (subscribedPostsSnapshot?.docs ?? []).map((doc) {
-        final postData = {'id': doc.id, ...doc.data()};
-        return PostModel.fromMap(postData);
+      // Search in commentsList within emojisList
+      final postsByNestedComments = allPosts.where((post) {
+        return post.emojisList.any((emoji) =>
+        emoji is CommentsModel &&
+            (emoji as CommentsModel).username == getSuggestedUserPostsRequest.userName);
       }).toList();
 
-      // Combine posts from username query and subscribers query
-      final allPosts = <dynamic>{...postModels, ...subscribedPostModels}.toList(); // Ensure distinct posts
+      // Combine all results
+      final combinedPosts = [
+        ...postsByUsername,
+        ...postsByComments,
+        ...postsByEmojis,
+        ...postsByNestedComments,
+      ];
 
-      // Combine data into HomePageModel
-      final homePageModels = allPosts.map((post) {
-        final isSubscribed = subscriberModels.any((subscriber) =>
-        subscriber.postAuther == post.username); // Match post author
-        return HomePageModel(postModel: post, userSubscribed: isSubscribed);
+      // Remove duplicates
+      final distinctPosts = combinedPosts.toSet().toList();
+
+      // Convert to HomePageModel
+      final homePageModels = distinctPosts.map((post) {
+        final userSubscribed = post.postSubscribersList.any((subscriber) => subscriber.username == getSuggestedUserPostsRequest.userName);
+        return HomePageModel(
+          postModel: post,
+          userSubscribed: userSubscribed,
+        );
       }).toList();
 
       return homePageModels;
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> checkIfUserSubscribed(CheckIfUserSubscribedRequest checkIfUserSubscribedRequest) async {
+    try {
+      var docs = await firestore.collection('subscribers')
+          .where('postAuther', isEqualTo: checkIfUserSubscribedRequest.postAuther)
+          .where('username', isEqualTo: checkIfUserSubscribedRequest.userName)
+          .get();
+
+      return docs.docs.isNotEmpty;
+    } catch(e) {
       rethrow;
     }
   }

@@ -5,6 +5,7 @@ import 'package:last/features/layout/domain/usecases/get_notifications_usecase.d
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../home_page/data/model/post_model.dart';
+import '../../data/model/add_post_response.dart';
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
@@ -24,7 +25,7 @@ class LayoutCubit extends Cubit<LayoutState> {
       final signInResult = await addPostUseCase.call(postModel);
       signInResult.fold(
             (failure) => emit(AddPostErrorState(failure.message)),
-            (postAdded) => emit(AddPostSuccessState()),
+            (postAdded) => emit(AddPostSuccessState(postAdded)),
       );
     } else {
       emit(NoInternetState());

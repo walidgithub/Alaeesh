@@ -1,46 +1,30 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:last/features/trending/presentation/ui/widgets/top_post_comments_bottom_sheet.dart';
 import 'package:last/features/trending/presentation/ui/widgets/user_subscriptions_post_view.dart';
-import 'package:readmore/readmore.dart';
-
-import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
 import '../../../../../core/utils/style/app_colors.dart';
-import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
-import '../../../../home_page/data/model/comments_model.dart';
-import '../../../../home_page/data/model/emoji_model.dart';
 import '../../../../home_page/data/model/home_page_model.dart';
-import '../../../../home_page/data/model/post_subscribers_model.dart';
-import '../../../../home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 
 class UserSubscriptionsBottomSheet extends StatefulWidget {
   List<HomePageModel> homePageModel;
-  final String postUsername;
-  final String postUserImage;
   final String loggedInUserName;
   final String loggedInUserImage;
   final double statusBarHeight;
-  Function getUserPosts;
+  final bool userSubscribed;
   Function addOrRemoveSubscriber;
   UserSubscriptionsBottomSheet({
     super.key,
     required this.homePageModel,
-    required this.postUsername,
-    required this.postUserImage,
     required this.loggedInUserName,
     required this.loggedInUserImage,
     required this.statusBarHeight,
-    required this.getUserPosts,
     required this.addOrRemoveSubscriber,
+    required this.userSubscribed,
   });
 
   @override
@@ -51,7 +35,7 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
   bool userSubscribed = false;
   @override
   void initState() {
-    userSubscribed = widget.homePageModel[0].userSubscribed;
+    userSubscribed = widget.userSubscribed;
     super.initState();
   }
   @override
@@ -87,9 +71,7 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    widget.loggedInUserName !=
-                        widget.postUsername
-                        ? GestureDetector(
+                    GestureDetector(
                         onTap: () {
                           if (userSubscribed) {
                             widget.addOrRemoveSubscriber(-1);
@@ -103,7 +85,6 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                               : AppAssets.notificationOff,
                           width: 30.w,
                         ))
-                        : Container(),
                   ],
                 ),
                 SizedBox(
@@ -121,19 +102,16 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                               return UserSubscriptionsPostView(
                                   id: widget.homePageModel[index].postModel.id.toString(),
                                   postAlsha: widget.homePageModel[index].postModel.postAlsha,
-                                  postUsername: widget.postUsername,
-                                  postUserImage: widget.postUserImage,
+                                  postUsername: widget.homePageModel[index].postModel.username,
+                                  postUserImage: widget.homePageModel[index].postModel.userImage,
                                   loggedInUserName: widget.loggedInUserName,
                                   loggedInUserImage: widget.loggedInUserImage,
                                   emojisList: widget.homePageModel[index].postModel.emojisList,
                                   commentsList: widget.homePageModel[index].postModel.commentsList,
                                   statusBarHeight: widget.statusBarHeight,
-                                  time: widget.homePageModel[0].postModel.time,
+                                  time: widget.homePageModel[index].postModel.time,
                                   index: 0,
-                                  userSubscribed: widget.homePageModel[index].userSubscribed,
-                                  getUserPosts: (String username) {
-                                    widget.getUserPosts(username);
-                                  });
+                                  );
                             },
                             itemCount: widget.homePageModel.length),
                       ],

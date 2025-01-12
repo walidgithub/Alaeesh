@@ -29,9 +29,7 @@ class UserSubscriptionsPostView extends StatefulWidget {
   final String time;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
-  final bool userSubscribed;
   final double statusBarHeight;
-  Function getUserPosts;
   int index;
   UserSubscriptionsPostView({
     super.key,
@@ -46,8 +44,6 @@ class UserSubscriptionsPostView extends StatefulWidget {
     required this.statusBarHeight,
     required this.time,
     required this.index,
-    required this.userSubscribed,
-    required this.getUserPosts
   });
 
   @override
@@ -92,81 +88,76 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                               mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
                               children: [
-                                Bounceable(
-                                  onTap: () {
-                                    widget.getUserPosts(widget.postUsername);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                          radius: 25.r,
-                                          backgroundColor: AppColors.cWhite,
-                                          child: Container(
-                                              padding: EdgeInsets.all(2.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: AppColors.cTitle,
-                                                  width: 2,
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 25.r,
+                                        backgroundColor: AppColors.cWhite,
+                                        child: Container(
+                                            padding: EdgeInsets.all(2.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.cTitle,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: ClipOval(
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2.w,
+                                                      color: AppColors.cTitle,
+                                                    ),
+                                                errorWidget: (context, url,
+                                                    error) =>
+                                                    Image.asset(
+                                                        AppAssets.profile),
+                                                imageUrl:
+                                                widget.postUserImage,
+                                              ),
+                                            ))),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.sizeOf(context)
+                                              .width *
+                                              0.50,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  widget.postUsername,
+                                                  style: AppTypography.kBold14
+                                                      .copyWith(
+                                                      color: AppColors
+                                                          .cTitle),
+                                                  overflow:
+                                                  TextOverflow.ellipsis,
+                                                  textDirection:
+                                                  TextDirection.ltr,
                                                 ),
                                               ),
-                                              child: ClipOval(
-                                                child: CachedNetworkImage(
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2.w,
-                                                        color: AppColors.cTitle,
-                                                      ),
-                                                  errorWidget: (context, url,
-                                                      error) =>
-                                                      Image.asset(
-                                                          AppAssets.profile),
-                                                  imageUrl:
-                                                  widget.postUserImage,
-                                                ),
-                                              ))),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.sizeOf(context)
-                                                .width *
-                                                0.50,
-                                            child: Row(
-                                              children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    widget.postUsername,
-                                                    style: AppTypography.kBold14
-                                                        .copyWith(
-                                                        color: AppColors
-                                                            .cTitle),
-                                                    overflow:
-                                                    TextOverflow.ellipsis,
-                                                    textDirection:
-                                                    TextDirection.ltr,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            ],
                                           ),
-                                          Directionality(
-                                            textDirection: TextDirection.ltr,
-                                            child: Text(
-                                              timeAgoText,
-                                              style: AppTypography.kLight12
-                                                  .copyWith(
-                                                  color: AppColors.cBlack),
-                                            ),
+                                        ),
+                                        Directionality(
+                                          textDirection: TextDirection.ltr,
+                                          child: Text(
+                                            timeAgoText,
+                                            style: AppTypography.kLight12
+                                                .copyWith(
+                                                color: AppColors.cBlack),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -227,7 +218,8 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                                     statusBarHeight:
                                     widget.statusBarHeight,
                                     commentsList:
-                                    widget.commentsList),
+                                    widget.commentsList,
+                                ),
                               );
                             },
                           );

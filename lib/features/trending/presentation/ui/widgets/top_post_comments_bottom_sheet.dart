@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:last/features/home_page/data/model/comments_model.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:last/core/preferences/app_pref.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_comment_view.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
+import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
+import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../home_page/data/model/comment_emoji_model.dart';
+import '../../../../home_page/data/model/comments_model.dart';
+import '../../../../home_page/data/model/requests/add_comment_emoji_request.dart';
+import '../../../../home_page/data/model/requests/add_comment_request.dart';
+import '../../../../home_page/domain/entities/emoji_entity.dart';
+import '../../bloc/trending_cubit.dart';
+import '../../bloc/trending_state.dart';
 
 class TopPostCommentsBottomSheet extends StatefulWidget {
   String postId;
@@ -41,6 +54,40 @@ class _TopPostCommentsBottomSheetState extends State<TopPostCommentsBottomSheet>
   var commentData;
   bool userReacted = false;
 
+  @override
+  void initState() {
+    getCommentId();
+    super.initState();
+  }
+
+  Future<void> getCommentId() async {
+    commentData = await _appSecureDataHelper.loadCommentData();
+    setState(() {
+      commentId = commentData['id'] ?? '';
+    });
+    scrollToItemWithComment(commentId);
+  }
+
+  void scrollToItemWithComment(String targetComment) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      int index =
+      widget.commentsList.indexWhere((item) => item.id == targetComment);
+
+      if (index != -1 && _scrollController.hasClients) {
+        double offset = 0.0;
+
+        for (int i = 0; i < index; i++) {
+          offset += calculateItemHeight(i);
+        }
+
+        _scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
 
   double calculateItemHeight(int index) {
     return 140.h;

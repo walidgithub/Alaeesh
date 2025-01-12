@@ -93,7 +93,7 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                           } else if (state is AddPostSuccessState) {
                             hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
-                            widget.postAdded();
+                            widget.postAdded(state.addPostResponse.postId);
                             Navigator.pop(context);
                           } else if (state is AddPostErrorState) {
                             hideLoading();

@@ -1,16 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:last/features/home_page/data/model/comments_model.dart';
+import 'package:last/features/home_page/data/model/requests/delete_comment_emoji_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_comment_bottom_sheet.dart';
+import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
+import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
+import '../../../../../core/utils/ui_components/loading_dialog.dart';
+import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/comment_emoji_model.dart';
+import '../../../../home_page/data/model/requests/delete_comment_request.dart';
+import '../../../../home_page/domain/entities/emoji_entity.dart';
+import '../../../../home_page/presentation/ui/widgets/reactions_view.dart';
+import '../../../../home_page/presentation/ui/widgets/update_comment_bottom_sheet.dart';
+import '../../bloc/trending_cubit.dart';
+import '../../bloc/trending_state.dart';
 
 class TopPostCommentView extends StatefulWidget {
   final String id;
@@ -57,6 +71,7 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
     reactionsCount = widget.commentEmojisModel.length;
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +168,7 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
                           )),
                     ],
                   ),
-                  widget.commentEmojisModel.isNotEmpty ? Divider(
+                  widget.commentEmojisModel.isNotEmpty ? const Divider(
                     color: AppColors.grey,
                   ) : Container(),
                   SizedBox(

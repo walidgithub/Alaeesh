@@ -183,7 +183,10 @@ class HomePageDataSource extends BaseDataSource {
         for (int i = 0; i < commentsList.length; i++) {
           if (commentsList[i]['id'] == updateCommentRequest.commentsModel.id) {
             commentsList[i]['comment'] = updateCommentRequest
-                .commentsModel.comment; // Update the comment
+                .commentsModel.comment;
+
+            await _appSecureDataHelper.saveCommentData(
+                id: updateCommentRequest.commentsModel.id.toString());
             break;
           }
         }

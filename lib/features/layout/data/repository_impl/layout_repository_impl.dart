@@ -9,6 +9,7 @@ import 'package:last/features/layout/data/model/notifications_model.dart';
 import '../../../../core/firebase/error/firebase_error_handler.dart';
 import '../../domain/repository/layout_repository.dart';
 import '../data_source/layout_datasource.dart';
+import '../model/add_post_response.dart';
 
 class LayoutRepositoryImpl extends LayoutRepository {
   final LayoutDataSource _layoutDataSource;
@@ -16,7 +17,7 @@ class LayoutRepositoryImpl extends LayoutRepository {
   LayoutRepositoryImpl(this._layoutDataSource);
 
   @override
-  Future<Either<FirebaseFailure, void>> addPost(PostModel postModel) async {
+  Future<Either<FirebaseFailure, AddPostResponse>> addPost(PostModel postModel) async {
     try {
       final result = await _layoutDataSource.addPost(postModel);
       return Right(result);

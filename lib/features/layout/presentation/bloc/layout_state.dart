@@ -1,11 +1,16 @@
 import 'package:last/features/layout/data/model/notifications_model.dart';
 
+import '../../data/model/add_post_response.dart';
+
 abstract class LayoutState{}
 
 class LayoutInitial extends LayoutState{}
 
 class AddPostLoadingState extends LayoutState{}
-class AddPostSuccessState extends LayoutState{}
+class AddPostSuccessState extends LayoutState{
+  AddPostResponse addPostResponse;
+  AddPostSuccessState(this.addPostResponse);
+}
 class AddPostErrorState extends LayoutState{
   final String errorMessage;
 

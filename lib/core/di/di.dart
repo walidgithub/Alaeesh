@@ -45,6 +45,7 @@ import '../../features/layout/domain/usecases/get_notifications_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
 import '../../features/switch_user/data/repository_impl/switch_user_repository_impl.dart';
 import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
+import '../../features/trending/domain/usecases/check_if_user_subscribed_usecase.dart';
 import '../../features/trending/domain/usecases/get_suggested_users_usecase.dart';
 import '../../features/welcome/data/repository_impl/welcome_repository_impl.dart';
 import '../../features/welcome/domain/usecases/login_usecase.dart';
@@ -129,12 +130,13 @@ class ServiceLocator {
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
     sl.registerLazySingleton<GetSuggestedUsersUseCase>(() => GetSuggestedUsersUseCase(sl()));
     sl.registerLazySingleton<GetSuggestedUserPostsUseCase>(() => GetSuggestedUserPostsUseCase(sl()));
+    sl.registerLazySingleton<CheckIfUserSubscribedUseCase>(() => CheckIfUserSubscribedUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
-    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }
