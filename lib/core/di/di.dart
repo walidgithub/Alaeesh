@@ -14,6 +14,7 @@ import 'package:last/features/home_page/domain/usecases/delete_emoji_usecase.dar
 import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
+import 'package:last/features/my_activities/domain/usecases/get_my_activities_usecase.dart';
 import 'package:last/features/trending/data/data_source/trending_datasource.dart';
 import 'package:last/features/trending/data/repository_impl/trending_repository_impl.dart';
 import 'package:last/features/trending/domain/repository/trending_repository.dart';
@@ -131,6 +132,9 @@ class ServiceLocator {
     sl.registerLazySingleton<GetSuggestedUsersUseCase>(() => GetSuggestedUsersUseCase(sl()));
     sl.registerLazySingleton<GetSuggestedUserPostsUseCase>(() => GetSuggestedUserPostsUseCase(sl()));
     sl.registerLazySingleton<CheckIfUserSubscribedUseCase>(() => CheckIfUserSubscribedUseCase(sl()));
+
+    // my activities useCases
+    sl.registerLazySingleton<GetMyActivitiesUseCase>(() => GetMyActivitiesUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));

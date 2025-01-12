@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyActivityView extends StatefulWidget {
-  const MyActivityView({Key? key}) : super(key: key);
+  const MyActivityView({super.key});
 
   @override
   State<MyActivityView> createState() => _MyActivityViewState();
