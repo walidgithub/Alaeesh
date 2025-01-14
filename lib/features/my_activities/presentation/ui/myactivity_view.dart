@@ -29,7 +29,7 @@ class _MyActivityViewState extends State<MyActivityView> {
 
   String id = "";
   String email = "";
-  String displayName = AppStrings.guestUsername;
+  String displayName = "";
   String photoUrl = "";
   var userData;
 

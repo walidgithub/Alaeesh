@@ -51,7 +51,7 @@ class _LayoutViewState extends State<LayoutView> {
       sl<SecureStorageLoginHelper>();
   String id = "";
   String email = "";
-  String displayName = AppStrings.guestUsername;
+  String displayName = "";
   String photoUrl = "";
   bool loadingUserData = true;
   var userData;

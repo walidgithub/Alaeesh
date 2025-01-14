@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
-import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
-import 'package:last/features/welcome/presentation/bloc/welcome_states.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/app_pref.dart';
 import '../../../../core/preferences/secure_local_data.dart';
@@ -9,14 +7,11 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
 import '../../../../core/utils/constant/app_constants.dart';
 import '../../../../core/utils/constant/app_strings.dart';
-import '../../../../core/utils/constant/app_typography.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/utils/dialogs/back_dialog.dart';
 import '../../../../core/utils/ui_components/curved_clipper.dart';
-import '../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../bloc/switch_user_cubit.dart';
@@ -123,9 +118,6 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                             SizedBox(
                               height: 20.h,
                             ),
-                            PrimaryButton(onTap: () {
-                              Navigator.pushReplacementNamed(context, Routes.layoutRoute);
-                            },text: AppStrings.guest,width: 120.w,gradient: true,),
                           ],
                         ),
                       ),

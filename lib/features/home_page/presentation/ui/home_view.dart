@@ -39,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
 
   String id = "";
   String email = "";
-  String displayName = AppStrings.guestUsername;
+  String displayName = "";
   String photoUrl = "";
   List<SubscribersModel> subscribersList = [];
   bool showAll = true;

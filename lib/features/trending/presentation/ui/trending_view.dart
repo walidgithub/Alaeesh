@@ -47,7 +47,7 @@ class _TrendingViewState extends State<TrendingView> {
 
   String id = "";
   String email = "";
-  String displayName = AppStrings.guestUsername;
+  String displayName = "";
   String photoUrl = "";
   List<SubscribersModel> subscribersList = [];
   var userData;

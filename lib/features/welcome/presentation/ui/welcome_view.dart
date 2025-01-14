@@ -100,37 +100,28 @@ class _WelcomeViewState extends State<WelcomeView> {
                         ),
                         FadeInRight(
                           duration: Duration(milliseconds: AppConstants.animation),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              PrimaryButton(onTap: () {
-                                Navigator.pushReplacementNamed(context, Routes.layoutRoute);
-                              },text: AppStrings.guest,width: 120.w,gradient: true,),
-                              SizedBox(width: 20.w,),
-                              BlocProvider(
-                                create: (context) => sl<WelcomeCubit>(),
-                                child: BlocConsumer<WelcomeCubit, WelcomeState>(
-                                  listener: (context, state) async {
-                                    if (state is LoginLoadingState) {
-                                      showLoading();
-                                    } else if (state is LoginSuccessState) {
-                                      hideLoading();
-                                      await _appSecureDataHelper.saveUserData(id: state.user.id!, email: state.user.email!, displayName: state.user.name!, photoUrl: state.user.photoUrl!);
-                                      await _appPreferences.setUserLoggedIn();
-                                      Navigator.pushReplacementNamed(context, Routes.layoutRoute);
-                                    } else if (state is LoginErrorState) {
-                                      showSnackBar(context, state.errorMessage);
-                                      hideLoading();
-                                    }
-                                  },
-                                  builder: (context, state) {
-                                    return PrimaryButton(onTap: () {
-                                      WelcomeCubit.get(context).login();
-                                    },text: AppStrings.google,width: 200.w,gradient: false,child: SvgPicture.asset(AppAssets.google,width: 30.w,),);
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: BlocProvider(
+                            create: (context) => sl<WelcomeCubit>(),
+                            child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                              listener: (context, state) async {
+                                if (state is LoginLoadingState) {
+                                  showLoading();
+                                } else if (state is LoginSuccessState) {
+                                  hideLoading();
+                                  await _appSecureDataHelper.saveUserData(id: state.user.id!, email: state.user.email!, displayName: state.user.name!, photoUrl: state.user.photoUrl!);
+                                  await _appPreferences.setUserLoggedIn();
+                                  Navigator.pushReplacementNamed(context, Routes.layoutRoute);
+                                } else if (state is LoginErrorState) {
+                                  showSnackBar(context, state.errorMessage);
+                                  hideLoading();
+                                }
+                              },
+                              builder: (context, state) {
+                                return PrimaryButton(onTap: () {
+                                  WelcomeCubit.get(context).login();
+                                },text: AppStrings.google,width: 200.w,gradient: false,child: SvgPicture.asset(AppAssets.google,width: 30.w,),);
+                              },
+                            ),
                           ),
                         )
                       ],
