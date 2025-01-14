@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:last/core/firebase/error/firebase_failure.dart';
-import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/add_subscriber_request.dart';
@@ -228,6 +227,20 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<FirebaseFailure, List<SubscribersModel>>> getSubscribers(GetSubscribersRequest getSubscribersRequest) async {
     try {
       final result = await _homePageDataSource.getSubscribers(getSubscribersRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, List<HomePageModel>>> searchPost(String postText) async {
+    try {
+      final result = await _homePageDataSource.searchPost(postText);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

@@ -17,6 +17,14 @@ class AddPostErrorState extends LayoutState{
   AddPostErrorState(this.errorMessage);
 }
 
+class SendAdviseLoadingState extends LayoutState{}
+class SendAdviseSuccessState extends LayoutState{}
+class SendAdviseErrorState extends LayoutState{
+  final String errorMessage;
+
+  SendAdviseErrorState(this.errorMessage);
+}
+
 class DeleteNotificationLoadingState extends LayoutState{}
 class DeleteNotificationSuccessState extends LayoutState{}
 class DeleteNotificationErrorState extends LayoutState{

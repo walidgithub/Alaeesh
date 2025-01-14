@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:last/core/utils/constant/app_assets.dart';
 import 'package:last/core/utils/constant/app_typography.dart';
+import 'package:last/features/layout/presentation/bloc/layout_cubit.dart';
 import 'package:launch_app_store/launch_app_store.dart';
+import '../../../../../core/di/di.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/style/app_colors.dart';
+import '../../../../../core/utils/ui_components/primary_button.dart';
+import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../data/model/requests/send_advise_request.dart';
+import '../../bloc/layout_state.dart';
 
 class DrawerInfo extends StatefulWidget {
   const DrawerInfo({super.key});
@@ -17,6 +24,7 @@ class DrawerInfo extends StatefulWidget {
 }
 
 class _DrawerInfoState extends State<DrawerInfo> {
+  final TextEditingController _adviseUsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +38,86 @@ class _DrawerInfoState extends State<DrawerInfo> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(AppStrings.about, style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),),
+                Text(
+                  AppStrings.adviseUs,
+                  style: AppTypography.kBold22
+                      .copyWith(color: AppColors.cSecondary),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                TextField(
+                    autofocus: false,
+                    keyboardType: TextInputType.text,
+                    controller: _adviseUsController,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(15.w),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(color: AppColors.cSecondary),
+                          borderRadius:
+                          BorderRadius.circular(AppConstants.radius),
+                        ),
+                        labelText: AppStrings.advice,
+                        border: InputBorder.none)),
+                SizedBox(
+                  height: AppConstants.moreHeightBetweenElements,
+                ),
+                BlocProvider(
+                  create: (context) => sl<LayoutCubit>(),
+                  child: BlocConsumer<LayoutCubit, LayoutState>(
+                    listener: (context, state) async {
+                      if (state is SendAdviseSuccessState) {
+                        showSnackBar(context, AppStrings.addSuccess);
+                        Navigator.pop(context);
+                      } else if (state is SendAdviseErrorState) {
+                        showSnackBar(context, state.errorMessage);
+                      }
+                    },
+                    builder: (context, state) {
+                      return PrimaryButton(
+                        onTap: () {
+                          SendAdviseRequest sendAdviseRequest =
+                          SendAdviseRequest(
+                            adviceText: _adviseUsController.text,
+                          );
+                          LayoutCubit.get(context)
+                              .sendAdvise(sendAdviseRequest);
+                        },
+                        text: AppStrings.addAlsha,
+                        width: 120.w,
+                        gradient: true,
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                const Divider(),
+                Text(
+                  AppStrings.about,
+                  style: AppTypography.kBold22
+                      .copyWith(color: AppColors.cSecondary),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
                 Text(
                   AppStrings.info,
-                  style: TextStyle(fontSize: 15.sp, color: AppColors.cBlack),textDirection: TextDirection.rtl,
+                  style: TextStyle(fontSize: 15.sp, color: AppColors.cBlack),
+                  textDirection: TextDirection.rtl,
                 ),
                 const Divider(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                  padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 5.w),
                   child: Column(
                     children: [
-                      Text(AppStrings.rating, style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),),
+                      Text(
+                        AppStrings.rating,
+                        style: AppTypography.kBold22
+                            .copyWith(color: AppColors.cSecondary),
+                      ),
                       SizedBox(
                         height: AppConstants.heightBetweenElements,
                       ),
@@ -51,7 +125,8 @@ class _DrawerInfoState extends State<DrawerInfo> {
                         onTap: () async {
                           await Future.delayed(
                               const Duration(milliseconds: 700));
-                          LaunchReview.launch(androidAppId: "com.iyaffle.kural");
+                          LaunchReview.launch(
+                              androidAppId: "com.iyaffle.kural");
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -82,6 +157,8 @@ class _DrawerInfoState extends State<DrawerInfo> {
                     ],
                   ),
                 ),
+
+
               ],
             ),
           ),

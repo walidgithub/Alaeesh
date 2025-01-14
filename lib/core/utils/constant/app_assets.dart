@@ -27,4 +27,5 @@ class AppAssets {
   static const String notificationOff = '$imagePath/notifications-off.svg';
   static const String rate = '$imagePath/rate.svg';
   static const String drawer = '$imagePath/drawer.svg';
+  static const String search = '$imagePath/search.svg';
 }

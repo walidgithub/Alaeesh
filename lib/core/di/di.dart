@@ -14,6 +14,7 @@ import 'package:last/features/home_page/domain/usecases/delete_emoji_usecase.dar
 import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
 import 'package:last/features/my_activities/domain/repository/my_activities_repository.dart';
 import 'package:last/features/my_activities/domain/usecases/get_my_activities_usecase.dart';
 import 'package:last/features/my_activities/presentation/bloc/my_activities_cubit.dart';
@@ -45,6 +46,7 @@ import '../../features/layout/domain/repository/layout_repository.dart';
 import '../../features/layout/domain/usecases/add_post_usecase.dart';
 import '../../features/layout/domain/usecases/delete_notification_usecase.dart';
 import '../../features/layout/domain/usecases/get_notifications_usecase.dart';
+import '../../features/layout/domain/usecases/send_advise_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
 import '../../features/my_activities/data/datasource/my_activities_datasource.dart';
 import '../../features/my_activities/data/repository_impl/my_activities_repository_impl.dart';
@@ -110,6 +112,7 @@ class ServiceLocator {
     sl.registerLazySingleton<AddPostUseCase>(() => AddPostUseCase(sl()));
     sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
     sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
+    sl.registerLazySingleton<SendAdviseUseCase>(() => SendAdviseUseCase(sl()));
     // homepage useCases
     sl.registerLazySingleton<AddCommentUseCase>(() => AddCommentUseCase(sl()));
     sl.registerLazySingleton<DeleteCommentUseCase>(() => DeleteCommentUseCase(sl()));
@@ -132,6 +135,7 @@ class ServiceLocator {
     sl.registerLazySingleton<DeleteCommentEmojiUseCase>(() => DeleteCommentEmojiUseCase(sl()));
 
     sl.registerLazySingleton<GetAllPostsUseCase>(() => GetAllPostsUseCase(sl()));
+    sl.registerLazySingleton<SearchPostUseCase>(() => SearchPostUseCase(sl()));
 
     // trending useCases
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
@@ -145,9 +149,9 @@ class ServiceLocator {
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
-    sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
+    sl.registerFactory(() => LayoutCubit(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MyActivitiesCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

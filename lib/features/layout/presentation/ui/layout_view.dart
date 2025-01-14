@@ -26,7 +26,6 @@ import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../../home_page/data/model/post_subscribers_model.dart';
 import '../../../home_page/data/model/requests/add_post_subscriber_request.dart';
-import '../../../home_page/data/model/requests/add_subscriber_request.dart';
 import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
@@ -57,6 +56,7 @@ class _LayoutViewState extends State<LayoutView> {
   bool loadingUserData = true;
   var userData;
   bool showAll = true;
+  bool searching = false;
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -124,7 +124,7 @@ class _LayoutViewState extends State<LayoutView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.logout,
-                                  width: 25.w,
+                                  width: 30.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
@@ -149,7 +149,7 @@ class _LayoutViewState extends State<LayoutView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.switchUser,
-                                  width: 20.w,
+                                  width: 25.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
@@ -164,54 +164,95 @@ class _LayoutViewState extends State<LayoutView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          addPost ? Bounceable(
-                            onTap: () {
-                              setState(() {
-                                if (showAll) {
-                                  showAll = false;
-                                } else {
-                                  showAll = true;
-                                }
-                              });
-                              Navigator.pop(context);
-                              if (showAll) {
-                                getAllPosts(displayName,allPosts: true);
-                              } else {
-                                getAllPosts(displayName,allPosts: false,username: displayName);
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  showAll ? AppAssets.profileIcon : AppAssets.all,
-                                  width: 25.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  showAll ? AppStrings.profile : AppStrings.showAll,
-                                  style: AppTypography.kLight14,
-                                ),
-                              ],
-                            ),
-                          ) : Container(),
-                          SizedBox(
-                            height: 10.h,
-                          ),
+                          addPost
+                              ? Bounceable(
+                                  onTap: () {
+                                    setState(() {
+                                      searching = true;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.search,
+                                        width: 30.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        AppStrings.searchForPost,
+                                        style: AppTypography.kLight14,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                          addPost
+                              ? SizedBox(
+                                  height: 10.h,
+                                )
+                              : Container(),
+                          addPost
+                              ? Bounceable(
+                                  onTap: () {
+                                    setState(() {
+                                      if (showAll) {
+                                        showAll = false;
+                                      } else {
+                                        showAll = true;
+                                      }
+                                    });
+                                    Navigator.pop(context);
+                                    if (showAll) {
+                                      getAllPosts(displayName, allPosts: true);
+                                    } else {
+                                      getAllPosts(displayName,
+                                          allPosts: false,
+                                          username: displayName);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        showAll
+                                            ? AppAssets.profileIcon
+                                            : AppAssets.all,
+                                        width: 30.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        showAll
+                                            ? AppStrings.profile
+                                            : AppStrings.showAll,
+                                        style: AppTypography.kLight14,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                          addPost
+                              ? SizedBox(
+                                  height: 10.h,
+                                )
+                              : Container(),
                           Bounceable(
                             onTap: () {
                               Navigator.pop(context);
-                              scaffoldKey.currentState
-                                  ?.openDrawer();
+                              scaffoldKey.currentState?.openDrawer();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.drawer,
-                                  width: 20.w,
+                                  width: 30.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
@@ -238,7 +279,9 @@ class _LayoutViewState extends State<LayoutView> {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
-      HomeView(),
+      HomeView(checkSearching: (bool returnedSearching) {
+        searching = returnedSearching;
+      },),
       MyActivityView(),
       TrendingView(
         getUserPosts: (String username) {
@@ -264,8 +307,9 @@ class _LayoutViewState extends State<LayoutView> {
     });
   }
 
-  getAllPosts(String displayName, {bool? allPosts,String? username}) {
-    HomePageCubit.get(context).getAllPosts(GetPostsRequest(currentUser: displayName, allPosts: allPosts!,username: username));
+  getAllPosts(String displayName, {bool? allPosts, String? username}) {
+    HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+        currentUser: displayName, allPosts: allPosts!, username: username));
   }
 
   @override
@@ -276,9 +320,9 @@ class _LayoutViewState extends State<LayoutView> {
       onWillPop: () => onBackButtonPressed(context),
       child: SafeArea(
           child: Scaffold(
-            key: scaffoldKey,
+        key: scaffoldKey,
         drawer: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: MediaQuery.of(context).size.width * 0.85,
             child: const DrawerInfo()),
         body: bodyContent(context, statusBarHeight),
       )),
@@ -356,54 +400,59 @@ class _LayoutViewState extends State<LayoutView> {
                           SizedBox(
                             width: 10.w,
                           ),
-                          addPost ? Bounceable(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context).height -
-                                        statusBarHeight -
-                                        100.h,
-                                    width: MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: AddPostBottomSheet(
-                                        username: displayName,
-                                        userImage: photoUrl,
-                                        statusBarHeight: statusBarHeight,
-                                        postAdded: (String postId) {
-                                          AddPostSubscriberRequest
-                                          addPostSubscriberRequest =
-                                          AddPostSubscriberRequest(
-                                              postSubscribersModel:
-                                              PostSubscribersModel(
-                                                username: displayName,
-                                                userImage: photoUrl,
-                                                postId: postId,
-                                              ));
-                                          HomePageCubit.get(context)
-                                              .addPostSubscriber(
-                                              addPostSubscriberRequest);
+                          addPost
+                              ? Bounceable(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      constraints: BoxConstraints.expand(
+                                          height: MediaQuery.sizeOf(context)
+                                                  .height -
+                                              statusBarHeight -
+                                              100.h,
+                                          width:
+                                              MediaQuery.sizeOf(context).width),
+                                      isScrollControlled: true,
+                                      barrierColor: AppColors.cTransparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(30.r),
+                                        ),
+                                      ),
+                                      builder: (context2) {
+                                        return Directionality(
+                                            textDirection: TextDirection.rtl,
+                                            child: AddPostBottomSheet(
+                                              username: displayName,
+                                              userImage: photoUrl,
+                                              statusBarHeight: statusBarHeight,
+                                              postAdded: (String postId) {
+                                                AddPostSubscriberRequest
+                                                    addPostSubscriberRequest =
+                                                    AddPostSubscriberRequest(
+                                                        postSubscribersModel:
+                                                            PostSubscribersModel(
+                                                  username: displayName,
+                                                  userImage: photoUrl,
+                                                  postId: postId,
+                                                ));
+                                                HomePageCubit.get(context)
+                                                    .addPostSubscriber(
+                                                        addPostSubscriberRequest);
 
-                                          getAllPosts(displayName, allPosts: true);
-                                        },
-                                      ));
-                                },
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.addPost,
-                              width: 30.w,
-                            ),
-                          ) : Container(),
+                                                getAllPosts(displayName,
+                                                    allPosts: true);
+                                              },
+                                            ));
+                                      },
+                                    );
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppAssets.addPost,
+                                    width: 30.w,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
@@ -461,8 +510,7 @@ class _LayoutViewState extends State<LayoutView> {
                                               Image.asset(AppAssets.profile),
                                           imageUrl: photoUrl,
                                         ),
-                                      )))
-                              ),
+                                      )))),
                         ],
                       ),
                     ),

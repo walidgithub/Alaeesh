@@ -118,6 +118,18 @@ class GetAllPostsErrorState extends HomePageState{
   GetAllPostsErrorState(this.errorMessage);
 }
 
+class SearchPostLoadingState extends HomePageState{}
+class SearchPostSuccessState extends HomePageState{
+  final List<HomePageModel> homePageModel;
+
+  SearchPostSuccessState(this.homePageModel);
+}
+class SearchPostErrorState extends HomePageState{
+  final String errorMessage;
+
+  SearchPostErrorState(this.errorMessage);
+}
+
 class DeleteCommentEmojiLoadingState extends HomePageState{}
 class DeleteCommentEmojiSuccessState extends HomePageState{}
 class DeleteCommentEmojiErrorState extends HomePageState{

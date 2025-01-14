@@ -10,6 +10,7 @@ import 'package:last/features/home_page/domain/usecases/add_post_subscriber_usec
 import 'package:last/features/home_page/domain/usecases/delete_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import '../../../../core/di/di.dart';
@@ -35,7 +36,7 @@ import '../../domain/usecases/get_subscribers_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
-  HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+  HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -58,6 +59,7 @@ class HomePageCubit extends Cubit<HomePageState> {
   final DeleteCommentEmojiUseCase deleteCommentEmojiUseCase;
 
   final GetAllPostsUseCase getAllPostsUseCase;
+  final SearchPostUseCase searchPostUseCase;
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
@@ -70,6 +72,19 @@ class HomePageCubit extends Cubit<HomePageState> {
       signInResult.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> searchPost(String postText) async {
+    emit(SearchPostLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signInResult = await searchPostUseCase.call(postText);
+      signInResult.fold(
+            (failure) => emit(SearchPostErrorState(failure.message)),
+            (posts) => emit(SearchPostSuccessState(posts)),
       );
     } else {
       emit(NoInternetState());

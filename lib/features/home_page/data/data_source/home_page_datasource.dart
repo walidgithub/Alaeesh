@@ -26,6 +26,7 @@ import '../model/subscribers_model.dart';
 abstract class BaseDataSource {
   Future<void> updatePost(UpdatePostRequest updatePostRequest);
   Future<void> deletePost(String postId);
+  Future<List<HomePageModel>> searchPost(String postText);
 
   Future<void> addComment(AddCommentRequest addCommentRequest);
   Future<void> deleteComment(DeleteCommentRequest deleteCommentRequest);
@@ -89,14 +90,16 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest) async {
+  Future<List<HomePageModel>> getAllPosts(
+      GetPostsRequest getPostsRequest) async {
     try {
       // Fetch posts and filtered subscribers concurrently
       final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
       if (getPostsRequest.allPosts) {
         postsFuture = firestore.collection('posts').get();
       } else {
-        postsFuture = firestore.collection('posts')
+        postsFuture = firestore
+            .collection('posts')
             .where('username', isEqualTo: getPostsRequest.username!.trim())
             .get();
       }
@@ -125,7 +128,7 @@ class HomePageDataSource extends BaseDataSource {
       // Combine data into HomePageModel
       List<HomePageModel> homePageModels = postModels.map((post) {
         final isSubscribed = subscriberModels.any((subscriber) =>
-        subscriber.postAuther == post.username); // Match post author
+            subscriber.postAuther == post.username); // Match post author
         return HomePageModel(postModel: post, userSubscribed: isSubscribed);
       }).toList();
 
@@ -182,8 +185,8 @@ class HomePageDataSource extends BaseDataSource {
 
         for (int i = 0; i < commentsList.length; i++) {
           if (commentsList[i]['id'] == updateCommentRequest.commentsModel.id) {
-            commentsList[i]['comment'] = updateCommentRequest
-                .commentsModel.comment;
+            commentsList[i]['comment'] =
+                updateCommentRequest.commentsModel.comment;
 
             await _appSecureDataHelper.saveCommentData(
                 id: updateCommentRequest.commentsModel.id.toString());
@@ -462,7 +465,8 @@ class HomePageDataSource extends BaseDataSource {
       GetSubscribersRequest getSubscribersRequest) async {
     List<SubscribersModel> subscribersList = [];
     try {
-      var docs = await firestore.collection('subscribers')
+      var docs = await firestore
+          .collection('subscribers')
           .where('username', isEqualTo: getSubscribersRequest.username)
           .get();
 
@@ -475,6 +479,15 @@ class HomePageDataSource extends BaseDataSource {
       }).toList();
 
       return subscribersList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HomePageModel>> searchPost(String postText) async {
+    try {
+      return [];
     } catch (e) {
       rethrow;
     }

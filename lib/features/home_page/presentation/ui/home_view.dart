@@ -25,7 +25,8 @@ import '../../data/model/subscribers_model.dart';
 import '../bloc/home_page_state.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  Function checkSearching;
+  HomeView({super.key, required this.checkSearching});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -37,18 +38,22 @@ class _HomeViewState extends State<HomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  final TextEditingController _searchingController = TextEditingController();
+
   String id = "";
   String email = "";
   String displayName = "";
   String photoUrl = "";
   List<SubscribersModel> subscribersList = [];
   bool showAll = true;
+  bool searching = false;
   var userData;
 
   @override
   void initState() {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
+    checkSearching();
     super.initState();
   }
 
@@ -107,6 +112,70 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
+              searching ?
+              Column(
+                children: [
+                  SizedBox(
+                    height: AppConstants.moreHeightBetweenElements,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.60,
+                        child: TextField(
+                            autofocus: true,
+                            keyboardType: TextInputType.text,
+                            controller: _searchingController,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(15.w),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                  const BorderSide(color: AppColors.cSecondary),
+                                  borderRadius:
+                                  BorderRadius.circular(AppConstants.radius),
+                                ),
+                                labelText: AppStrings.searchForPost,
+                                border: InputBorder.none)),
+                      ),
+                      SizedBox(
+                        width: 10.w,
+                      ),
+                      BlocConsumer<HomePageCubit, HomePageState>(
+                        listener: (context, state) async {
+                          if (state is SearchPostLoadingState) {
+                            showLoading();
+                          } else if (state is SearchPostSuccessState) {
+                            hideLoading();
+                            homePageModel.clear();
+                            homePageModel.addAll(state.homePageModel);
+                            setState(() {
+                              searching = false;
+                            });
+                          } else if (state is SearchPostErrorState) {
+                            hideLoading();
+                            showSnackBar(context, state.errorMessage);
+                          }
+                        },
+                        builder: (context, state) {
+                          return PrimaryButton(
+                            onTap: () {
+                              HomePageCubit.get(context)
+                                  .searchPost(_searchingController.text.trim());
+                            },
+                            text: AppStrings.search,
+                            width: 100.w,
+                            gradient: true,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppConstants.heightBetweenElements,
+                  )
+                ],
+              )
+                  : Container(),
               Expanded(
                 child: SingleChildScrollView(
                   child: BlocConsumer<HomePageCubit, HomePageState>(

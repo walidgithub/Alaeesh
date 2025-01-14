@@ -21,6 +21,7 @@ import '../../data/model/subscribers_model.dart';
 abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> updatePost(UpdatePostRequest updatePostRequest);
   Future<Either<FirebaseFailure, void>> deletePost(String postId);
+  Future<Either<FirebaseFailure, List<HomePageModel>>> searchPost(String postText);
 
   Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest addCommentRequest);
   Future<Either<FirebaseFailure, void>> updateComment(UpdateCommentRequest updateCommentRequest);
