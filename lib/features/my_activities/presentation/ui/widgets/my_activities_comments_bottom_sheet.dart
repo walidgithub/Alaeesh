@@ -59,18 +59,6 @@ class _MyActivitiesCommentsBottomSheetState extends State<MyActivitiesCommentsBo
     super.initState();
   }
 
-  // void goToLastItem() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (_scrollController.hasClients) {
-  //       _scrollController.animateTo(
-  //         _scrollController.position.maxScrollExtent,
-  //         duration: const Duration(milliseconds: 300),
-  //         curve: Curves.linear,
-  //       );
-  //     }
-  //   });
-  // }
-
   Future<void> getCommentId() async {
     commentData = await _appSecureDataHelper.loadCommentData();
     setState(() {

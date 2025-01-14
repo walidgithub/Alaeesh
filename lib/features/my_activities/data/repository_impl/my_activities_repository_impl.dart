@@ -14,10 +14,10 @@ import '../../../home_page/data/data_source/home_page_datasource.dart';
 import '../../domain/repository/my_activities_repository.dart';
 
 class MyActivitiesRepositoryImpl extends MyActivitiesRepository{
-  final GetMyActivitiesDataSource _getMyActivitiesDataSource;
+  final MyActivitiesDataSource _myActivitiesDataSource;
   final HomePageDataSource _homePageDataSource;
 
-  MyActivitiesRepositoryImpl(this._getMyActivitiesDataSource,
+  MyActivitiesRepositoryImpl(this._myActivitiesDataSource,
       this._homePageDataSource);
 
   @override
@@ -93,7 +93,7 @@ class MyActivitiesRepositoryImpl extends MyActivitiesRepository{
   @override
   Future<Either<FirebaseFailure, List<HomePageModel>>> getMyActivities(GetMyActivitiesRequest getMyActivitiesRequest) async {
     try {
-      final result = await _getMyActivitiesDataSource.getMyActivities(getMyActivitiesRequest);
+      final result = await _myActivitiesDataSource.getMyActivities(getMyActivitiesRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

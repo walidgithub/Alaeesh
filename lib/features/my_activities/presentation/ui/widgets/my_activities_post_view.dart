@@ -46,6 +46,7 @@ class MyActivitiesPostView extends StatefulWidget {
   Function addNewEmoji;
   Function updateComment;
   int index;
+  Function postUpdated;
   MyActivitiesPostView({
     super.key,
     required this.id,
@@ -62,6 +63,7 @@ class MyActivitiesPostView extends StatefulWidget {
     required this.index,
     required this.addNewEmoji,
     required this.updateComment,
+    required this.postUpdated,
   });
 
   @override
@@ -98,106 +100,65 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
         items: [
           PopupMenuItem(
               padding: EdgeInsets.zero,
-              child: Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.cTitle),
-                    borderRadius: BorderRadius.all(Radius.circular(5.r))),
-                child: Column(
-                  children: [
-                    Bounceable(
-                      onTap: () {
-                        MyActivitiesCubit.get(context).deletePost(widget.id);
-                      },
-                      child: SizedBox(
-                        width: 90.w,
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            SvgPicture.asset(
-                              AppAssets.delete,
-                              width: 15.w,
+              child: BlocProvider(
+                create: (context) => sl<MyActivitiesCubit>(),
+                child: BlocConsumer<MyActivitiesCubit, MyActivitiesState>(
+                  listener: (context, state) async {
+                    if (state is DeletePostLoadingState) {
+                      showLoading();
+                    } else if (state is DeletePostSuccessState) {
+                      hideLoading();
+                      widget.postUpdated();
+                      Navigator.pop(context);
+                    } else if (state is DeletePostErrorState) {
+                      hideLoading();
+                      showSnackBar(context, state.errorMessage);
+                      Navigator.pop(context);
+                    }
+                  },
+                  builder: (context, state) {
+                    return Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.cTitle),
+                          borderRadius: BorderRadius.all(Radius.circular(5.r))),
+                      child: Column(
+                        children: [
+                          Bounceable(
+                            onTap: () {
+                              MyActivitiesCubit.get(context).deletePost(widget.id);
+                            },
+                            child: SizedBox(
+                              width: 90.w,
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SvgPicture.asset(
+                                    AppAssets.delete,
+                                    width: 15.w,
+                                  ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    AppStrings.delete,
+                                    style: AppTypography.kLight13,
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            Text(
-                              AppStrings.delete,
-                              style: AppTypography.kLight13,
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ))
         ]);
   }
 
   OverlayEntry? _overlayEntry;
-
-  void _showPopup(BuildContext context, Offset position) {
-    _overlayEntry = OverlayEntry(
-      builder: (context) => GestureDetector(
-        onTap: _removePopup,
-        behavior: HitTestBehavior.translucent,
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: _removePopup,
-              behavior: HitTestBehavior.translucent,
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-            Positioned(
-                left: position.dx - MediaQuery.sizeOf(context).width * 0.75,
-                top: position.dy - 40.h,
-                child: BlocProvider(
-                  create: (context) => sl<MyActivitiesCubit>(),
-                  child: BlocConsumer<MyActivitiesCubit, MyActivitiesState>(
-                    listener: (context, state) async {
-                      if (state is DeleteEmojiSuccessState) {
-                        widget.addNewEmoji(-1);
-                        _removePopup();
-                      } else if (state is DeleteEmojiErrorState) {
-                        showSnackBar(context, state.errorMessage);
-                      }
-                    },
-                    builder: (context, state) {
-                      return ReactionsView(
-                        returnEmojiData: (EmojiEntity returnedEmojiData) {
-                        },
-                        deleteEmojiData: () {
-                          int emojiIndex = widget.emojisList.indexWhere(
-                              (element) =>
-                                  element.postId == widget.id &&
-                                  element.username == widget.loggedInUserName);
-                          DeleteEmojiRequest deleteEmojiRequest =
-                              DeleteEmojiRequest(
-                                  postId: widget.id,
-                                  emojiId: widget.emojisList[emojiIndex].id!);
-                          MyActivitiesCubit.get(context)
-                              .deleteEmoji(deleteEmojiRequest);
-                        },
-                      );
-                    },
-                  ),
-                ))
-          ],
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  void _removePopup() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -338,9 +299,12 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
                         )),
                   ],
                 ),
-                const Divider(
+                widget.commentsList.isNotEmpty ||
+                    widget.emojisList.isNotEmpty
+                    ? const Divider(
                   color: AppColors.grey,
-                ),
+                )
+                    : Container(),
                 SizedBox(
                   height: widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty ? 40.h : 0,
                   child: Row(
@@ -369,17 +333,18 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
                               return Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: MyActivitiesCommentsBottomSheet(
-                                    postAlsha: widget.postAlsha,
-                                    userImage:
-                                    widget.loggedInUserImage,
-                                    userName: widget.loggedInUserName,
-                                    postId: widget.id,
-                                    statusBarHeight:
-                                    widget.statusBarHeight,
-                                    commentsList:
-                                    widget.commentsList, updateComment: (int status) {
-                                      widget.updateComment(status);
-                                },),
+                                  postAlsha: widget.postAlsha,
+                                  userImage:
+                                  widget.loggedInUserImage,
+                                  userName: widget.loggedInUserName,
+                                  postId: widget.id,
+                                  statusBarHeight:
+                                  widget.statusBarHeight,
+                                  commentsList:
+                                  widget.commentsList,
+                                  updateComment: (int status) {
+                                    widget.updateComment(status);
+                                  },),
                               );
                             },
                           );
@@ -405,6 +370,31 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
                       widget.emojisList.isNotEmpty
                           ? Row(
                         children: [
+                          BlocProvider(
+                            create: (context) => sl<MyActivitiesCubit>(),
+                            child: BlocConsumer<MyActivitiesCubit, MyActivitiesState>(
+                              listener: (context, state) async {
+                                if (state is DeleteEmojiSuccessState) {
+                                  widget.addNewEmoji(-1);
+                                } else if (state is DeleteEmojiErrorState) {
+                                  showSnackBar(context, state.errorMessage);
+                                }
+                              },
+                              builder: (context, state) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    DeleteEmojiRequest deleteEmojiRequest =
+                                    DeleteEmojiRequest(
+                                        postId: widget.id,
+                                        emojiId: widget.emojisList[0].id!);
+                                    MyActivitiesCubit.get(context)
+                                        .deleteEmoji(deleteEmojiRequest);
+                                  },
+                                  child: Text(AppStrings.skip, style: AppTypography.kLight16.copyWith(color: AppColors.cTitle),),
+                                );
+                              },
+                            ),
+                          ),
                           Bounceable(
                             onTap: () {
                               showModalBottomSheet(
@@ -436,9 +426,7 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
                               );
                             },
                             child: SizedBox(
-                              width:
-                              MediaQuery.sizeOf(context).width *
-                                  0.5,
+                              width: 30.w,
                               height: 30.h,
                               child: Stack(
                                 children: widget.emojisList
@@ -489,22 +477,12 @@ class _MyActivitiesPostViewState extends State<MyActivitiesPostView> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(widget.emojisList.length.toString()),
                         ],
                       )
                           : Container(),
                     ],
                   ),
                 ),
-                widget.commentsList.isNotEmpty ||
-                    widget.emojisList.isNotEmpty
-                    ? const Divider(
-                  color: AppColors.grey,
-                )
-                    : Container(),
                 SizedBox(
                   height: 5.h,
                 ),

@@ -75,71 +75,6 @@ class _MyActivitiesCommentViewState extends State<MyActivitiesCommentView> {
 
   OverlayEntry? _overlayEntry;
 
-  void _showPopup(BuildContext context, Offset position) {
-    _overlayEntry = OverlayEntry(
-      builder: (context) => GestureDetector(
-        onTap: _removePopup,
-        behavior: HitTestBehavior.translucent,
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: _removePopup,
-              behavior: HitTestBehavior.translucent,
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-            BlocProvider(
-                create: (context) => sl<MyActivitiesCubit>(),
-                child: BlocConsumer<MyActivitiesCubit, MyActivitiesState>(
-                  listener: (context, state) {
-                    if (state is DeleteCommentEmojiSuccessState) {
-                      widget.updateComment(-1);
-                      _removePopup();
-                    } else if (state is DeleteCommentEmojiErrorState) {
-                      showSnackBar(context, state.errorMessage);
-                      _removePopup();
-                    }
-                  },
-                  builder: (context, state) {
-                    return Positioned(
-                        left: position.dx -
-                            MediaQuery.sizeOf(context).width * 0.75,
-                        top: position.dy - 40.h,
-                        child: ReactionsView(
-                          returnEmojiData: (EmojiEntity returnedEmojiData) {},
-                          deleteEmojiData: () {
-                            int emojiIndex = widget.commentEmojisModel
-                                .indexWhere((element) =>
-                                    element.commentId == widget.id &&
-                                    element.username ==
-                                        widget.loggedInUserName);
-                            DeleteCommentEmojiRequest
-                                deleteCommentEmojiRequest =
-                                DeleteCommentEmojiRequest(
-                                    postId: widget.postId,
-                                    emojiId: widget
-                                        .commentEmojisModel[emojiIndex].id!,
-                                    commentId: widget.id);
-                            MyActivitiesCubit.get(context)
-                                .deleteCommentEmoji(deleteCommentEmojiRequest);
-                          },
-                        ));
-                  },
-                ))
-          ],
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  void _removePopup() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
   Future<void> _showCommentPopupMenu(
       BuildContext context, Offset position, int index) async {
     await showMenu(
@@ -337,30 +272,43 @@ class _MyActivitiesCommentViewState extends State<MyActivitiesCommentView> {
                           )),
                     ],
                   ),
-                  const Divider(
+                  widget.commentEmojisModel.isNotEmpty ? const Divider(
                     color: AppColors.grey,
-                  ),
+                  ) : Container(),
                   SizedBox(
                     height: 5.h,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  widget.commentEmojisModel.isNotEmpty ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        onTapDown: (details) {
-                          if (_overlayEntry == null) {
-                            _showPopup(context, details.globalPosition);
-                          } else {
-                            _removePopup();
-                          }
-                        },
-                        child: SvgPicture.asset(
-                          AppAssets.emoji,
-                          width: 25.w,
-                        ),
-                      ),
-                      widget.commentEmojisModel.isNotEmpty
-                          ? Row(
+                      BlocProvider(
+                          create: (context) => sl<MyActivitiesCubit>(),
+                          child: BlocConsumer<MyActivitiesCubit, MyActivitiesState>(
+                            listener: (context, state) {
+                              if (state is DeleteCommentEmojiSuccessState) {
+                                widget.updateComment(-1);
+                              } else if (state is DeleteCommentEmojiErrorState) {
+                                showSnackBar(context, state.errorMessage);
+                              }
+                            },
+                            builder: (context, state) {
+                              return GestureDetector(
+                                onTap: () {
+                                  DeleteCommentEmojiRequest
+                                  deleteCommentEmojiRequest =
+                                  DeleteCommentEmojiRequest(
+                                      postId: widget.postId,
+                                      emojiId: widget
+                                          .commentEmojisModel[0].id!,
+                                      commentId: widget.id);
+                                  MyActivitiesCubit.get(context)
+                                      .deleteCommentEmoji(deleteCommentEmojiRequest);
+                                },
+                                child: Text(AppStrings.skip, style: AppTypography.kLight16.copyWith(color: AppColors.cTitle),),
+                              );
+                            },
+                          )),
+                      Row(
                         children: [
                           Bounceable(
                             onTap: () {
@@ -394,9 +342,7 @@ class _MyActivitiesCommentViewState extends State<MyActivitiesCommentView> {
                               );
                             },
                             child: SizedBox(
-                              width:
-                              MediaQuery.sizeOf(context).width *
-                                  0.5,
+                              width: 30.w,
                               height: 30.h,
                               child: Stack(
                                 children: widget.commentEmojisModel
@@ -447,15 +393,11 @@ class _MyActivitiesCommentViewState extends State<MyActivitiesCommentView> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(reactionsCount.toString()),
+
                         ],
                       )
-                          : Container(),
                     ],
-                  ),
+                  ) : Container(),
                   SizedBox(
                     height: 5.h,
                   ),
@@ -469,22 +411,3 @@ class _MyActivitiesCommentViewState extends State<MyActivitiesCommentView> {
     );
   }
 }
-
-// bool isUserReacted = widget.emojisList.where((element) => element.username == widget.username).isNotEmpty;
-// if (isUserReacted) {
-//   widget.emojisList.removeWhere((element) => element.username == widget.username);
-//   widget.emojisList.add(EmojiModel(
-//       id: returnedEmojiData.id,
-//       postId: widget.id,
-//       username: widget.username,
-//       userImage: widget.userImage,
-//       emojiData: returnedEmojiData.emojiData));
-// } else {
-//   widget.emojisList.add(EmojiModel(
-//       id: returnedEmojiData.id,
-//       postId: widget.id,
-//       username: widget.username,
-//       userImage: widget.userImage,
-//       emojiData: returnedEmojiData.emojiData));
-//   reactionsCount++;
-// }

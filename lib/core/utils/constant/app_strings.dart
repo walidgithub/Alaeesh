@@ -37,6 +37,6 @@ class AppStrings {
   static const String topPosts = "أعـلـى مـنـشـورات";
   static const String updatedSuccessfully = 'تـم الـتـعـديـل بـنـجـاح';
   static const String noPosts = 'لـم يـتـم إضـافـة مـنـشـورات بـعـد، قـم أنـت بـهـذه الـخـطـوة';
-
+  static const String noActivities = 'لا يـوجـد مـنـشـورات خـاصـة بـك';
   static const String addSuccess = 'تـمـت الإضـافـة بـنـجـاح';
 }

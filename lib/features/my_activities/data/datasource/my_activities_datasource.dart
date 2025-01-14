@@ -11,7 +11,7 @@ abstract class BaseDataSource {
       GetMyActivitiesRequest getMyActivitiesRequest);
 }
 
-class GetMyActivitiesDataSource extends BaseDataSource {
+class MyActivitiesDataSource extends BaseDataSource {
   final FirebaseFirestore firestore = sl<FirebaseFirestore>();
 
   @override
