@@ -19,41 +19,52 @@ class _ReactionsViewState extends State<ReactionsView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250.w,
-      height: 50.h,
+      width: 270.w,
+      height: 100.h,
       padding: EdgeInsets.all(5.w),
       decoration: BoxDecoration(
         color: AppColors.cWhite,
-        border: Border.all(color: AppColors.cTitle,width: 2.w),
-          borderRadius: BorderRadius.all(Radius.circular(30.r))
+        border: Border.all(color: AppColors.cTitle, width: 2.w),
+        borderRadius: BorderRadius.all(Radius.circular(30.r)),
       ),
-      child: Center(
-        child: ListView.builder(
-          itemCount: emojisData.length,
-          shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return ZoomIn(
-              duration: Duration(milliseconds: 300 * index),
-              child: Bounceable(
-                onTap: () {
-                  if (emojisData[index].id != "0") {
-                    widget.returnEmojiData(emojisData.where((element) => element.id == emojisData[index].id).first);
-                  } else {
-                    widget.deleteEmojiData();
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(emojisData[index].emojiData, style: emojisData[index].id == "0" ? AppTypography.kLight16.copyWith(color: AppColors.cTitle) : AppTypography.kLight20,),
-                    SizedBox(width: 5.w),
-                  ],
+      child: Row(
+        children: [
+          Bounceable(
+            onTap: () {
+              widget.deleteEmojiData();
+            },
+            child: Text(
+              emojisData[0].emojiData,
+              style: AppTypography.kLight16.copyWith(color: AppColors.cTitle),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: List.generate(
+                  emojisData.length - 1,
+                      (index) {
+                    return ZoomIn(
+                      duration: Duration(milliseconds: 300 * (index + 1)),
+                      child: Bounceable(
+                        onTap: () {
+                          widget.returnEmojiData(emojisData[index + 1]);
+                        },
+                        child: Text(
+                          emojisData[index + 1].emojiData,
+                          style: AppTypography.kLight20,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

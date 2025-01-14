@@ -247,7 +247,7 @@ class _PostViewState extends State<PostView> {
             ),
             Positioned(
                 left: position.dx - MediaQuery.sizeOf(context).width * 0.75,
-                top: position.dy - 40.h,
+                top: position.dy - 90.h,
                 child: BlocProvider(
                   create: (context) => sl<HomePageCubit>(),
                   child: BlocConsumer<HomePageCubit, HomePageState>(

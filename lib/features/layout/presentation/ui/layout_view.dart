@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
+import 'package:last/features/layout/presentation/ui/widgets/drawer_info_page.dart';
 import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
 import 'package:last/features/my_activities/presentation/ui/myactivity_view.dart';
 import 'package:last/features/trending/presentation/ui/trending_view.dart';
@@ -56,6 +57,8 @@ class _LayoutViewState extends State<LayoutView> {
   bool loadingUserData = true;
   var userData;
   bool showAll = true;
+
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<bool> selectedWidgets = [false, false, true];
   int selectScreen = 0;
@@ -193,7 +196,33 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                               ],
                             ),
-                          ) : Container()
+                          ) : Container(),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+                              Navigator.pop(context);
+                              scaffoldKey.currentState
+                                  ?.openDrawer();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.drawer,
+                                  width: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.showDrawer,
+                                  style: AppTypography.kLight14,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -247,6 +276,10 @@ class _LayoutViewState extends State<LayoutView> {
       onWillPop: () => onBackButtonPressed(context),
       child: SafeArea(
           child: Scaffold(
+            key: scaffoldKey,
+        drawer: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: const DrawerInfo()),
         body: bodyContent(context, statusBarHeight),
       )),
     );

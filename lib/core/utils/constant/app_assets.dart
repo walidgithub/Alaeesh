@@ -25,4 +25,6 @@ class AppAssets {
   static const String trendingWhite = '$imagePath/trending_white.svg';
   static const String notificationOn = '$imagePath/notifications-on.svg';
   static const String notificationOff = '$imagePath/notifications-off.svg';
+  static const String rate = '$imagePath/rate.svg';
+  static const String drawer = '$imagePath/drawer.svg';
 }

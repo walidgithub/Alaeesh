@@ -114,7 +114,7 @@ class _CommentViewState extends State<CommentView> {
                     return Positioned(
                         left: position.dx -
                             MediaQuery.sizeOf(context).width * 0.75,
-                        top: position.dy - 40.h,
+                        top: position.dy - 90.h,
                         child: ReactionsView(
                           returnEmojiData: (EmojiEntity returnedEmojiData) {
                             _removePopup();

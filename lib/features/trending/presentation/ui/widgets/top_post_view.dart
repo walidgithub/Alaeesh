@@ -246,7 +246,7 @@ class _TopPostViewState extends State<TopPostView> {
             ),
             Positioned(
                 left: position.dx - MediaQuery.sizeOf(context).width * 0.75,
-                top: position.dy - 40.h,
+                top: position.dy - 90.h,
                 child: BlocProvider(
                   create: (context) => sl<TrendingCubit>(),
                   child: BlocConsumer<TrendingCubit, TrendingState>(

@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <path d="M27 22c-1.646 0-3.103 0.8-4.013 2.028l-13.168-6.71c0.114-0.421 0.181-0.86 0.181-1.317 0-0.572-0.101-1.119-0.277-1.63l13.242-6.426c0.909 1.244 2.375 2.056 4.035 2.056 2.762 0 5-2.239 5-5s-2.238-5-5-5-5 2.239-5 5c0 0.388 0.049 0.764 0.133 1.127l-13.432 6.518c-0.915-1.009-2.231-1.646-3.7-1.646-2.761 0-5 2.239-5 5s2.239 5 5 5c1.59 0 3.004-0.744 3.92-1.902l13.222 6.739c-0.090 0.374-0.142 0.762-0.142 1.163 0 2.761 2.238 5 5 5s5-2.239 5-5-2.238-5-5-5zM27 2c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3zM5 19c-1.657 0-3-1.343-3-3s1.343-3 3-3c1.657 0 3 1.344 3 3s-1.343 3-3 3zM27 30c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_14_1937)">
+<path d="M39.432 18.477L23.662 28.314" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M39.445 45.458L23.649 35.569" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.849 38.784C21.6316 38.784 24.698 35.7176 24.698 31.935C24.698 28.1524 21.6316 25.086 17.849 25.086C14.0664 25.086 11 28.1524 11 31.935C11 35.7176 14.0664 38.784 17.849 38.784Z" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M45.245 21.698C49.0276 21.698 52.094 18.6316 52.094 14.849C52.094 11.0664 49.0276 8 45.245 8C41.4624 8 38.396 11.0664 38.396 14.849C38.396 18.6316 41.4624 21.698 45.245 21.698Z" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M45.245 55.943C49.0276 55.943 52.094 52.8766 52.094 49.094C52.094 45.3114 49.0276 42.245 45.245 42.245C41.4624 42.245 38.396 45.3114 38.396 49.094C38.396 52.8766 41.4624 55.943 45.245 55.943Z" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_14_1937">
+<rect width="45.094" height="51.943" fill="white" transform="translate(9 6)"/>
+</clipPath>
+</defs>
 </svg>
