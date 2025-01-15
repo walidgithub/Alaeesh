@@ -15,9 +15,8 @@ import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
-import 'package:last/features/my_activities/domain/repository/my_activities_repository.dart';
-import 'package:last/features/my_activities/domain/usecases/get_my_activities_usecase.dart';
-import 'package:last/features/my_activities/presentation/bloc/my_activities_cubit.dart';
+import 'package:last/features/notifications/domain/repository/notifications_repository.dart';
+import 'package:last/features/notifications/presentation/bloc/notifications_cubit.dart';
 import 'package:last/features/trending/data/data_source/trending_datasource.dart';
 import 'package:last/features/trending/data/repository_impl/trending_repository_impl.dart';
 import 'package:last/features/trending/domain/repository/trending_repository.dart';
@@ -44,12 +43,17 @@ import '../../features/layout/data/data_source/layout_datasource.dart';
 import '../../features/layout/data/repository_impl/layout_repository_impl.dart';
 import '../../features/layout/domain/repository/layout_repository.dart';
 import '../../features/layout/domain/usecases/add_post_usecase.dart';
-import '../../features/layout/domain/usecases/delete_notification_usecase.dart';
-import '../../features/layout/domain/usecases/get_notifications_usecase.dart';
 import '../../features/layout/domain/usecases/send_advise_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
-import '../../features/my_activities/data/datasource/my_activities_datasource.dart';
-import '../../features/my_activities/data/repository_impl/my_activities_repository_impl.dart';
+import '../../features/mine/data/datasource/mine_datasource.dart';
+import '../../features/mine/data/repository_impl/mine_repository_impl.dart';
+import '../../features/mine/domain/repository/mine_repository.dart';
+import '../../features/mine/domain/usecases/get_mine_usecase.dart';
+import '../../features/mine/presentation/bloc/myine_cubit.dart';
+import '../../features/notifications/data/data_source/notifications_datasource.dart';
+import '../../features/notifications/data/repository_impl/notifications_repository_impl.dart';
+import '../../features/notifications/domain/usecases/delete_notification_usecase.dart';
+import '../../features/notifications/domain/usecases/get_notifications_usecase.dart';
 import '../../features/switch_user/data/repository_impl/switch_user_repository_impl.dart';
 import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
 import '../../features/trending/domain/usecases/check_if_user_subscribed_usecase.dart';
@@ -92,7 +96,8 @@ class ServiceLocator {
     sl.registerLazySingleton<HomePageDataSource>(() => HomePageDataSource());
     sl.registerLazySingleton<SwitchUserDataSource>(() => SwitchUserDataSource());
     sl.registerLazySingleton<TrendingDataSource>(() => TrendingDataSource());
-    sl.registerLazySingleton<MyActivitiesDataSource>(() => MyActivitiesDataSource());
+    sl.registerLazySingleton<MineDataSource>(() => MineDataSource());
+    sl.registerLazySingleton<NotificationsDataSource>(() => NotificationsDataSource());
 
     // Repositories
     sl.registerLazySingleton<WelcomeRepository>(() => WelcomeRepositoryImpl(sl()));
@@ -100,7 +105,8 @@ class ServiceLocator {
     sl.registerLazySingleton<HomePageRepository>(() => HomePageRepositoryImpl(sl()));
     sl.registerLazySingleton<SwitchUserRepository>(() => SwitchUserRepositoryImpl(sl()));
     sl.registerLazySingleton<TrendingRepository>(() => TrendingRepositoryImpl(sl(), sl()));
-    sl.registerLazySingleton<MyActivitiesRepository>(() => MyActivitiesRepositoryImpl(sl(), sl()));
+    sl.registerLazySingleton<MineRepository>(() => MineRepositoryImpl(sl(), sl()));
+    sl.registerLazySingleton<NotificationsRepository>(() => NotificationsRepositoryImpl(sl()));
 
     // UseCases
     // welcome useCases
@@ -110,8 +116,6 @@ class ServiceLocator {
     sl.registerLazySingleton<SwitchUserUseCase>(() => SwitchUserUseCase(sl()));
     // layout useCases
     sl.registerLazySingleton<AddPostUseCase>(() => AddPostUseCase(sl()));
-    sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
-    sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
     sl.registerLazySingleton<SendAdviseUseCase>(() => SendAdviseUseCase(sl()));
     // homepage useCases
     sl.registerLazySingleton<AddCommentUseCase>(() => AddCommentUseCase(sl()));
@@ -143,15 +147,20 @@ class ServiceLocator {
     sl.registerLazySingleton<GetSuggestedUserPostsUseCase>(() => GetSuggestedUserPostsUseCase(sl()));
     sl.registerLazySingleton<CheckIfUserSubscribedUseCase>(() => CheckIfUserSubscribedUseCase(sl()));
 
-    // my activities useCases
-    sl.registerLazySingleton<GetMyActivitiesUseCase>(() => GetMyActivitiesUseCase(sl()));
+    // mine useCases
+    sl.registerLazySingleton<GetMineUseCase>(() => GetMineUseCase(sl()));
+
+    // notifications useCases
+    sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
+    sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl()));
-    sl.registerFactory(() => LayoutCubit(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => LayoutCubit(sl(), sl()));
+    sl.registerFactory(() => NotificationsCubit(sl(), sl()));
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => MyActivitiesCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

@@ -18,8 +18,8 @@ class SwitchUserCubit extends Cubit<SwitchUserState> {
   Future<void> switchUser() async {
     emit(SwitchUserLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await switchUserUseCase.call(const FirebaseNoParameters());
-      signInResult.fold(
+      final result = await switchUserUseCase.call(const FirebaseNoParameters());
+      result.fold(
             (failure) => emit(SwitchUserErrorState(failure.message)),
             (user) => emit(SwitchUserSuccessState(user)),
       );

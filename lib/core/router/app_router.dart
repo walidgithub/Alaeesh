@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:last/features/my_activities/presentation/bloc/my_activities_cubit.dart';
 import 'package:last/features/switch_user/presentation/ui/switch_user_view.dart';
 import 'package:last/features/trending/presentation/bloc/trending_cubit.dart';
 import '../../features/home_page/presentation/bloc/home_page_cubit.dart';
 import '../../features/layout/presentation/ui/layout_view.dart';
+import '../../features/mine/presentation/bloc/myine_cubit.dart';
 import '../../features/welcome/presentation/ui/welcome_view.dart';
 import '../di/di.dart';
 
@@ -28,7 +28,7 @@ class RouteGenerator {
                 providers: [
                   BlocProvider(create: (homeContext) => sl<HomePageCubit>()),
                   BlocProvider(create: (trendingContext) => sl<TrendingCubit>()),
-                  BlocProvider(create: (myActivitiesContext) => sl<MyActivitiesCubit>()),
+                  BlocProvider(create: (mineContext) => sl<MineCubit>()),
                 ],
                 child: const LayoutView())));
       case Routes.switchUserRoute:

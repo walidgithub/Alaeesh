@@ -9,4 +9,4 @@ class HomePageModel {
 
 List<HomePageModel> homePageModel = [];
 List<HomePageModel> trendingModel = [];
-List<HomePageModel> myActivitiesModel = [];
+List<HomePageModel> mineModel = [];

@@ -14,6 +14,7 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
   List<HomePageModel> homePageModel;
   final String loggedInUserName;
   final String loggedInUserImage;
+  final String username;
   final double statusBarHeight;
   final bool userSubscribed;
   Function addOrRemoveSubscriber;
@@ -22,6 +23,7 @@ class UserSubscriptionsBottomSheet extends StatefulWidget {
     required this.homePageModel,
     required this.loggedInUserName,
     required this.loggedInUserImage,
+    required this.username,
     required this.statusBarHeight,
     required this.addOrRemoveSubscriber,
     required this.userSubscribed,
@@ -61,9 +63,22 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                 ),
                 SizedBox(height: AppConstants.heightBetweenElements),
                 Center(
-                  child: Text(AppStrings.userSubscriptions,
-                      style:
-                      AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
+                  child: Text(
+                    AppStrings.userSubscriptions,
+                    style: AppTypography.kBold24
+                        .copyWith(color: AppColors.cTitle),
+                  ),
+                ),
+                Center(
+                  child: Flexible(
+                    child: Text(
+                      widget.username,
+                      style: AppTypography.kBold18
+                          .copyWith(color: AppColors.cTitle),
+                      overflow: TextOverflow.ellipsis,
+                      textDirection: TextDirection.ltr,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: AppConstants.moreHeightBetweenElements,

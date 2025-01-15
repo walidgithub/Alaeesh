@@ -68,8 +68,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> getAllPosts(GetPostsRequest getPostsRequest) async {
     emit(GetAllPostsLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getAllPostsUseCase.call(getPostsRequest);
-      signInResult.fold(
+      final result = await getAllPostsUseCase.call(getPostsRequest);
+      result.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
       );
@@ -81,8 +81,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> searchPost(String postText) async {
     emit(SearchPostLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await searchPostUseCase.call(postText);
-      signInResult.fold(
+      final result = await searchPostUseCase.call(postText);
+      result.fold(
             (failure) => emit(SearchPostErrorState(failure.message)),
             (posts) => emit(SearchPostSuccessState(posts)),
       );
@@ -94,8 +94,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deletePost(String postId) async {
     emit(DeletePostLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deletePostUseCase.call(postId);
-      signInResult.fold(
+      final result = await deletePostUseCase.call(postId);
+      result.fold(
             (failure) => emit(DeletePostErrorState(failure.message)),
             (postDeleted) => emit(DeletePostSuccessState()),
       );
@@ -107,8 +107,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> updatePost(UpdatePostRequest updatePostRequest) async {
     emit(UpdatePostLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await updatePostUseCase.call(updatePostRequest);
-      signInResult.fold(
+      final result = await updatePostUseCase.call(updatePostRequest);
+      result.fold(
             (failure) => emit(UpdatePostErrorState(failure.message)),
             (postUpdated) => emit(UpdatePostSuccessState()),
       );
@@ -120,8 +120,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> addComment(AddCommentRequest addCommentRequest) async {
     emit(AddCommentLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addCommentUseCase.call(addCommentRequest);
-      signInResult.fold(
+      final result = await addCommentUseCase.call(addCommentRequest);
+      result.fold(
             (failure) => emit(AddCommentErrorState(failure.message)),
             (commentAdded) => emit(AddCommentSuccessState()),
       );
@@ -133,8 +133,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> updateComment(UpdateCommentRequest updateCommentRequest) async {
     emit(UpdateCommentLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await updateCommentUseCase.call(updateCommentRequest);
-      signInResult.fold(
+      final result = await updateCommentUseCase.call(updateCommentRequest);
+      result.fold(
             (failure) => emit(UpdateCommentErrorState(failure.message)),
             (commentAdded) => emit(UpdateCommentSuccessState()),
       );
@@ -146,8 +146,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
     emit(DeleteCommentLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deleteCommentUseCase.call(deleteCommentRequest);
-      signInResult.fold(
+      final result = await deleteCommentUseCase.call(deleteCommentRequest);
+      result.fold(
             (failure) => emit(DeleteCommentErrorState(failure.message)),
             (commentDeleted) => emit(DeleteCommentSuccessState()),
       );
@@ -159,8 +159,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> addPostSubscriber(AddPostSubscriberRequest addPostSubscriberRequest) async {
     emit(AddPostSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addPostSubscriberUseCase.call(addPostSubscriberRequest);
-      signInResult.fold(
+      final result = await addPostSubscriberUseCase.call(addPostSubscriberRequest);
+      result.fold(
             (failure) => emit(AddPostSubscriberErrorState(failure.message)),
             (postSubscriberAdded) => emit(AddPostSubscriberSuccessState()),
       );
@@ -172,8 +172,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deletePostSubscriber(DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     emit(DeletePostSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deletePostSubscriberUseCase.call(deletePostSubscriberRequest);
-      signInResult.fold(
+      final result = await deletePostSubscriberUseCase.call(deletePostSubscriberRequest);
+      result.fold(
             (failure) => emit(DeletePostSubscriberErrorState(failure.message)),
             (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
@@ -185,8 +185,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
     emit(AddSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addSubscriberUseCase.call(addSubscriberRequest);
-      signInResult.fold(
+      final result = await addSubscriberUseCase.call(addSubscriberRequest);
+      result.fold(
             (failure) => emit(AddSubscriberErrorState(failure.message)),
             (subscriberAdded) => emit(AddSubscriberSuccessState()),
       );
@@ -198,8 +198,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deleteSubscriber(DeleteSubscriberRequest deleteSubscriberRequest) async {
     emit(DeleteSubscriberLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deleteSubscriberUseCase.call(deleteSubscriberRequest);
-      signInResult.fold(
+      final result = await deleteSubscriberUseCase.call(deleteSubscriberRequest);
+      result.fold(
             (failure) => emit(DeleteSubscriberErrorState(failure.message)),
             (subscriberDeleted) => emit(DeleteSubscriberSuccessState()),
       );
@@ -211,8 +211,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> getSubscribers(GetSubscribersRequest getSubscribersRequest) async {
     emit(GetSubscribersLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await getSubscribersUseCase.call(getSubscribersRequest);
-      signInResult.fold(
+      final result = await getSubscribersUseCase.call(getSubscribersRequest);
+      result.fold(
             (failure) => emit(GetSubscribersErrorState(failure.message)),
             (subscribers) => emit(GetSubscribersSuccessState(subscribers)),
       );
@@ -224,8 +224,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> addEmoji(AddEmojiRequest addEmojiRequest) async {
     emit(AddEmojiLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addEmojiUseCase.call(addEmojiRequest);
-      signInResult.fold(
+      final result = await addEmojiUseCase.call(addEmojiRequest);
+      result.fold(
             (failure) => emit(AddEmojiErrorState(failure.message)),
             (emojiAdded) => emit(AddEmojiSuccessState()),
       );
@@ -237,8 +237,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
     emit(DeleteEmojiLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deleteEmojiUseCase.call(deleteEmojiRequest);
-      signInResult.fold(
+      final result = await deleteEmojiUseCase.call(deleteEmojiRequest);
+      result.fold(
             (failure) => emit(DeleteEmojiErrorState(failure.message)),
             (emojiDeleted) => emit(DeleteEmojiSuccessState()),
       );
@@ -250,8 +250,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> addCommentEmoji(AddCommentEmojiRequest addCommentEmojiRequest) async {
     emit(AddCommentEmojiLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await addCommentEmojiUseCase.call(addCommentEmojiRequest);
-      signInResult.fold(
+      final result = await addCommentEmojiUseCase.call(addCommentEmojiRequest);
+      result.fold(
             (failure) => emit(AddCommentEmojiErrorState(failure.message)),
             (commentEmojiAdded) => emit(AddCommentEmojiSuccessState()),
       );
@@ -263,8 +263,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   Future<void> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
     emit(DeleteEmojiLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await deleteCommentEmojiUseCase.call(deleteCommentEmojiRequest);
-      signInResult.fold(
+      final result = await deleteCommentEmojiUseCase.call(deleteCommentEmojiRequest);
+      result.fold(
             (failure) => emit(DeleteCommentEmojiErrorState(failure.message)),
             (commentEmojiDeleted) => emit(DeleteCommentEmojiSuccessState()),
       );

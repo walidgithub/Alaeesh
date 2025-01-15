@@ -219,7 +219,6 @@ class _TrendingViewState extends State<TrendingView> {
           showSnackBar(context, state.errorMessage);
         } else if (state is DeleteSubscriberLoadingState) {
         } else if (state is DeleteSubscriberSuccessState) {
-          print("deletingggggggg");
           if (showUserSubscriptionsSheet) {
             Navigator.pop(context);
             setState(() {
@@ -287,6 +286,7 @@ class _TrendingViewState extends State<TrendingView> {
                           .addSubscriber(addSubscriberRequest);
                     }
                   },
+                  username: selectedUserName,
                   loggedInUserName: displayName,
                   loggedInUserImage: photoUrl,
                   statusBarHeight: statusBarHeight,

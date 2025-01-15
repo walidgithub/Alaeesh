@@ -53,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
-    checkSearching();
+    // checkSearching();
     super.initState();
   }
 

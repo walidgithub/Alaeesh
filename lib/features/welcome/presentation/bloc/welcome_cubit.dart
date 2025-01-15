@@ -20,8 +20,8 @@ class WelcomeCubit extends Cubit<WelcomeState> {
   Future<void> login() async {
     emit(LoginLoadingState());
     if (await _networkInfo.isConnected) {
-      final signInResult = await loginUseCase.call(const FirebaseNoParameters());
-      signInResult.fold(
+      final result = await loginUseCase.call(const FirebaseNoParameters());
+      result.fold(
             (failure) => emit(LoginErrorState(failure.message)),
             (user) => emit(LoginSuccessState(user)),
       );

@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
 import 'package:last/features/layout/presentation/ui/widgets/drawer_info_page.dart';
-import 'package:last/features/layout/presentation/ui/widgets/notifications_bottom_sheet.dart';
-import 'package:last/features/my_activities/presentation/ui/myactivity_view.dart';
 import 'package:last/features/trending/presentation/ui/trending_view.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -14,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:badges/badges.dart' as badges;
 import '../../../../../core/utils/dialogs/back_dialog.dart';
 import '../../../../../core/utils/ui_components/tab_icon.dart';
 import '../../../../core/di/di.dart';
@@ -24,13 +21,17 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../dashboard/presentation/ui/dashboard_view.dart';
 import '../../../home_page/data/model/post_subscribers_model.dart';
 import '../../../home_page/data/model/requests/add_post_subscriber_request.dart';
 import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
+import '../../../mine/presentation/ui/mine_view.dart';
+import '../../../notifications/presentation/ui/notifications_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
 import '../../../welcome/presentation/bloc/welcome_states.dart';
+import 'package:badges/badges.dart' as badges;
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -43,7 +44,6 @@ class _LayoutViewState extends State<LayoutView> {
   final int _notificationBadgeAmount = 0;
   final bool _showNotificationBadge = true;
   String returnedUserName = '';
-  String returnedUsePostId = '';
   bool addPost = true;
 
   final AppPreferences _appPreferences = sl<AppPreferences>();
@@ -60,7 +60,7 @@ class _LayoutViewState extends State<LayoutView> {
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<bool> selectedWidgets = [false, false, true];
+  List<bool> selectedWidgets = [true, false, false, false, false];
   int selectScreen = 0;
   void toggleIcon(int index) {
     setState(() {
@@ -168,37 +168,6 @@ class _LayoutViewState extends State<LayoutView> {
                               ? Bounceable(
                                   onTap: () {
                                     setState(() {
-                                      searching = true;
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppAssets.search,
-                                        width: 30.w,
-                                      ),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Text(
-                                        AppStrings.searchForPost,
-                                        style: AppTypography.kLight14,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Container(),
-                          addPost
-                              ? SizedBox(
-                                  height: 10.h,
-                                )
-                              : Container(),
-                          addPost
-                              ? Bounceable(
-                                  onTap: () {
-                                    setState(() {
                                       if (showAll) {
                                         showAll = false;
                                       } else {
@@ -237,10 +206,86 @@ class _LayoutViewState extends State<LayoutView> {
                                   ),
                                 )
                               : Container(),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ))
+        ]);
+  }
+
+  Future<void> _showMenuPopupMenu() async {
+    await showMenu(
+        context: context,
+        color: AppColors.cWhite,
+        menuPadding: EdgeInsets.zero,
+        elevation: 4,
+        position: RelativeRect.fromDirectional(
+            textDirection: TextDirection.ltr,
+            start: 20.w,
+            top: 120.h,
+            end: 0.w,
+            bottom: 0),
+        items: [
+          PopupMenuItem(
+              padding: EdgeInsets.zero,
+              child: BlocProvider(
+                create: (context) => sl<WelcomeCubit>(),
+                child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                  listener: (context, state) async {
+                    if (state is LogoutLoadingState) {
+                      showLoading();
+                    } else if (state is LogoutSuccessState) {
+                      hideLoading();
+                      await _appSecureDataHelper.clearUserData();
+                      await _appPreferences.setUserLoggedOut();
+                      Navigator.pushReplacementNamed(
+                          context, Routes.welcomeRoute);
+                    } else if (state is LogoutErrorState) {
+                      showSnackBar(context, state.errorMessage);
+                      hideLoading();
+                    }
+                  },
+                  builder: (context, state) {
+                    return Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.cTitle),
+                          borderRadius: BorderRadius.all(Radius.circular(5.r))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          addPost
+                              ? Bounceable(
+                            onTap: () {
+                              setState(() {
+                                searching = true;
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.search,
+                                  width: 30.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.searchForPost,
+                                  style: AppTypography.kLight14,
+                                ),
+                              ],
+                            ),
+                          )
+                              : Container(),
                           addPost
                               ? SizedBox(
-                                  height: 10.h,
-                                )
+                            height: 10.h,
+                          )
                               : Container(),
                           Bounceable(
                             onTap: () {
@@ -282,7 +327,7 @@ class _LayoutViewState extends State<LayoutView> {
       HomeView(checkSearching: (bool returnedSearching) {
         searching = returnedSearching;
       },),
-      MyActivityView(),
+      MineView(),
       TrendingView(
         getUserPosts: (String username) {
           setState(() {
@@ -292,6 +337,8 @@ class _LayoutViewState extends State<LayoutView> {
           toggleIcon(0);
         },
       ),
+      NotificationsView(),
+      DashboardView(),
     ];
     super.initState();
   }
@@ -354,48 +401,12 @@ class _LayoutViewState extends State<LayoutView> {
                         children: [
                           Bounceable(
                             onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context).height -
-                                        statusBarHeight -
-                                        100.h,
-                                    width: MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return NotificationsBottomSheet(
-                                    statusBarHeight: statusBarHeight,
-                                  );
-                                },
-                              );
+                              _showMenuPopupMenu();
                             },
-                            child: badges.Badge(
-                              position:
-                                  badges.BadgePosition.topEnd(top: -15, end: 0),
-                              badgeAnimation: const badges.BadgeAnimation.slide(
-                                disappearanceFadeAnimationDuration:
-                                    Duration(milliseconds: 200),
-                                curve: Curves.bounceInOut,
-                              ),
-                              showBadge: _showNotificationBadge,
-                              badgeStyle: const badges.BadgeStyle(
-                                badgeColor: AppColors.cPrimary,
-                              ),
-                              badgeContent: Text(
-                                _notificationBadgeAmount.toString(),
-                                style: const TextStyle(color: AppColors.cWhite),
-                              ),
-                              child: SvgPicture.asset(
-                                AppAssets.notification,
-                                width: 30.w,
-                              ),
-                            ),
+                            child: SvgPicture.asset(
+                              AppAssets.mainMenu,
+                              width: 30.w,
+                            )
                           ),
                           SizedBox(
                             width: 10.w,
@@ -534,14 +545,65 @@ class _LayoutViewState extends State<LayoutView> {
                         setState(() {
                           addPost = false;
                         });
+                        toggleIcon(4);
+                      },
+                      child: TabIcon(
+                        selectedWidgets: selectedWidgets,
+                        selectScreen: selectScreen,
+                        index: 4,
+                        heightSize: 50.h,
+                        widthSize: 50.w,
+                        blueIcon: AppAssets.dashboard,
+                        whiteIcon: AppAssets.dashboardWhite,
+                        padding: 5.w,
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          addPost = false;
+                        });
+                        toggleIcon(3);
+                      },
+                      child: badges.Badge(
+                        position:
+                        badges.BadgePosition.topStart(top: 0, start: 0),
+                        badgeAnimation: const badges.BadgeAnimation.slide(
+                          disappearanceFadeAnimationDuration:
+                          Duration(milliseconds: 200),
+                          curve: Curves.bounceInOut,
+                        ),
+                        showBadge: _showNotificationBadge,
+                        badgeStyle: const badges.BadgeStyle(
+                          badgeColor: AppColors.cPrimary,
+                        ),
+                        badgeContent: Text(
+                          _notificationBadgeAmount.toString(),
+                          style: const TextStyle(color: AppColors.cWhite),
+                        ),
+                        child: TabIcon(
+                          selectedWidgets: selectedWidgets,
+                          selectScreen: selectScreen,
+                          index: 3,
+                          heightSize: 45.h,
+                          widthSize: 45.w,
+                          blueIcon: AppAssets.notification,
+                          whiteIcon: AppAssets.notificationWhite,
+                          padding: 5.w,
+                        ),
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          addPost = false;
+                        });
                         toggleIcon(2);
                       },
                       child: TabIcon(
                         selectedWidgets: selectedWidgets,
                         selectScreen: selectScreen,
                         index: 2,
-                        heightSize: 50.h,
-                        widthSize: 50.w,
+                        heightSize: 45.h,
+                        widthSize: 45.w,
                         blueIcon: AppAssets.trending,
                         whiteIcon: AppAssets.trendingWhite,
                         padding: 5.w,
@@ -557,8 +619,10 @@ class _LayoutViewState extends State<LayoutView> {
                         selectedWidgets: selectedWidgets,
                         selectScreen: selectScreen,
                         index: 1,
-                        blueIcon: AppAssets.activity,
-                        whiteIcon: AppAssets.activityWhite,
+                        heightSize: 45.h,
+                        widthSize: 45.w,
+                        blueIcon: AppAssets.mine,
+                        whiteIcon: AppAssets.mineWhite,
                       )),
                   GestureDetector(
                       onTap: () {

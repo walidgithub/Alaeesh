@@ -580,51 +580,55 @@ class _TopPostViewState extends State<TopPostView> {
                                   0.5,
                               height: 30.h,
                               child: Stack(
-                                children: widget.emojisList
-                                    .asMap()
-                                    .entries
-                                    .toList()
-                                    .fold<
-                                    List<
-                                        MapEntry<int,
-                                            dynamic>>>([],
-                                        (acc, entry) {
-                                      if (!acc.any((e) =>
-                                      e.value.emojiData ==
-                                          entry.value.emojiData)) {
-                                        acc.add(entry);
-                                      }
-                                      return acc;
-                                    }).map((entry) {
-                                  int index =
-                                      entry.key; // Original index
-                                  return Positioned(
-                                    left: index * reactPosition,
-                                    child: CircleAvatar(
-                                      radius: 15.r,
-                                      backgroundColor:
-                                      AppColors.cWhite,
-                                      child: Container(
-                                        padding: EdgeInsets.all(1.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color:
-                                            AppColors.cSecondary,
-                                            width: 1,
+                                children: [
+                                  ...widget.emojisList
+                                      .asMap()
+                                      .entries
+                                      .toList()
+                                      .fold<List<MapEntry<int, dynamic>>>([], (acc, entry) {
+                                    if (!acc.any((e) => e.value.emojiData == entry.value.emojiData)) {
+                                      acc.add(entry);
+                                    }
+                                    return acc;
+                                  })
+                                      .take(4)
+                                      .map((entry) {
+                                    int index = entry.key;
+                                    return Positioned(
+                                      left: index * reactPosition,
+                                      child: CircleAvatar(
+                                        radius: 15.r,
+                                        backgroundColor: AppColors.cWhite,
+                                        child: Container(
+                                          padding: EdgeInsets.all(1.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.cSecondary,
+                                              width: 1,
+                                            ),
                                           ),
-                                        ),
-                                        child: ClipOval(
-                                          child: Text(
-                                            entry.value.emojiData,
-                                            style: AppTypography
-                                                .kExtraLight18,
+                                          child: ClipOval(
+                                            child: Text(
+                                              entry.value.emojiData,
+                                              style: AppTypography.kExtraLight18,
+                                            ),
                                           ),
                                         ),
                                       ),
+                                    );
+                                  }),
+                                  if (widget.emojisList.length > 4)
+                                    Positioned(
+                                      left: 4 * reactPosition,
+                                      child: Text(
+                                        AppStrings.others,
+                                        style: AppTypography.kExtraLight18.copyWith(
+                                          color: AppColors.cSecondary,
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                }).toList(),
+                                ],
                               ),
                             ),
                           ),
