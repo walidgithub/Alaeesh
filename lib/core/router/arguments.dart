@@ -1,5 +1,5 @@
 
-class WeatherViewArguments {
-  String location;
-  WeatherViewArguments({required this.location});
+class UserPostsArguments {
+  String? username;
+  UserPostsArguments({this.username});
 }

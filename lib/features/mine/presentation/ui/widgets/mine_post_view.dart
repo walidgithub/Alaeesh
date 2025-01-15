@@ -29,7 +29,7 @@ import '../../../../home_page/data/model/requests/add_emoji_request.dart';
 import '../../../../home_page/domain/entities/emoji_entity.dart';
 import '../../bloc/myine_cubit.dart';
 import '../../bloc/mine_state.dart';
-import 'my_activities_comments_bottom_sheet.dart';
+import 'mine_comments_bottom_sheet.dart';
 
 class MinePostView extends StatefulWidget {
   final String id;
@@ -130,25 +130,22 @@ class _MinePostViewState extends State<MinePostView> {
                             onTap: () {
                               MineCubit.get(context).deletePost(widget.id);
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.delete,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.delete,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.delete,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           ),
                         ],

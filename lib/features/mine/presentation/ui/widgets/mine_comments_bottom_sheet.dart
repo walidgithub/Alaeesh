@@ -18,7 +18,7 @@ import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../bloc/myine_cubit.dart';
 import '../../bloc/mine_state.dart';
-import 'my_activities_comment_view.dart';
+import 'mine_comment_view.dart';
 
 class MineCommentsBottomSheet extends StatefulWidget {
   String postId;

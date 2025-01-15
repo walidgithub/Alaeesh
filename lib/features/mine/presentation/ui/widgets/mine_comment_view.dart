@@ -73,8 +73,6 @@ class _MineCommentViewState extends State<MineCommentView> {
     super.initState();
   }
 
-  OverlayEntry? _overlayEntry;
-
   Future<void> _showCommentPopupMenu(
       BuildContext context, Offset position, int index) async {
     await showMenu(
@@ -124,25 +122,22 @@ class _MineCommentViewState extends State<MineCommentView> {
                               MineCubit.get(context)
                                   .deleteComment(deleteCommentRequest);
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.delete,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.delete,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.delete,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           ),
                         ],

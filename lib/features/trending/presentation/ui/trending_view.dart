@@ -6,6 +6,8 @@ import 'package:last/features/trending/presentation/ui/widgets/suggested_user_vi
 import 'package:last/features/trending/presentation/ui/widgets/user_subscriptions_bottom_sheet.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/router/arguments.dart';
 import '../../../../core/utils/constant/app_constants.dart';
 import '../../../../core/utils/constant/app_strings.dart';
 import '../../../../core/utils/constant/app_typography.dart';
@@ -28,8 +30,7 @@ import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
 
 class TrendingView extends StatefulWidget {
-  Function getUserPosts;
-  TrendingView({super.key, required this.getUserPosts});
+  const TrendingView({super.key});
 
   @override
   State<TrendingView> createState() => _TrendingViewState();
@@ -480,8 +481,9 @@ class _TrendingViewState extends State<TrendingView> {
                                   postSubscribersList: trendingModel[index]
                                       .postModel
                                       .postSubscribersList,
-                                  getUserPosts: (String username) {
-                                    widget.getUserPosts(username);
+                                  getUserPosts: () {
+                                    Navigator.pushNamed(context, Routes.userPostsRoute,
+                                        arguments: UserPostsArguments(username: trendingModel[index].postModel.username));
                                   },
                                   addOrRemoveSubscriber: (int status) {
                                     if (status == -1) {

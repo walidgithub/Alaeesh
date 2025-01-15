@@ -58,6 +58,19 @@ class _LayoutViewState extends State<LayoutView> {
   bool showAll = true;
   bool searching = false;
 
+  void updateSearching(bool value) {
+    setState(() {
+      searching = value;
+    });
+    screens = [
+      HomeView(searching: searching,showAllAgain: showAllAgain),
+      MineView(),
+      TrendingView(),
+      NotificationsView(),
+      DashboardView(),
+    ];
+  }
+
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<bool> selectedWidgets = [true, false, false, false, false];
@@ -259,9 +272,8 @@ class _LayoutViewState extends State<LayoutView> {
                           addPost
                               ? Bounceable(
                             onTap: () {
-                              setState(() {
-                                searching = true;
-                              });
+                              Navigator.pop(context);
+                              updateSearching(true);
                             },
                             child: Row(
                               mainAxisAlignment:
@@ -324,23 +336,17 @@ class _LayoutViewState extends State<LayoutView> {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
-      HomeView(checkSearching: (bool returnedSearching) {
-        searching = returnedSearching;
-      },),
+      HomeView(searching: searching,showAllAgain: showAllAgain,),
       MineView(),
-      TrendingView(
-        getUserPosts: (String username) {
-          setState(() {
-            addPost = true;
-            returnedUserName = username;
-          });
-          toggleIcon(0);
-        },
-      ),
+      TrendingView(),
       NotificationsView(),
       DashboardView(),
     ];
     super.initState();
+  }
+
+  void showAllAgain() {
+    getAllPosts(displayName, allPosts: true);
   }
 
   Future<void> _loadSavedUserData() async {

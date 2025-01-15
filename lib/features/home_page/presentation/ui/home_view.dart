@@ -25,8 +25,9 @@ import '../../data/model/subscribers_model.dart';
 import '../bloc/home_page_state.dart';
 
 class HomeView extends StatefulWidget {
-  Function checkSearching;
-  HomeView({super.key, required this.checkSearching});
+  bool searching;
+  Function showAllAgain;
+  HomeView({super.key, required this.searching, required this.showAllAgain});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -46,14 +47,12 @@ class _HomeViewState extends State<HomeView> {
   String photoUrl = "";
   List<SubscribersModel> subscribersList = [];
   bool showAll = true;
-  bool searching = false;
   var userData;
 
   @override
   void initState() {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
-    // checkSearching();
     super.initState();
   }
 
@@ -112,7 +111,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
-              searching ?
+              widget.searching ?
               Column(
                 children: [
                   SizedBox(
@@ -127,6 +126,17 @@ class _HomeViewState extends State<HomeView> {
                             keyboardType: TextInputType.text,
                             controller: _searchingController,
                             decoration: InputDecoration(
+                                suffixIcon: Bounceable(
+                                    onTap: () {
+                                      setState(() {
+                                        widget.searching = false;
+                                        _searchingController.text = "";
+                                      });
+                                      widget.showAllAgain();
+                                    },
+                                    child: Icon(Icons.close,
+                                        color: AppColors.cBlack,
+                                        size: 20.sp)),
                                 contentPadding: EdgeInsets.all(15.w),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide:
@@ -148,9 +158,6 @@ class _HomeViewState extends State<HomeView> {
                             hideLoading();
                             homePageModel.clear();
                             homePageModel.addAll(state.homePageModel);
-                            setState(() {
-                              searching = false;
-                            });
                           } else if (state is SearchPostErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);

@@ -139,7 +139,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                               HomePageCubit.get(context)
                                   .updatePost(updatePostRequest);
                             },
-                            text: AppStrings.edit,
+                            text: AppStrings.addSuccess,
                             width: 120.w,
                             gradient: true,
                           );

@@ -8,6 +8,8 @@ import 'package:last/features/trending/presentation/ui/widgets/top_post_comments
 import 'package:readmore/readmore.dart';
 
 import '../../../../../core/functions/time_ago_function.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/arguments.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -84,82 +86,82 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                        radius: 25.r,
-                                        backgroundColor: AppColors.cWhite,
-                                        child: Container(
-                                            padding: EdgeInsets.all(2.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.cTitle,
-                                                width: 2,
+                            Bounceable(
+                              onTap: () {
+                                Navigator.pushNamed(context, Routes.userPostsRoute,
+                                    arguments: UserPostsArguments(username: widget.postUsername));
+                              },
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                      radius: 25.r,
+                                      backgroundColor: AppColors.cWhite,
+                                      child: Container(
+                                          padding: EdgeInsets.all(2.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.cTitle,
+                                              width: 2,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(
+                                                    strokeWidth: 2.w,
+                                                    color: AppColors.cTitle,
+                                                  ),
+                                              errorWidget: (context, url,
+                                                  error) =>
+                                                  Image.asset(
+                                                      AppAssets.profile),
+                                              imageUrl:
+                                              widget.postUserImage,
+                                            ),
+                                          ))),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: MediaQuery.sizeOf(context)
+                                            .width *
+                                            0.50,
+                                        child: Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                widget.postUsername,
+                                                style: AppTypography.kBold14
+                                                    .copyWith(
+                                                    color: AppColors
+                                                        .cTitle),
+                                                overflow:
+                                                TextOverflow.ellipsis,
+                                                textDirection:
+                                                TextDirection.ltr,
                                               ),
                                             ),
-                                            child: ClipOval(
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2.w,
-                                                      color: AppColors.cTitle,
-                                                    ),
-                                                errorWidget: (context, url,
-                                                    error) =>
-                                                    Image.asset(
-                                                        AppAssets.profile),
-                                                imageUrl:
-                                                widget.postUserImage,
-                                              ),
-                                            ))),
-                                    SizedBox(
-                                      width: 10.w,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.sizeOf(context)
-                                              .width *
-                                              0.50,
-                                          child: Row(
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  widget.postUsername,
-                                                  style: AppTypography.kBold14
-                                                      .copyWith(
-                                                      color: AppColors
-                                                          .cTitle),
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  textDirection:
-                                                  TextDirection.ltr,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                          ],
                                         ),
-                                        Directionality(
-                                          textDirection: TextDirection.ltr,
-                                          child: Text(
-                                            timeAgoText,
-                                            style: AppTypography.kLight12
-                                                .copyWith(
-                                                color: AppColors.cBlack),
-                                          ),
+                                      ),
+                                      Directionality(
+                                        textDirection: TextDirection.ltr,
+                                        child: Text(
+                                          timeAgoText,
+                                          style: AppTypography.kLight12
+                                              .copyWith(
+                                              color: AppColors.cBlack),
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(
                               height: 10.h,

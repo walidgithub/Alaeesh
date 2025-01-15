@@ -487,7 +487,46 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<List<HomePageModel>> searchPost(String postText) async {
     try {
-      return [];
+      // Fetch posts and filtered subscribers concurrently
+      final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
+
+      postsFuture = firestore.collection('posts').get();
+
+      final subscribersFuture = firestore
+          .collection('subscribers')
+          .get();
+
+      final results = await Future.wait([postsFuture, subscribersFuture]);
+
+      // Parse the data
+      final postDocs = results[0].docs;
+      final subscriberDocs = results[1].docs;
+
+      // Convert Firestore documents to PostModel and SubscribersModel lists
+      final postModels = postDocs.map((doc) {
+        final postData = {'id': doc.id, ...doc.data()};
+        return PostModel.fromMap(postData);
+      }).toList();
+
+      final subscriberModels = subscriberDocs.map((doc) {
+        final subscriberData = {'id': doc.id, ...doc.data()};
+        return SubscribersModel.fromMap(subscriberData);
+      }).toList();
+
+      // Combine data into HomePageModel
+      List<HomePageModel> homePageModels = postModels.map((post) {
+        final isSubscribed = subscriberModels.any((subscriber) =>
+        subscriber.postAuther == post.username); // Match post author
+        return HomePageModel(postModel: post, userSubscribed: isSubscribed);
+      }).toList();
+
+      // Filter the HomePageModels based on specific text
+      final specificText = postText; // Replace with your desired text
+      final filteredHomePageModels = homePageModels.where((homePageModel) {
+        return homePageModel.postModel.postAlsha.contains(specificText);
+      }).toList();
+
+      return filteredHomePageModels;
     } catch (e) {
       rethrow;
     }

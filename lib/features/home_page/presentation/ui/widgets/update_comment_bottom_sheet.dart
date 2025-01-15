@@ -128,7 +128,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                               HomePageCubit.get(context)
                                   .updateComment(updateCommentRequest);
                             },
-                            text: AppStrings.edit,
+                            text: AppStrings.addSuccess,
                             width: 120.w,
                             gradient: true,
                           );

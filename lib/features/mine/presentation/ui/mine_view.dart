@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/home_page/data/model/home_page_model.dart';
-import 'package:last/features/mine/presentation/ui/widgets/my_activities_post_view.dart';
+import 'package:last/features/mine/presentation/ui/widgets/mine_post_view.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/utils/constant/app_constants.dart';
 import '../../../../core/utils/constant/app_strings.dart';
 import '../../../../core/utils/constant/app_typography.dart';
+import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../../home_page/data/model/post_subscribers_model.dart';
@@ -92,9 +93,15 @@ class _MineViewState extends State<MineView> {
           return mineModel.isNotEmpty
               ? Column(
                   children: [
-                    SizedBox(
-                      height: AppConstants.heightBetweenElements,
+                    SizedBox(height: AppConstants.heightBetweenElements),
+                    Center(
+                      child: Text(
+                        AppStrings.mineSubscriptions,
+                        style: AppTypography.kBold24
+                            .copyWith(color: AppColors.cTitle),
+                      ),
                     ),
+                    SizedBox(height: AppConstants.heightBetweenElements),
                     ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),

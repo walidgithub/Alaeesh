@@ -206,25 +206,22 @@ class _CommentViewState extends State<CommentView> {
                               HomePageCubit.get(context)
                                   .deleteComment(deleteCommentRequest);
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.delete,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.delete,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.delete,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -269,25 +266,22 @@ class _CommentViewState extends State<CommentView> {
                                 },
                               );
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.edit,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.edit,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.edit,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.edit,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           )
                         ],

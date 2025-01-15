@@ -135,25 +135,22 @@ class _TopPostViewState extends State<TopPostView> {
                             onTap: () {
                               TrendingCubit.get(context).deletePost(widget.id);
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.delete,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.delete,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.delete,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -198,25 +195,22 @@ class _TopPostViewState extends State<TopPostView> {
                                 },
                               );
                             },
-                            child: SizedBox(
-                              width: 90.w,
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppAssets.edit,
-                                    width: 15.w,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Text(
-                                    AppStrings.edit,
-                                    style: AppTypography.kLight13,
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.edit,
+                                  width: 15.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.edit,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           )
                         ],
@@ -624,7 +618,7 @@ class _TopPostViewState extends State<TopPostView> {
                                       child: Text(
                                         AppStrings.others,
                                         style: AppTypography.kExtraLight18.copyWith(
-                                          color: AppColors.cSecondary,
+                                          color: AppColors.cSecondary, fontSize: 12.sp
                                         ),
                                       ),
                                     ),
