@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:last/core/utils/constant/app_assets.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
 import '../../../../../core/router/arguments.dart';
@@ -8,6 +10,7 @@ import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
 import '../../../../../core/utils/style/app_colors.dart';
+import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/home_page_model.dart';
@@ -75,15 +78,49 @@ class _UserPostsViewState extends State<UserPostsView> {
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-        child: Scaffold(
-          body: bodyContent(context, statusBarHeight),
-        ));
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: SafeArea(
+          child: Scaffold(
+            body: bodyContent(context, statusBarHeight),
+          )),
+    );
   }
 
   Widget bodyContent(BuildContext context, double statusBarHeight) {
     return Column(
       children: [
+        SizedBox(height: AppConstants.moreHeightBetweenElements),
+        GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+              widget.arguments.reload!();
+            },
+            child: SvgPicture.asset(
+              AppAssets.back,
+              width: 30.w,
+            )),
+        SizedBox(height: AppConstants.moreHeightBetweenElements),
+        Center(
+          child: Text(
+            AppStrings.userSubscriptions,
+            style: AppTypography.kBold24
+                .copyWith(color: AppColors.cTitle),
+          ),
+        ),
+        Center(
+          child: Flexible(
+            child: Text(
+              widget.arguments.username!,
+              style: AppTypography.kBold18
+                  .copyWith(color: AppColors.cTitle),
+              overflow: TextOverflow.ellipsis,
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        ),
         Expanded(
           child: Container(
             padding: EdgeInsets.all(20.w),

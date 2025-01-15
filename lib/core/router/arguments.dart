@@ -1,5 +1,6 @@
 
 class UserPostsArguments {
   String? username;
-  UserPostsArguments({this.username});
+  Function? reload;
+  UserPostsArguments({this.username, this.reload});
 }

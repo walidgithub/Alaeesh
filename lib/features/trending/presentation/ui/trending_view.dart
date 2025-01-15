@@ -483,7 +483,10 @@ class _TrendingViewState extends State<TrendingView> {
                                       .postSubscribersList,
                                   getUserPosts: () {
                                     Navigator.pushNamed(context, Routes.userPostsRoute,
-                                        arguments: UserPostsArguments(username: trendingModel[index].postModel.username));
+                                        arguments: UserPostsArguments(username: trendingModel[index].postModel.username, reload: () {
+                                          getTopPosts(displayName);
+                                          getSuggestedUsers();
+                                        }));
                                   },
                                   addOrRemoveSubscriber: (int status) {
                                     if (status == -1) {

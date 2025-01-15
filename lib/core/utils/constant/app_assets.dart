@@ -32,4 +32,5 @@ class AppAssets {
   static const String rate = '$imagePath/rate.svg';
   static const String drawer = '$imagePath/drawer.svg';
   static const String search = '$imagePath/search.svg';
+  static const String back = '$imagePath/back.svg';
 }
