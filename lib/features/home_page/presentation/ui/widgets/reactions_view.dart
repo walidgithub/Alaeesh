@@ -48,7 +48,7 @@ class _ReactionsViewState extends State<ReactionsView> {
                   emojisData.length - 1,
                       (index) {
                     return ZoomIn(
-                      duration: Duration(milliseconds: 300 * (index + 1)),
+                      duration: Duration(milliseconds: 150 * (index + 1)),
                       child: Bounceable(
                         onTap: () {
                           widget.returnEmojiData(emojisData[index + 1]);

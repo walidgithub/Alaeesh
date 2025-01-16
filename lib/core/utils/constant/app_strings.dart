@@ -26,13 +26,15 @@ class AppStrings {
   static const String edit = 'اتـلـغـبـط مـعـلـش 😬';
   static const String search = 'بـحـث 🕵🏻‍';
   static const String skip = ' تـراجـع  ';
-  static const String others = '+ نـاس تـانـيـة';
+  static const String others = 'نـاس تـانـيـة +';
   static const String readMore = "عايـز أكـمـل 🤔";
   static const String less = " تـمـام كـده 👍";
   static const String userSubscriptions = "مـشـاركـات";
   static const String mineSubscriptions = "مـشـاركـاتـى 🥳";
   static const String showAll = "كـل الألـشـات";
   static const String subscriptions = "مـشـاركــات";
+  static const String subscription = "مـشـاركــة";
+  static const String moreThan = "أكـثـر مــن";
   static const String suggestedUsers = "الـمـفـروض نـاس دمـهـا خـفـيـف 🤐";
   static const String topPosts = "أعـلـى ألـشـات 🤣";
   static const String updatedSuccessfully = 'تـمـام كـده 👍';

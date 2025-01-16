@@ -42,5 +42,9 @@ List<EmojiEntity> emojisData = [
   EmojiEntity(id: "34", emojiData: "🤮"),
   EmojiEntity(id: "35", emojiData: "🙄"),
   EmojiEntity(id: "37", emojiData: "😧"),
+  EmojiEntity(id: "38", emojiData: "❤"),
+  EmojiEntity(id: "39", emojiData: "💔"),
+  EmojiEntity(id: "40", emojiData: "🤍"),
+  EmojiEntity(id: "42", emojiData: "💕"),
 
 ];

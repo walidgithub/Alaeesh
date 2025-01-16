@@ -65,7 +65,7 @@ class _SuggestedUserViewState extends State<SuggestedUserView> {
                           ),
                         ))),
                 Flexible(child: Text(widget.userName, style: AppTypography.kLight14.copyWith(color: AppColors.cTitle),overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,),),
-                Text("${widget.subscriptionsCount} ${AppStrings.subscriptions}", style: AppTypography.kLight13.copyWith(color: AppColors.grey),)
+                Text("${widget.subscriptionsCount > 50 ? AppStrings.moreThan : ''} ${widget.subscriptionsCount > 50 ? 50 : widget.subscriptionsCount} ${widget.subscriptionsCount > 10 ? AppStrings.subscription : AppStrings.subscriptions}", style: AppTypography.kLight13.copyWith(color: AppColors.grey),)
               ],
             ),
           ),

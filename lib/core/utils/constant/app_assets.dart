@@ -33,4 +33,6 @@ class AppAssets {
   static const String drawer = '$imagePath/drawer.svg';
   static const String search = '$imagePath/search.svg';
   static const String back = '$imagePath/back.svg';
+  static const String message = '$imagePath/message.svg';
+  static const String messageWhite = '$imagePath/message_white.svg';
 }

@@ -27,6 +27,7 @@ import '../../../home_page/data/model/requests/add_post_subscriber_request.dart'
 import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
+import '../../../messages/presentation/ui/messages.dart';
 import '../../../mine/presentation/ui/mine_view.dart';
 import '../../../notifications/presentation/ui/notifications_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
@@ -42,7 +43,9 @@ class LayoutView extends StatefulWidget {
 
 class _LayoutViewState extends State<LayoutView> {
   final int _notificationBadgeAmount = 0;
+  final int _messagesBadgeAmount = 0;
   final bool _showNotificationBadge = true;
+  final bool _messagesBadge = true;
   String returnedUserName = '';
   bool addPost = true;
 
@@ -68,12 +71,13 @@ class _LayoutViewState extends State<LayoutView> {
       TrendingView(),
       NotificationsView(),
       DashboardView(),
+      MessagesView(),
     ];
   }
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<bool> selectedWidgets = [true, false, false, false, false];
+  List<bool> selectedWidgets = [true, false, false, false, false, false];
   int selectScreen = 0;
   void toggleIcon(int index) {
     setState(() {
@@ -341,6 +345,7 @@ class _LayoutViewState extends State<LayoutView> {
       TrendingView(),
       NotificationsView(),
       DashboardView(),
+      MessagesView(),
     ];
     super.initState();
   }
@@ -551,6 +556,40 @@ class _LayoutViewState extends State<LayoutView> {
                         setState(() {
                           addPost = false;
                         });
+                        toggleIcon(5);
+                      },
+                      child: badges.Badge(
+                        position:
+                        badges.BadgePosition.topStart(top: 0, start: 0),
+                        badgeAnimation: const badges.BadgeAnimation.slide(
+                          disappearanceFadeAnimationDuration:
+                          Duration(milliseconds: 200),
+                          curve: Curves.bounceInOut,
+                        ),
+                        showBadge: _messagesBadge,
+                        badgeStyle: const badges.BadgeStyle(
+                          badgeColor: AppColors.cPrimary,
+                        ),
+                        badgeContent: Text(
+                          _messagesBadgeAmount.toString(),
+                          style: const TextStyle(color: AppColors.cWhite),
+                        ),
+                        child: TabIcon(
+                          selectedWidgets: selectedWidgets,
+                          selectScreen: selectScreen,
+                          index: 5,
+                          heightSize: 50.h,
+                          widthSize: 50.w,
+                          blueIcon: AppAssets.message,
+                          whiteIcon: AppAssets.messageWhite,
+                          padding: 5.w,
+                        ),
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          addPost = false;
+                        });
                         toggleIcon(4);
                       },
                       child: TabIcon(
@@ -625,10 +664,11 @@ class _LayoutViewState extends State<LayoutView> {
                         selectedWidgets: selectedWidgets,
                         selectScreen: selectScreen,
                         index: 1,
-                        heightSize: 45.h,
-                        widthSize: 45.w,
+                        heightSize: 50.h,
+                        widthSize: 50.w,
                         blueIcon: AppAssets.mine,
                         whiteIcon: AppAssets.mineWhite,
+                        padding: 5.w,
                       )),
                   GestureDetector(
                       onTap: () {

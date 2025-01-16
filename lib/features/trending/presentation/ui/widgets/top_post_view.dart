@@ -571,7 +571,7 @@ class _TopPostViewState extends State<TopPostView> {
                             child: SizedBox(
                               width:
                               MediaQuery.sizeOf(context).width *
-                                  0.5,
+                                  0.55,
                               height: 30.h,
                               child: Stack(
                                 children: [
@@ -612,13 +612,15 @@ class _TopPostViewState extends State<TopPostView> {
                                       ),
                                     );
                                   }),
-                                  if (widget.emojisList.length > 4)
+                                  if (widget.emojisList.length > 3)
                                     Positioned(
-                                      left: 4 * reactPosition,
+                                      top: 5.h,
+                                      left: 4.7 * reactPosition,
                                       child: Text(
                                         AppStrings.others,
-                                        style: AppTypography.kExtraLight18.copyWith(
-                                          color: AppColors.cSecondary, fontSize: 12.sp
+                                        style: AppTypography.kBold18.copyWith(
+                                            color: AppColors.cSecondary,
+                                            fontSize: 15.sp
                                         ),
                                       ),
                                     ),
