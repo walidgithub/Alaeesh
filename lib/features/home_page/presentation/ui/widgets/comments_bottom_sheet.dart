@@ -65,18 +65,6 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     super.initState();
   }
 
-  // void goToLastItem() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (_scrollController.hasClients) {
-  //       _scrollController.animateTo(
-  //         _scrollController.position.maxScrollExtent,
-  //         duration: const Duration(milliseconds: 300),
-  //         curve: Curves.linear,
-  //       );
-  //     }
-  //   });
-  // }
-
   Future<void> getCommentId() async {
     commentData = await _appSecureDataHelper.loadCommentData();
     setState(() {
@@ -103,6 +91,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           curve: Curves.easeInOut,
         );
       }
+    });
+  }
+
+  Future<void> refresh() async {
+    setState(() {
+      widget.addNewComment(0);
+      Navigator.pop(context);
     });
   }
 
@@ -234,77 +229,81 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return BlocProvider(
-                        create: (context) => sl<HomePageCubit>(),
-                        child: BlocConsumer<HomePageCubit, HomePageState>(
-                            listener: (context, state) {
-                          if (state is AddCommentEmojiSuccessState) {
-                            if (userReacted) {
-                              widget.addNewComment(0);
-                            } else {
-                              widget.addNewComment(1);
-                            }
-                            Navigator.pop(context);
-                          } else if (state is AddCommentEmojiErrorState) {
-                            showSnackBar(context, state.errorMessage);
-                            Navigator.pop(context);
-                          } else if (state is DeleteCommentEmojiErrorState) {
-                            showSnackBar(context, state.errorMessage);
-                            Navigator.pop(context);
-                          }
-                        }, builder: (context, state) {
-                          return CommentView(
-                            getUserPosts: () {
-                              widget.getUserPosts();
-                            },
-                            addOrRemoveSubscriber: (int status) {
-                              widget.addOrRemoveSubscriber(status);
-                            },
-                            index: index,
-                            id: widget.commentsList[index].id!,
-                            username: widget.commentsList[index].username,
-                            time: widget.commentsList[index].time,
-                            comment: widget.commentsList[index].comment,
-                            userImage: widget.commentsList[index].userImage,
-                            loggedInUserImage: widget.userImage,
-                            loggedInUserName: widget.userName,
-                            commentEmojisModel:
-                                widget.commentsList[index].commentEmojiModel,
-                            statusBarHeight: widget.statusBarHeight,
-                            postId: widget.commentsList[index].postId,
-                            addNewCommentEmoji:
-                                (EmojiEntity returnedEmojiData) {
-                                  userReacted = widget.commentsList[0].commentEmojiModel.where(
-                                          (element) => element.username == widget.userName).isNotEmpty;
-
-                              AddCommentEmojiRequest addCommentEmojiRequest =
-                                  AddCommentEmojiRequest(
-                                      postId: widget.commentsList[0].postId,
-                                      commentEmojiModel: CommentEmojiModel(
-                                          commentId:
-                                              widget.commentsList[index].id!,
-                                          postId: widget.commentsList[0].postId,
-                                          emojiData:
-                                              returnedEmojiData.emojiData,
-                                          username:
-                                              widget.userName,
-                                          userImage: widget.userImage));
-                              HomePageCubit.get(context)
-                                  .addCommentEmoji(addCommentEmojiRequest);
-                            },
-                            updateComment: (int status) {
-                              widget.addNewComment(status);
+              child: RefreshIndicator(
+                color: AppColors.cTitle,
+                backgroundColor: AppColors.cWhite,
+                onRefresh: refresh,
+                child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return BlocProvider(
+                          create: (context) => sl<HomePageCubit>(),
+                          child: BlocConsumer<HomePageCubit, HomePageState>(
+                              listener: (context, state) {
+                            if (state is AddCommentEmojiSuccessState) {
+                              if (userReacted) {
+                                widget.addNewComment(0);
+                              } else {
+                                widget.addNewComment(1);
+                              }
                               Navigator.pop(context);
-                            },
-                          );
-                        }));
-                  },
-                  itemCount: widget.commentsList.length),
+                            } else if (state is AddCommentEmojiErrorState) {
+                              showSnackBar(context, state.errorMessage);
+                              Navigator.pop(context);
+                            } else if (state is DeleteCommentEmojiErrorState) {
+                              showSnackBar(context, state.errorMessage);
+                              Navigator.pop(context);
+                            }
+                          }, builder: (context, state) {
+                            return CommentView(
+                              getUserPosts: () {
+                                widget.getUserPosts();
+                              },
+                              addOrRemoveSubscriber: (int status) {
+                                widget.addOrRemoveSubscriber(status);
+                              },
+                              index: index,
+                              id: widget.commentsList[index].id!,
+                              username: widget.commentsList[index].username,
+                              time: widget.commentsList[index].time,
+                              comment: widget.commentsList[index].comment,
+                              userImage: widget.commentsList[index].userImage,
+                              loggedInUserImage: widget.userImage,
+                              loggedInUserName: widget.userName,
+                              commentEmojisModel:
+                                  widget.commentsList[index].commentEmojiModel,
+                              statusBarHeight: widget.statusBarHeight,
+                              postId: widget.commentsList[index].postId,
+                              addNewCommentEmoji:
+                                  (EmojiEntity returnedEmojiData) {
+                                    userReacted = widget.commentsList[0].commentEmojiModel.where(
+                                            (element) => element.username == widget.userName).isNotEmpty;
+
+                                AddCommentEmojiRequest addCommentEmojiRequest =
+                                    AddCommentEmojiRequest(
+                                        postId: widget.commentsList[0].postId,
+                                        commentEmojiModel: CommentEmojiModel(
+                                            commentId:
+                                                widget.commentsList[index].id!,
+                                            postId: widget.commentsList[0].postId,
+                                            emojiData:
+                                                returnedEmojiData.emojiData,
+                                            username:
+                                                widget.userName,
+                                            userImage: widget.userImage));
+                                HomePageCubit.get(context)
+                                    .addCommentEmoji(addCommentEmojiRequest);
+                              },
+                              updateComment: (int status) {
+                                widget.addNewComment(status);
+                                Navigator.pop(context);
+                              },
+                            );
+                          }));
+                    },
+                    itemCount: widget.commentsList.length),
+              ),
             )
           ],
         ),

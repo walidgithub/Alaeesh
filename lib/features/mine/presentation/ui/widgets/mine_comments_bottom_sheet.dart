@@ -59,6 +59,13 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
     super.initState();
   }
 
+  Future<void> refresh() async {
+    setState(() {
+      widget.updateComment(0);
+      Navigator.pop(context);
+    });
+  }
+
   Future<void> getCommentId() async {
     commentData = await _appSecureDataHelper.loadCommentData();
     setState(() {
@@ -123,40 +130,44 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
               height: AppConstants.moreHeightBetweenElements,
             ),
             Expanded(
-              child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return BlocProvider(
-                        create: (context) => sl<MineCubit>(),
-                        child: BlocConsumer<MineCubit, MineState>(
-                            listener: (context, state) {
-                          if (state is DeleteCommentEmojiErrorState) {
-                            showSnackBar(context, state.errorMessage);
-                            Navigator.pop(context);
-                          }
-                        }, builder: (context, state) {
-                          return MineCommentView(
-                            index: index,
-                            id: widget.commentsList[index].id!,
-                            username: widget.commentsList[index].username,
-                            time: widget.commentsList[index].time,
-                            comment: widget.commentsList[index].comment,
-                            userImage: widget.commentsList[index].userImage,
-                            loggedInUserImage: widget.userImage,
-                            loggedInUserName: widget.userName,
-                            commentEmojisModel:
-                                widget.commentsList[index].commentEmojiModel,
-                            statusBarHeight: widget.statusBarHeight,
-                            postId: widget.commentsList[index].postId,
-                            updateComment: (int status) {
-                              widget.updateComment(status);
-                            },
-                          );
-                        }));
-                  },
-                  itemCount: widget.commentsList.length),
+              child: RefreshIndicator(
+                color: AppColors.cTitle,
+                backgroundColor: AppColors.cWhite,
+                onRefresh: refresh,
+                child: ListView.builder(
+                    controller: _scrollController,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return BlocProvider(
+                          create: (context) => sl<MineCubit>(),
+                          child: BlocConsumer<MineCubit, MineState>(
+                              listener: (context, state) {
+                            if (state is DeleteCommentEmojiErrorState) {
+                              showSnackBar(context, state.errorMessage);
+                              Navigator.pop(context);
+                            }
+                          }, builder: (context, state) {
+                            return MineCommentView(
+                              index: index,
+                              id: widget.commentsList[index].id!,
+                              username: widget.commentsList[index].username,
+                              time: widget.commentsList[index].time,
+                              comment: widget.commentsList[index].comment,
+                              userImage: widget.commentsList[index].userImage,
+                              loggedInUserImage: widget.userImage,
+                              loggedInUserName: widget.userName,
+                              commentEmojisModel:
+                                  widget.commentsList[index].commentEmojiModel,
+                              statusBarHeight: widget.statusBarHeight,
+                              postId: widget.commentsList[index].postId,
+                              updateComment: (int status) {
+                                widget.updateComment(status);
+                              },
+                            );
+                          }));
+                    },
+                    itemCount: widget.commentsList.length),
+              ),
             )
           ],
         ),
