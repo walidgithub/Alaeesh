@@ -1,6 +1,5 @@
 import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
 
-import '../../../../core/utils/constant/app_assets.dart';
 import 'comments_model.dart';
 import 'emoji_model.dart';
 
@@ -11,7 +10,8 @@ class PostModel {
   final String userImage;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
-  final String time;
+  String? time;
+  final String lastUpdateTime;
   final List<PostSubscribersModel> postSubscribersList;
   PostModel(
       {this.id,
@@ -21,7 +21,8 @@ class PostModel {
       required this.emojisList,
       required this.commentsList,
       required this.postSubscribersList,
-      required this.time});
+      required this.lastUpdateTime,
+      this.time});
 
   static PostModel fromMap(Map<String, dynamic> map) {
     PostModel postModel = PostModel(
@@ -29,6 +30,7 @@ class PostModel {
         postAlsha: map['postAlsha'],
         username: map['username'],
         userImage: map['userImage'],
+        lastUpdateTime: map['lastUpdateTime'],
         emojisList: List.from(map['emojisList']).map((e)=>EmojiModel.fromMap(e)).toList(),
         commentsList: List.from(map['commentsList']).map((e)=>CommentsModel.fromMap(e)).toList(),
         postSubscribersList: List.from(map['subscribersList']).map((e)=>PostSubscribersModel.fromMap(e)).toList(),
@@ -42,6 +44,7 @@ class PostModel {
       'postAlsha': postAlsha,
       'username': username,
       'userImage': userImage,
+      'lastUpdateTime': lastUpdateTime,
       'emojisList': emojisList.map((e)=>e.toMap()).toList(),
       'commentsList': commentsList.map((e)=>e.toMap()).toList(),
       'subscribersList': postSubscribersList.map((e)=>e.toMap()).toList(),

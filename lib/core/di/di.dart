@@ -2,6 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:last/features/dashboard/data/data_source/dashboard_datasource.dart';
+import 'package:last/features/dashboard/data/repository_impl/dashboard_repository_impl.dart';
+import 'package:last/features/dashboard/domain/repository/dashboard_repository.dart';
+import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
+import 'package:last/features/dashboard/domain/usecases/update_user_permissions_usecase.dart';
+import 'package:last/features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
 import 'package:last/features/home_page/data/repository_impl/home_page_repository_impl.dart';
 import 'package:last/features/home_page/domain/usecases/add_comment_emoji_usecase.dart';
@@ -43,6 +49,7 @@ import '../../features/layout/data/data_source/layout_datasource.dart';
 import '../../features/layout/data/repository_impl/layout_repository_impl.dart';
 import '../../features/layout/domain/repository/layout_repository.dart';
 import '../../features/layout/domain/usecases/add_post_usecase.dart';
+import '../../features/layout/domain/usecases/get_user_permissions_usecase.dart';
 import '../../features/layout/domain/usecases/send_advise_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
 import '../../features/mine/data/datasource/mine_datasource.dart';
@@ -59,6 +66,7 @@ import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
 import '../../features/trending/domain/usecases/check_if_user_subscribed_usecase.dart';
 import '../../features/trending/domain/usecases/get_suggested_users_usecase.dart';
 import '../../features/welcome/data/repository_impl/welcome_repository_impl.dart';
+import '../../features/welcome/domain/usecases/add_user_permissions_usecase.dart';
 import '../../features/welcome/domain/usecases/login_usecase.dart';
 import '../network/network_info.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -98,6 +106,7 @@ class ServiceLocator {
     sl.registerLazySingleton<TrendingDataSource>(() => TrendingDataSource());
     sl.registerLazySingleton<MineDataSource>(() => MineDataSource());
     sl.registerLazySingleton<NotificationsDataSource>(() => NotificationsDataSource());
+    sl.registerLazySingleton<DashboardDataSource>(() => DashboardDataSource());
 
     // Repositories
     sl.registerLazySingleton<WelcomeRepository>(() => WelcomeRepositoryImpl(sl()));
@@ -107,16 +116,22 @@ class ServiceLocator {
     sl.registerLazySingleton<TrendingRepository>(() => TrendingRepositoryImpl(sl(), sl()));
     sl.registerLazySingleton<MineRepository>(() => MineRepositoryImpl(sl(), sl()));
     sl.registerLazySingleton<NotificationsRepository>(() => NotificationsRepositoryImpl(sl()));
+    sl.registerLazySingleton<DashboardRepository>(() => DashboardRepositoryImpl(sl(), sl()));
 
     // UseCases
     // welcome useCases
     sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
     sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
+    sl.registerLazySingleton<AddUserPermissionsUseCase>(() => AddUserPermissionsUseCase(sl()));
+
     // switch user useCases
     sl.registerLazySingleton<SwitchUserUseCase>(() => SwitchUserUseCase(sl()));
+
     // layout useCases
     sl.registerLazySingleton<AddPostUseCase>(() => AddPostUseCase(sl()));
     sl.registerLazySingleton<SendAdviseUseCase>(() => SendAdviseUseCase(sl()));
+    sl.registerLazySingleton<GetUserPermissionsUseCase>(() => GetUserPermissionsUseCase(sl()));
+
     // homepage useCases
     sl.registerLazySingleton<AddCommentUseCase>(() => AddCommentUseCase(sl()));
     sl.registerLazySingleton<DeleteCommentUseCase>(() => DeleteCommentUseCase(sl()));
@@ -154,13 +169,18 @@ class ServiceLocator {
     sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
     sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
 
+    // dashboard useCases
+    sl.registerLazySingleton<UpdateUserPermissionsUseCase>(() => UpdateUserPermissionsUseCase(sl()));
+    sl.registerLazySingleton<GetUserAdvicesUseCase>(() => GetUserAdvicesUseCase(sl()));
+
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
-    sl.registerFactory(() => WelcomeCubit(sl(), sl()));
-    sl.registerFactory(() => LayoutCubit(sl(), sl()));
+    sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl()));
+    sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
     sl.registerFactory(() => NotificationsCubit(sl(), sl()));
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

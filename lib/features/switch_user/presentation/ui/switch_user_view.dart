@@ -11,6 +11,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/dialogs/back_dialog.dart';
+import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/ui_components/curved_clipper.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
@@ -104,6 +105,9 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                       } else if (state is SwitchUserErrorState) {
                                         showSnackBar(context, state.errorMessage);
                                         hideLoading();
+                                      } else if (state is NoInternetState) {
+                                        hideLoading();
+                                        onError(context, AppStrings.noInternet);
                                       }
                                     },
                                     builder: (context, state) {

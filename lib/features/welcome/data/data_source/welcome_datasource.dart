@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:last/features/welcome/data/model/user_model.dart';
 import '../../../../core/di/di.dart';
-import '../../../../core/firebase/error/firebase_error_handler.dart';
-import '../../../../core/preferences/app_pref.dart';
+import '../model/user_permissions_model.dart';
 
 abstract class BaseDataSource {
   Future<UserModel> login();
+  Future<void> addUserPermission(UserPermissionsModel userPermissionsModel);
   Future<void> logout();
 }
 
@@ -14,6 +15,7 @@ class WelcomeDataSource extends BaseDataSource {
 
   GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth auth = sl<FirebaseAuth>();
+  final FirebaseFirestore firestore = sl<FirebaseFirestore>();
 
   @override
   Future<UserModel> login() async {
@@ -46,6 +48,26 @@ class WelcomeDataSource extends BaseDataSource {
     try {
       await auth.signOut();
       await googleSignIn.signOut();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addUserPermission(UserPermissionsModel userPermissionsModel) async {
+    try {
+      final collection = firestore.collection('userPermissions');
+
+      final querySnapshot = await collection
+          .where('username', isEqualTo: userPermissionsModel.username)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return;
+      }
+      final docRef = collection.doc();
+      userPermissionsModel.id = docRef.id;
+      await docRef.set(userPermissionsModel.toMap());
     } catch (e) {
       rethrow;
     }

@@ -19,6 +19,7 @@ import '../../../../core/preferences/app_pref.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/constant/app_assets.dart';
+import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
 import '../../../dashboard/presentation/ui/dashboard_view.dart';
@@ -121,6 +122,9 @@ class _LayoutViewState extends State<LayoutView> {
                     } else if (state is LogoutErrorState) {
                       showSnackBar(context, state.errorMessage);
                       hideLoading();
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -262,6 +266,9 @@ class _LayoutViewState extends State<LayoutView> {
                     } else if (state is LogoutErrorState) {
                       showSnackBar(context, state.errorMessage);
                       hideLoading();
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {

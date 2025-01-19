@@ -124,7 +124,7 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                                   emojisList: widget.homePageModel[index].postModel.emojisList,
                                   commentsList: widget.homePageModel[index].postModel.commentsList,
                                   statusBarHeight: widget.statusBarHeight,
-                                  time: widget.homePageModel[index].postModel.time,
+                                  time: widget.homePageModel[index].postModel.time!,
                                   index: 0,
                                   );
                             },

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/home_page/data/model/comments_model.dart';
-import 'package:last/features/home_page/data/model/requests/add_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_comment_request.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/primary_button.dart';
@@ -97,13 +98,20 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                       create: (context) => sl<HomePageCubit>(),
                       child: BlocConsumer<HomePageCubit, HomePageState>(
                         listener: (context, state) async {
-                          if (state is UpdateCommentSuccessState) {
+                          if (state is UpdateCommentLoadingState) {
+                            showLoading();
+                          } else if (state is UpdateCommentSuccessState) {
+                            hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
                             widget.updateComment(0);
                             Navigator.pop(context);
                           } else if (state is UpdateCommentErrorState) {
+                            hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
+                          } else if (state is NoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {
@@ -122,9 +130,10 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                                       postId: widget.commentModel.postId,
                                       username: widget.commentModel.username,
                                       userImage: widget.commentModel.userImage,
-                                      time: '$formattedDate $formattedTime',
                                       comment: _commentController.text.trim(),
-                                      commentEmojiModel: widget.commentModel.commentEmojiModel));
+                                      commentEmojiModel: widget.commentModel.commentEmojiModel),
+                                lastTimeUpdate: '$formattedDate $formattedTime'
+                              );
                               HomePageCubit.get(context)
                                   .updateComment(updateCommentRequest);
                             },

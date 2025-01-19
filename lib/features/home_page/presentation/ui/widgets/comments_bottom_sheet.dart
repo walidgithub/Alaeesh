@@ -11,8 +11,10 @@ import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
+import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/comment_emoji_model.dart';
 import '../../../data/model/comments_model.dart';
@@ -188,13 +190,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                   create: (context) => sl<HomePageCubit>(),
                   child: BlocConsumer<HomePageCubit, HomePageState>(
                       listener: (context, state) {
-                    if (state is AddCommentSuccessState) {
+                    if (state is AddCommentLoadingState) {
+                      showLoading();
+                    } else if (state is AddCommentSuccessState) {
+                      hideLoading();
                       showSnackBar(context, AppStrings.addSuccess);
                       widget.addNewComment(1);
                       Navigator.pop(context);
                     } else if (state is AddCommentErrorState) {
+                      hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   }, builder: (context, state) {
                     return Bounceable(
@@ -216,7 +225,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                           widget.userImage,
                                       time: '$formattedDate $formattedTime',
                                       comment: _commentController.text.trim(),
-                                      commentEmojiModel: []));
+                                      commentEmojiModel: []),
+                              lastTimeUpdate: '$formattedDate $formattedTime'
+                              );
                           HomePageCubit.get(context)
                               .addComment(addCommentRequest);
                         },
@@ -241,7 +252,10 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           create: (context) => sl<HomePageCubit>(),
                           child: BlocConsumer<HomePageCubit, HomePageState>(
                               listener: (context, state) {
-                            if (state is AddCommentEmojiSuccessState) {
+                            if (state is AddCommentEmojiLoadingState) {
+                              showLoading();
+                            } else if (state is AddCommentEmojiSuccessState) {
+                              hideLoading();
                               if (userReacted) {
                                 widget.addNewComment(0);
                               } else {
@@ -249,11 +263,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               }
                               Navigator.pop(context);
                             } else if (state is AddCommentEmojiErrorState) {
+                              hideLoading();
                               showSnackBar(context, state.errorMessage);
                               Navigator.pop(context);
+                            } else if (state is DeleteCommentEmojiLoadingState) {
+                              showLoading();
+                            } else if (state is DeleteCommentEmojiSuccessState) {
+                              hideLoading();
                             } else if (state is DeleteCommentEmojiErrorState) {
+                              hideLoading();
                               showSnackBar(context, state.errorMessage);
                               Navigator.pop(context);
+                            } else if (state is NoInternetState) {
+                              hideLoading();
+                              onError(context, AppStrings.noInternet);
                             }
                           }, builder: (context, state) {
                             return CommentView(
@@ -266,7 +289,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               index: index,
                               id: widget.commentsList[index].id!,
                               username: widget.commentsList[index].username,
-                              time: widget.commentsList[index].time,
+                              time: widget.commentsList[index].time!,
                               comment: widget.commentsList[index].comment,
                               userImage: widget.commentsList[index].userImage,
                               loggedInUserImage: widget.userImage,
@@ -280,6 +303,12 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     userReacted = widget.commentsList[0].commentEmojiModel.where(
                                             (element) => element.username == widget.userName).isNotEmpty;
 
+                                    DateTime now = DateTime.now();
+                                    String formattedDate =
+                                    DateFormat('yyyy-MM-dd').format(now);
+                                    String formattedTime =
+                                    DateFormat('hh:mm a').format(now);
+
                                 AddCommentEmojiRequest addCommentEmojiRequest =
                                     AddCommentEmojiRequest(
                                         postId: widget.commentsList[0].postId,
@@ -291,7 +320,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                 returnedEmojiData.emojiData,
                                             username:
                                                 widget.userName,
-                                            userImage: widget.userImage));
+                                            userImage: widget.userImage),
+                                    lastTimeUpdate: '$formattedDate $formattedTime'
+                                    );
                                 HomePageCubit.get(context)
                                     .addCommentEmoji(addCommentEmojiRequest);
                               },

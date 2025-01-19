@@ -1,4 +1,3 @@
-import 'package:last/features/trending/data/model/suggested_user_model.dart';
 
 import '../../../home_page/data/model/home_page_model.dart';
 

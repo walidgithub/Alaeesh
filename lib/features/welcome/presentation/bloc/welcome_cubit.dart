@@ -4,13 +4,16 @@ import 'package:last/features/welcome/domain/usecases/login_usecase.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_states.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
+import '../../data/model/user_permissions_model.dart';
+import '../../domain/usecases/add_user_permissions_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 
 class WelcomeCubit extends Cubit<WelcomeState> {
-  WelcomeCubit(this.loginUseCase, this.logoutUseCase) : super(WelcomeInitial());
+  WelcomeCubit(this.loginUseCase, this.logoutUseCase, this.addUserPermissionsUseCase) : super(WelcomeInitial());
 
   final LoginUseCase loginUseCase;
   final LogoutUseCase logoutUseCase;
+  final AddUserPermissionsUseCase addUserPermissionsUseCase;
 
   static WelcomeCubit get(context) => BlocProvider.of(context);
 
@@ -37,6 +40,19 @@ class WelcomeCubit extends Cubit<WelcomeState> {
       signOutResult.fold(
             (failure) => emit(LogoutErrorState(failure.message)),
             (loggedOut) => emit(LogoutSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> addUserPermission(UserPermissionsModel userPermissionsModel) async {
+    emit(AddUserPermissionLoadingState());
+    if (await _networkInfo.isConnected) {
+      final signOutResult = await addUserPermissionsUseCase.call(userPermissionsModel);
+      signOutResult.fold(
+            (failure) => emit(AddUserPermissionErrorState(failure.message)),
+            (loggedOut) => emit(AddUserPermissionSuccessState()),
       );
     } else {
       emit(NoInternetState());

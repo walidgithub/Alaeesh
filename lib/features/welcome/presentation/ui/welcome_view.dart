@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/utils/dialogs/back_dialog.dart';
+import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/ui_components/curved_clipper.dart';
 import '../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
@@ -114,6 +115,9 @@ class _WelcomeViewState extends State<WelcomeView> {
                                 } else if (state is LoginErrorState) {
                                   showSnackBar(context, state.errorMessage);
                                   hideLoading();
+                                } else if (state is NoInternetState) {
+                                  hideLoading();
+                                  onError(context, AppStrings.noInternet);
                                 }
                               },
                               builder: (context, state) {

@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
-import 'package:last/core/preferences/app_pref.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_comment_view.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
-import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
-import '../../../../../core/utils/ui_components/snackbar.dart';
-import '../../../../home_page/data/model/comment_emoji_model.dart';
 import '../../../../home_page/data/model/comments_model.dart';
-import '../../../../home_page/data/model/requests/add_comment_emoji_request.dart';
-import '../../../../home_page/data/model/requests/add_comment_request.dart';
-import '../../../../home_page/domain/entities/emoji_entity.dart';
-import '../../bloc/trending_cubit.dart';
-import '../../bloc/trending_state.dart';
 
 class TopPostCommentsBottomSheet extends StatefulWidget {
   String postId;
@@ -145,7 +132,7 @@ class _TopPostCommentsBottomSheetState extends State<TopPostCommentsBottomSheet>
                           index: index,
                           id: widget.commentsList[index].id!,
                           username: widget.commentsList[index].username,
-                          time: widget.commentsList[index].time,
+                          time: widget.commentsList[index].time!,
                           comment: widget.commentsList[index].comment,
                           userImage: widget.commentsList[index].userImage,
                           loggedInUserImage: widget.userImage,

@@ -9,6 +9,7 @@ import '../../../../../core/di/di.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
@@ -109,6 +110,9 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
+                          } else if (state is NoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {
@@ -134,7 +138,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                                           emojisList:
                                               widget.postModel.emojisList,
                                           postSubscribersList: widget.postModel.postSubscribersList,
-                                          time:
+                                          lastUpdateTime:
                                               '$formattedDate $formattedTime'));
                               HomePageCubit.get(context)
                                   .updatePost(updatePostRequest);

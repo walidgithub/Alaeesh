@@ -3,13 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_comments_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
 
 import '../../../../../core/functions/time_ago_function.dart';
-import '../../../../../core/router/app_router.dart';
-import '../../../../../core/router/arguments.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -18,7 +15,6 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
-import '../../../../home_page/data/model/post_subscribers_model.dart';
 import '../../../../home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 
 class UserSubscriptionsPostView extends StatefulWidget {

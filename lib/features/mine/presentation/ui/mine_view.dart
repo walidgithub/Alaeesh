@@ -7,6 +7,7 @@ import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/utils/constant/app_constants.dart';
 import '../../../../core/utils/constant/app_strings.dart';
 import '../../../../core/utils/constant/app_typography.dart';
+import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
@@ -99,6 +100,9 @@ class _MineViewState extends State<MineView> {
                   .getMine(GetMineRequest(userName: displayName));
             } else if (state is DeletePostSubscriberErrorState) {
               showSnackBar(context, state.errorMessage);
+            } else if (state is NoInternetState) {
+              hideLoading();
+              onError(context, AppStrings.noInternet);
             }
           },
           builder: (context, state) {
@@ -113,7 +117,7 @@ class _MineViewState extends State<MineView> {
                         return MinePostView(
                           index: index,
                           id: mineModel[index].postModel.id!,
-                          time: mineModel[index].postModel.time,
+                          time: mineModel[index].postModel.time!,
                           postUsername: mineModel[index].postModel.username,
                           postUserImage:
                               mineModel[index].postModel.userImage,

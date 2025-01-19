@@ -7,6 +7,7 @@ class AppStrings {
   static const String no = 'آســف 🙄';
   static const String warning = 'مـتـأكـد؟ 🧐';
   static const String error = 'خـطـأ 😵‍';
+  static const String noInternet = 'فـى مـشـكـلـة فـى الـنـت تـقـريـبـًا 😵‍';
   static const String closeApp = 'هـان عـلـيـك تـقـفـل ألائـــيـش؟ 😌';
   static const String welcome = 'أهـلاً بـك 🥰 فـى ';
   static const String loginWithOtherUser = 'الـدخـول بـمـسـتـخـدم آخــر';

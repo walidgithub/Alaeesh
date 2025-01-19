@@ -1,12 +1,7 @@
 import '../../../../../core/utils/constant/app_constants.dart';
-import '../../../../../core/utils/constant/app_strings.dart';
-import '../../../../../core/utils/constant/app_typography.dart';
-import '../../../../../core/utils/style/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
-import '../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../layout/presentation/ui/widgets/notification_view.dart';
 import '../../data/model/notifications_model.dart';
 
@@ -78,7 +73,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                               textDirection: TextDirection.rtl,
                               child: NotificationView(
                                   id: notificationsList[index].postModel.id!,
-                                  time: notificationsList[index].postModel.time,
+                                  time: notificationsList[index].postModel.time!,
                                   username: notificationsList[index]
                                       .postModel
                                       .username,

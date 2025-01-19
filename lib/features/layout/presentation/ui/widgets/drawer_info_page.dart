@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:last/core/utils/constant/app_assets.dart';
 import 'package:last/core/utils/constant/app_typography.dart';
+import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/layout/presentation/bloc/layout_cubit.dart';
 import 'package:launch_app_store/launch_app_store.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
@@ -68,10 +70,17 @@ class _DrawerInfoState extends State<DrawerInfo> {
                   child: BlocConsumer<LayoutCubit, LayoutState>(
                     listener: (context, state) async {
                       if (state is SendAdviseSuccessState) {
+                        showLoading();
+                      } else if (state is SendAdviseSuccessState) {
+                        hideLoading();
                         showSnackBar(context, AppStrings.addSuccess);
                         Navigator.pop(context);
                       } else if (state is SendAdviseErrorState) {
+                        hideLoading();
                         showSnackBar(context, state.errorMessage);
+                      } else if (state is NoInternetState) {
+                        hideLoading();
+                        onError(context, AppStrings.noInternet);
                       }
                     },
                     builder: (context, state) {

@@ -7,7 +7,6 @@ import '../../../home_page/data/model/home_page_model.dart';
 import '../../../home_page/data/model/post_model.dart';
 import '../../../home_page/data/model/subscribers_model.dart';
 import '../model/requests/check_if_user_subscribed_request.dart';
-import '../model/requests/get_post_data_request.dart';
 import '../model/requests/get_top_posts_request.dart';
 
 abstract class BaseDataSource {

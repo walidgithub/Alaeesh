@@ -1,13 +1,12 @@
 import 'package:last/features/home_page/data/model/comment_emoji_model.dart';
 
-import 'emoji_model.dart';
 
 class CommentsModel {
   String? id;
   final String postId;
   final String username;
   final String userImage;
-  final String time;
+  String? time;
   final String comment;
   final List<CommentEmojiModel> commentEmojiModel;
   CommentsModel(
@@ -15,7 +14,7 @@ class CommentsModel {
       required this.postId,
       required this.username,
       required this.userImage,
-      required this.time,
+      this.time,
       required this.comment,
       required this.commentEmojiModel});
 

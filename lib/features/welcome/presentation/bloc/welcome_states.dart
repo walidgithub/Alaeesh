@@ -24,4 +24,12 @@ class LogoutErrorState extends WelcomeState{
 }
 class LogoutLoadingState extends WelcomeState{}
 
+class AddUserPermissionSuccessState extends WelcomeState{}
+class AddUserPermissionErrorState extends WelcomeState{
+  final String errorMessage;
+
+  AddUserPermissionErrorState(this.errorMessage);
+}
+class AddUserPermissionLoadingState extends WelcomeState{}
+
 class NoInternetState extends WelcomeState{}

@@ -9,8 +9,8 @@ import '../../../../../core/router/arguments.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
-import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/home_page_model.dart';
@@ -261,22 +261,28 @@ class _UserPostsViewState extends State<UserPostsView> {
                   showSnackBar(context, state.errorMessage);
                   hideLoading();
                 } else if (state is AddSubscriberLoadingState) {
+                  showLoading();
                 } else if (state is AddSubscriberSuccessState) {
+                  hideLoading();
                   HomePageCubit.get(context).getAllPosts(
                       GetPostsRequest(
                           currentUser: displayName,
                           allPosts: false,
                           username: widget.arguments.username));
                 } else if (state is AddSubscriberErrorState) {
+                  hideLoading();
                   showSnackBar(context, state.errorMessage);
                 } else if (state is DeleteSubscriberLoadingState) {
+                  showLoading();
                 } else if (state is DeleteSubscriberSuccessState) {
+                  hideLoading();
                   HomePageCubit.get(context).getAllPosts(
                       GetPostsRequest(
                           currentUser: displayName,
                           allPosts: false,
                           username: widget.arguments.username));
                 } else if (state is DeleteSubscriberErrorState) {
+                  hideLoading();
                   showSnackBar(context, state.errorMessage);
                 } else if (state is AddPostSubscriberLoadingState) {
                 } else if (state is AddPostSubscriberSuccessState) {
@@ -296,6 +302,9 @@ class _UserPostsViewState extends State<UserPostsView> {
                           username: widget.arguments.username));
                 } else if (state is DeletePostSubscriberErrorState) {
                   showSnackBar(context, state.errorMessage);
+                } else if (state is NoInternetState) {
+                  hideLoading();
+                  onError(context, AppStrings.noInternet);
                 }
               },
               builder: (context, state) {
@@ -341,7 +350,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                               },
                               index: index,
                               id: homePageModel[index].postModel.id!,
-                              time: homePageModel[index].postModel.time,
+                              time: homePageModel[index].postModel.time!,
                               postUsername:
                               homePageModel[index].postModel.username,
                               postUserImage:
@@ -391,8 +400,9 @@ class _UserPostsViewState extends State<UserPostsView> {
                                           allPosts: false,
                                           username: widget.arguments.username));
                                 }
-                                selectedPost = index;
+
                                 setState(() {
+                                  selectedPost = index;
                                   showCommentBottomSheet = true;
                                 });
                               },

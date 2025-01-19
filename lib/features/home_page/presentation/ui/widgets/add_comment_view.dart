@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:last/core/utils/dialogs/error_dialog.dart';
+import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/home_page/data/model/comments_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_request.dart';
 import '../../../../../core/di/di.dart';
@@ -97,13 +99,20 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                       create: (context) => sl<HomePageCubit>(),
                       child: BlocConsumer<HomePageCubit, HomePageState>(
                         listener: (context, state) async {
-                          if (state is AddCommentSuccessState) {
+                          if (state is AddCommentLoadingState) {
+                            showLoading();
+                          } else if (state is AddCommentSuccessState) {
+                            hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
                             widget.addNewComment(1);
                             Navigator.pop(context);
                           } else if (state is AddCommentErrorState) {
+                            hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
+                          } else if (state is NoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {
@@ -115,15 +124,19 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                               String formattedTime =
                                   DateFormat('hh:mm a').format(now);
 
-                              AddCommentRequest addCommentRequest = AddCommentRequest(
-                                  postId: widget.id,
-                                  commentsModel: CommentsModel(
+                              AddCommentRequest addCommentRequest =
+                                  AddCommentRequest(
                                       postId: widget.id,
-                                      username: widget.username,
-                                      userImage: widget.userImage,
-                                      time: '$formattedDate $formattedTime',
-                                      comment: _commentController.text.trim(),
-                                      commentEmojiModel: []));
+                                      commentsModel: CommentsModel(
+                                          postId: widget.id,
+                                          username: widget.username,
+                                          userImage: widget.userImage,
+                                          time: '$formattedDate $formattedTime',
+                                          comment:
+                                              _commentController.text.trim(),
+                                          commentEmojiModel: []),
+                                      lastTimeUpdate:
+                                          '$formattedDate $formattedTime');
                               HomePageCubit.get(context)
                                   .addComment(addCommentRequest);
                             },

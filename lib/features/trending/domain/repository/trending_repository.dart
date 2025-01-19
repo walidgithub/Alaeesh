@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../../home_page/data/model/home_page_model.dart';
-import '../../../home_page/data/model/post_model.dart';
 import '../../../home_page/data/model/requests/add_comment_emoji_request.dart';
 import '../../../home_page/data/model/requests/add_comment_request.dart';
 import '../../../home_page/data/model/requests/add_emoji_request.dart';
@@ -15,7 +14,6 @@ import '../../../home_page/data/model/requests/delete_subscriber_request.dart';
 import '../../../home_page/data/model/requests/update_comment_request.dart';
 import '../../../home_page/data/model/requests/update_post_request.dart';
 import '../../data/model/requests/check_if_user_subscribed_request.dart';
-import '../../data/model/requests/get_post_data_request.dart';
 import '../../data/model/requests/get_suggested_user_posts_request.dart';
 import '../../data/model/requests/get_top_posts_request.dart';
 import '../../data/model/suggested_user_model.dart';

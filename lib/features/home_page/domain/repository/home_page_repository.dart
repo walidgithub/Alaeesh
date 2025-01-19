@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_emoji_request.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../data/model/home_page_model.dart';

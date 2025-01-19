@@ -6,27 +6,21 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
-import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
-import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
-import 'package:last/features/home_page/presentation/ui/widgets/reactions_view.dart';
-import 'package:last/features/home_page/presentation/ui/widgets/update_post_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
 import '../../../../home_page/data/model/post_subscribers_model.dart';
-import '../../../../home_page/data/model/requests/add_emoji_request.dart';
-import '../../../../home_page/domain/entities/emoji_entity.dart';
 import '../../bloc/myine_cubit.dart';
 import '../../bloc/mine_state.dart';
 import 'mine_comments_bottom_sheet.dart';
@@ -116,6 +110,9 @@ class _MinePostViewState extends State<MinePostView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -374,9 +371,16 @@ class _MinePostViewState extends State<MinePostView> {
                             child: BlocConsumer<MineCubit, MineState>(
                               listener: (context, state) async {
                                 if (state is DeleteEmojiSuccessState) {
+                                  showLoading();
+                                } else if (state is DeleteEmojiSuccessState) {
+                                  hideLoading();
                                   widget.addNewEmoji(-1);
                                 } else if (state is DeleteEmojiErrorState) {
+                                  hideLoading();
                                   showSnackBar(context, state.errorMessage);
+                                } else if (state is NoInternetState) {
+                                  hideLoading();
+                                  onError(context, AppStrings.noInternet);
                                 }
                               },
                               builder: (context, state) {

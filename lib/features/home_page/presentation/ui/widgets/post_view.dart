@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
@@ -19,6 +20,7 @@ import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
@@ -26,7 +28,7 @@ import '../../../data/model/comments_model.dart';
 import '../../../data/model/emoji_model.dart';
 import '../../../data/model/requests/add_emoji_request.dart';
 import '../../../data/model/post_subscribers_model.dart';
-import '../../../data/model/subscribers_model.dart';
+import 'dart:ui' as ui;
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -121,6 +123,9 @@ class _PostViewState extends State<PostView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -175,7 +180,7 @@ class _PostViewState extends State<PostView> {
                                 ),
                                 builder: (context2) {
                                   return Directionality(
-                                      textDirection: TextDirection.rtl,
+                                      textDirection: ui.TextDirection.rtl,
                                       child: UpdatePostBottomSheet(
                                         postModel: PostModel(
                                             id: widget.id,
@@ -184,7 +189,7 @@ class _PostViewState extends State<PostView> {
                                             userImage: widget.postUserImage,
                                             emojisList: widget.emojisList,
                                             commentsList: widget.commentsList,
-                                            time: widget.time,
+                                            lastUpdateTime: widget.time,
                                             postSubscribersList:
                                                 widget.postSubscribersList),
                                         statusBarHeight: widget.statusBarHeight,
@@ -245,7 +250,10 @@ class _PostViewState extends State<PostView> {
                   create: (context) => sl<HomePageCubit>(),
                   child: BlocConsumer<HomePageCubit, HomePageState>(
                     listener: (context, state) async {
-                      if (state is AddEmojiSuccessState) {
+                      if (state is AddEmojiLoadingState) {
+                        showLoading();
+                      } else if (state is AddEmojiSuccessState) {
+                        hideLoading();
                         if (userReacted) {
                           widget.addNewEmoji(0);
                         } else {
@@ -253,12 +261,20 @@ class _PostViewState extends State<PostView> {
                         }
                         _removePopup();
                       } else if (state is AddEmojiErrorState) {
+                        hideLoading();
                         showSnackBar(context, state.errorMessage);
+                      } else if (state is DeleteEmojiLoadingState) {
+                        showLoading();
                       } else if (state is DeleteEmojiSuccessState) {
+                        hideLoading();
                         widget.addNewEmoji(-1);
                         _removePopup();
                       } else if (state is DeleteEmojiErrorState) {
+                        hideLoading();
                         showSnackBar(context, state.errorMessage);
+                      } else if (state is NoInternetState) {
+                        hideLoading();
+                        onError(context, AppStrings.noInternet);
                       }
                     },
                     builder: (context, state) {
@@ -269,13 +285,21 @@ class _PostViewState extends State<PostView> {
                                   element.username == widget.loggedInUserName)
                               .isNotEmpty;
 
+                          DateTime now = DateTime.now();
+                          String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(now);
+                          String formattedTime =
+                          DateFormat('hh:mm a').format(now);
+
                           AddEmojiRequest addEmojiRequest = AddEmojiRequest(
                               postId: widget.id,
                               emojiModel: EmojiModel(
                                   postId: widget.id,
                                   emojiData: returnedEmojiData.emojiData,
                                   username: widget.loggedInUserName,
-                                  userImage: widget.loggedInUserImage));
+                                  userImage: widget.loggedInUserImage),
+                              lastTimeUpdate: '$formattedDate $formattedTime'
+                          );
                           HomePageCubit.get(context).addEmoji(addEmojiRequest);
                         },
                         deleteEmojiData: () {
@@ -393,14 +417,14 @@ class _PostViewState extends State<PostView> {
                                                     overflow:
                                                     TextOverflow.ellipsis,
                                                     textDirection:
-                                                    TextDirection.ltr,
+                                                    ui.TextDirection.ltr,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Directionality(
-                                            textDirection: TextDirection.ltr,
+                                            textDirection: ui.TextDirection.ltr,
                                             child: Text(
                                               timeAgoText,
                                               style: AppTypography.kLight12
@@ -502,7 +526,7 @@ class _PostViewState extends State<PostView> {
                             ),
                             builder: (context2) {
                               return Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: CommentsBottomSheet(
                                     addOrRemoveSubscriber:
                                         (int status) {
@@ -569,7 +593,7 @@ class _PostViewState extends State<PostView> {
                                 ),
                                 builder: (context2) {
                                   return Directionality(
-                                    textDirection: TextDirection.rtl,
+                                    textDirection: ui.TextDirection.rtl,
                                     child: ReactionsBottomSheet(
                                         statusBarHeight:
                                         widget.statusBarHeight,
@@ -699,7 +723,7 @@ class _PostViewState extends State<PostView> {
                               ),
                               builder: (context2) {
                                 return Directionality(
-                                    textDirection: TextDirection.rtl,
+                                    textDirection: ui.TextDirection.rtl,
                                     child: AddCommentBottomSheet(
                                         postId: widget.id,
                                         statusBarHeight:

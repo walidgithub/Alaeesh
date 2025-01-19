@@ -132,6 +132,11 @@ class HomePageDataSource extends BaseDataSource {
         return HomePageModel(postModel: post, userSubscribed: isSubscribed);
       }).toList();
 
+      // Sort homePageModels by lastUpdateTime
+      homePageModels.sort((a, b) {
+        return b.postModel.lastUpdateTime.compareTo(a.postModel.lastUpdateTime);
+      });
+
       return homePageModels;
     } catch (e) {
       rethrow;
@@ -165,6 +170,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addCommentRequest.postId).update({
           'commentsList': updatedComments,
+          'lastUpdateTime':  addCommentRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -175,7 +181,7 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> updateComment(UpdateCommentRequest updateCommentRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance
+      final postRef = firestore
           .collection('posts')
           .doc(updateCommentRequest.postId);
 
@@ -194,7 +200,7 @@ class HomePageDataSource extends BaseDataSource {
           }
         }
 
-        await postRef.update({'commentsList': commentsList});
+        await postRef.update({'commentsList': commentsList,'lastUpdateTime':  updateCommentRequest.lastTimeUpdate});
       } else {
         throw "Post document does not exist.";
       }
@@ -206,7 +212,7 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance
+      final postRef = firestore
           .collection('posts')
           .doc(deleteCommentRequest.postId);
 
@@ -254,6 +260,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addEmojiRequest.postId).update({
           'emojisList': updatedEmojies,
+          'lastUpdateTime':  addEmojiRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -264,7 +271,7 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance
+      final postRef = firestore
           .collection('posts')
           .doc(deleteEmojiRequest.postId);
 
@@ -321,7 +328,7 @@ class HomePageDataSource extends BaseDataSource {
   Future<void> deletePostSubscriber(
       DeletePostSubscriberRequest deletePostSubscriberRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance
+      final postRef = firestore
           .collection('posts')
           .doc(deletePostSubscriberRequest.postSubscribersModel.postId);
 
@@ -387,6 +394,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addCommentEmojiRequest.postId).update({
           'commentsList': updatedComments,
+          'lastUpdateTime':  addCommentEmojiRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -398,7 +406,7 @@ class HomePageDataSource extends BaseDataSource {
   Future<void> deleteCommentEmoji(
       DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
     try {
-      final postRef = FirebaseFirestore.instance
+      final postRef = firestore
           .collection('posts')
           .doc(deleteCommentEmojiRequest.postId);
 
@@ -429,7 +437,7 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> addSubscriber(AddSubscriberRequest addSubscriberRequest) async {
     try {
-      final collection = FirebaseFirestore.instance.collection('subscribers');
+      final collection = firestore.collection('subscribers');
       final docRef = collection.doc();
       addSubscriberRequest.id = docRef.id;
       await docRef.set(addSubscriberRequest.toMap());

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
 import 'package:last/features/trending/data/data_source/trending_datasource.dart';
 import 'package:last/features/trending/data/model/requests/check_if_user_subscribed_request.dart';
-import 'package:last/features/trending/data/model/requests/get_post_data_request.dart';
 import 'package:last/features/trending/data/model/requests/get_suggested_user_posts_request.dart';
 import 'package:last/features/trending/data/model/suggested_user_model.dart';
 import 'package:last/features/trending/domain/repository/trending_repository.dart';

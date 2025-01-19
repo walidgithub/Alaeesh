@@ -11,6 +11,7 @@ import '../../../../core/router/arguments.dart';
 import '../../../../core/utils/constant/app_constants.dart';
 import '../../../../core/utils/constant/app_strings.dart';
 import '../../../../core/utils/constant/app_typography.dart';
+import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
@@ -214,7 +215,9 @@ class _TrendingViewState extends State<TrendingView> {
           showSnackBar(context, state.errorMessage);
           hideLoading();
         } else if (state is AddSubscriberLoadingState) {
+          showLoading();
         } else if (state is AddSubscriberSuccessState) {
+          hideLoading();
           if (showUserSubscriptionsSheet) {
             Navigator.pop(context);
             setState(() {
@@ -224,9 +227,12 @@ class _TrendingViewState extends State<TrendingView> {
           TrendingCubit.get(context)
               .getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is AddSubscriberErrorState) {
+          hideLoading();
           showSnackBar(context, state.errorMessage);
         } else if (state is DeleteSubscriberLoadingState) {
+          showLoading();
         } else if (state is DeleteSubscriberSuccessState) {
+          hideLoading();
           if (showUserSubscriptionsSheet) {
             Navigator.pop(context);
             setState(() {
@@ -236,6 +242,7 @@ class _TrendingViewState extends State<TrendingView> {
           TrendingCubit.get(context)
               .getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is DeleteSubscriberErrorState) {
+          hideLoading();
           showSnackBar(context, state.errorMessage);
         } else if (state is CheckIfUserSubscribedLoadingState) {
           showLoading();
@@ -319,6 +326,9 @@ class _TrendingViewState extends State<TrendingView> {
               .getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is DeletePostSubscriberErrorState) {
           showSnackBar(context, state.errorMessage);
+        } else if (state is NoInternetState) {
+          hideLoading();
+          onError(context, AppStrings.noInternet);
         }
       },
       builder: (context, state) {
@@ -435,8 +445,9 @@ class _TrendingViewState extends State<TrendingView> {
                                       GetTopPostsRequest(
                                           currentUser: displayName));
                                 }
-                                selectedPost = index;
+
                                 setState(() {
+                                  selectedPost = index;
                                   showCommentBottomSheet = true;
                                 });
                               },
@@ -519,7 +530,7 @@ class _TrendingViewState extends State<TrendingView> {
                               },
                               index: index,
                               id: trendingModel[index].postModel.id!,
-                              time: trendingModel[index].postModel.time,
+                              time: trendingModel[index].postModel.time!,
                               postUsername:
                                   trendingModel[index].postModel.username,
                               postUserImage:

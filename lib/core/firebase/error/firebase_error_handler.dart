@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import '../../utils/constant/app_strings.dart';
 import 'firebase_failure.dart';
 
 class FirebaseErrorHandler {

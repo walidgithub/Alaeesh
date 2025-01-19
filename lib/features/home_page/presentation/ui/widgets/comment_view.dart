@@ -8,6 +8,7 @@ import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,7 @@ import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/comment_emoji_model.dart';
-import '../../../data/model/requests/add_subscriber_request.dart';
 import '../../../data/model/requests/delete_comment_request.dart';
-import '../../../data/model/requests/delete_subscriber_request.dart';
 import '../../../domain/entities/emoji_entity.dart';
 import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
@@ -102,12 +101,19 @@ class _CommentViewState extends State<CommentView> {
                 create: (context) => sl<HomePageCubit>(),
                 child: BlocConsumer<HomePageCubit, HomePageState>(
                   listener: (context, state) {
-                    if (state is DeleteCommentEmojiSuccessState) {
+                    if (state is DeleteCommentEmojiLoadingState) {
+                      showLoading();
+                    } else if (state is DeleteCommentEmojiSuccessState) {
+                      hideLoading();
                       widget.updateComment(-1);
                       _removePopup();
                     } else if (state is DeleteCommentEmojiErrorState) {
+                      hideLoading();
                       showSnackBar(context, state.errorMessage);
                       _removePopup();
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -187,6 +193,9 @@ class _CommentViewState extends State<CommentView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
+                    } else if (state is NoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {

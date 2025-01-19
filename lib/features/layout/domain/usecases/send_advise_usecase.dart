@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
-import '../../data/model/add_post_response.dart';
 import '../repository/layout_repository.dart';
 
 class SendAdviseUseCase extends FirebaseBaseUseCase{

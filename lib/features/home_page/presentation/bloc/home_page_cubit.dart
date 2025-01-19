@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:last/core/base_usecase/firebase_base_usecase.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
@@ -31,7 +30,6 @@ import '../../domain/usecases/delete_emoji_usecase.dart';
 import '../../domain/usecases/delete_post_usecase.dart';
 import '../../domain/usecases/delete_subscriber_usecase.dart';
 import '../../domain/usecases/get_all_posts_usecase.dart';
-import '../../../trending/domain/usecases/get_top_posts_usecase.dart';
 import '../../domain/usecases/get_subscribers_usecase.dart';
 import 'home_page_state.dart';
 

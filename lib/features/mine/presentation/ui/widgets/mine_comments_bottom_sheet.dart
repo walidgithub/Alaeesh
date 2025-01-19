@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
-import 'package:last/core/preferences/app_pref.dart';
-import 'package:readmore/readmore.dart';
+import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
-import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
@@ -142,16 +138,24 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
                           create: (context) => sl<MineCubit>(),
                           child: BlocConsumer<MineCubit, MineState>(
                               listener: (context, state) {
-                            if (state is DeleteCommentEmojiErrorState) {
+                            if (state is DeleteCommentEmojiLoadingState) {
+                              showLoading();
+                            } else if (state is DeleteCommentEmojiSuccessState) {
+                              hideLoading();
+                            } else if (state is DeleteCommentEmojiErrorState) {
+                              hideLoading();
                               showSnackBar(context, state.errorMessage);
                               Navigator.pop(context);
+                            } else if (state is NoInternetState) {
+                              hideLoading();
+                              onError(context, AppStrings.noInternet);
                             }
                           }, builder: (context, state) {
                             return MineCommentView(
                               index: index,
                               id: widget.commentsList[index].id!,
                               username: widget.commentsList[index].username,
-                              time: widget.commentsList[index].time,
+                              time: widget.commentsList[index].time!,
                               comment: widget.commentsList[index].comment,
                               userImage: widget.commentsList[index].userImage,
                               loggedInUserImage: widget.userImage,

@@ -1,4 +1,3 @@
-import '../subscribers_model.dart';
 
 class GetSubscribersRequest {
   String username;

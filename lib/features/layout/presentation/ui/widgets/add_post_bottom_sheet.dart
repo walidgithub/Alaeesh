@@ -8,6 +8,7 @@ import '../../../../../core/di/di.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/constant/app_typography.dart';
+import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
@@ -99,6 +100,9 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
+                          } else if (state is NoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {
@@ -115,7 +119,9 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                                   commentsList: [],
                                   emojisList: [],
                                   postSubscribersList: [],
-                                  time: '$formattedDate $formattedTime');
+                                  time: '$formattedDate $formattedTime',
+                              lastUpdateTime: '$formattedDate $formattedTime'
+                              );
                               LayoutCubit.get(context).addPost(postModel);
                             },
                             text: AppStrings.addAlsha,

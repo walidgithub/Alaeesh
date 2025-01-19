@@ -1,3 +1,4 @@
+import '../../../welcome/data/model/user_permissions_model.dart';
 import '../../data/model/add_post_response.dart';
 
 abstract class LayoutState{}
@@ -13,6 +14,17 @@ class AddPostErrorState extends LayoutState{
   final String errorMessage;
 
   AddPostErrorState(this.errorMessage);
+}
+
+class GetUserPermissionsLoadingState extends LayoutState{}
+class GetUserPermissionsSuccessState extends LayoutState{
+  UserPermissionsModel userPermissionsModel;
+  GetUserPermissionsSuccessState(this.userPermissionsModel);
+}
+class GetUserPermissionsErrorState extends LayoutState{
+  final String errorMessage;
+
+  GetUserPermissionsErrorState(this.errorMessage);
 }
 
 class SendAdviseLoadingState extends LayoutState{}
