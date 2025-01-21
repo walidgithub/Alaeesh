@@ -1,19 +1,29 @@
-class SendAdviseRequest {
+class SendAdviceRequest {
   String? adviceId;
   String adviceText;
-  SendAdviseRequest({this.adviceId, required this.adviceText});
+  String username;
+  String userImage;
+  String time;
+  SendAdviceRequest({this.adviceId, required this.adviceText, required this.username, required this.userImage, required this.time});
 
-  static SendAdviseRequest fromMap(Map<String, dynamic> map) {
-    SendAdviseRequest sendAdviseRequest = SendAdviseRequest(
+  static SendAdviceRequest fromMap(Map<String, dynamic> map) {
+    SendAdviceRequest sendAdviceRequest = SendAdviceRequest(
       adviceId: map['adviceId'],
-      adviceText: map['adviceText'],);
-    return sendAdviseRequest;
+      adviceText: map['adviceText'],
+      username: map['username'],
+      userImage: map['userImage'],
+      time: map['time'],
+    );
+    return sendAdviceRequest;
   }
 
   Map<String, dynamic> toMap() {
     return {
       'adviceId': adviceId,
       'adviceText': adviceText,
+      'username': username,
+      'userImage': userImage,
+      'time': time,
     };
   }
 }

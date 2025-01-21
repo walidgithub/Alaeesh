@@ -109,10 +109,12 @@ class _CommentViewState extends State<CommentView> {
                       _removePopup();
                     } else if (state is DeleteCommentEmojiErrorState) {
                       hideLoading();
-                      showSnackBar(context, state.errorMessage);
+                      _removePopup();
+showSnackBar(context, state.errorMessage);
                       _removePopup();
                     } else if (state is NoInternetState) {
                       hideLoading();
+                      _removePopup();
                       onError(context, AppStrings.noInternet);
                     }
                   },
@@ -191,10 +193,12 @@ class _CommentViewState extends State<CommentView> {
                       Navigator.pop(context);
                     } else if (state is DeleteCommentErrorState) {
                       hideLoading();
-                      showSnackBar(context, state.errorMessage);
+                      _removePopup();
+showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
                     } else if (state is NoInternetState) {
                       hideLoading();
+                      _removePopup();
                       onError(context, AppStrings.noInternet);
                     }
                   },

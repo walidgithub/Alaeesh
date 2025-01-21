@@ -79,6 +79,12 @@ class MineDataSource extends BaseDataSource {
         );
       }).toList();
 
+      // Sort homePageModels by lastUpdateTime
+      homePageModels.sort((a, b) {
+        return b.postModel.lastUpdateTime.compareTo(a.postModel.lastUpdateTime);
+      });
+
+
       return homePageModels;
     } catch (e) {
       rethrow;

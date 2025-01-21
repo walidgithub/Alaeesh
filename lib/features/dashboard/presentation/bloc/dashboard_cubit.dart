@@ -1,4 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
+import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
+import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
+import 'package:last/features/dashboard/domain/usecases/update_user_permissions_usecase.dart';
+import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../home_page/data/model/requests/delete_comment_emoji_request.dart';
@@ -12,19 +17,22 @@ import '../../../home_page/domain/usecases/delete_emoji_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/get_all_posts_usecase.dart';
+import '../../../welcome/data/model/user_permissions_model.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit(this.deleteEmojiUseCase, this.deleteCommentEmojiUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
+  DashboardCubit(this.updateUserPermissionsUseCase, this.sendReplyUseCase, this.getUserAdvicesUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
       : super(DashboardInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final DeleteCommentUseCase deleteCommentUseCase;
   final DeletePostSubscriberUseCase deletePostSubscriberUseCase;
-  final DeleteEmojiUseCase deleteEmojiUseCase;
-  final DeleteCommentEmojiUseCase deleteCommentEmojiUseCase;
+  final SendReplyUseCase sendReplyUseCase;
 
   final GetAllPostsUseCase getAllPostsUseCase;
+  final GetUserAdvicesUseCase getUserAdvicesUseCase;
+  final UpdateUserPermissionsUseCase updateUserPermissionsUseCase;
+
 
   static DashboardCubit get(context) => BlocProvider.of(context);
 
@@ -69,32 +77,6 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
   }
 
-  Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
-    emit(DeleteEmojiLoadingState());
-    if (await _networkInfo.isConnected) {
-      final result = await deleteEmojiUseCase.call(deleteEmojiRequest);
-      result.fold(
-            (failure) => emit(DeleteEmojiErrorState(failure.message)),
-            (emojiDeleted) => emit(DeleteEmojiSuccessState()),
-      );
-    } else {
-      emit(NoInternetState());
-    }
-  }
-
-  Future<void> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
-    emit(DeleteEmojiLoadingState());
-    if (await _networkInfo.isConnected) {
-      final result = await deleteCommentEmojiUseCase.call(deleteCommentEmojiRequest);
-      result.fold(
-            (failure) => emit(DeleteCommentEmojiErrorState(failure.message)),
-            (commentEmojiDeleted) => emit(DeleteCommentEmojiSuccessState()),
-      );
-    } else {
-      emit(NoInternetState());
-    }
-  }
-
   Future<void> getAllPosts(GetPostsRequest getPostsRequest) async {
     emit(GetAllPostsLoadingState());
     if (await _networkInfo.isConnected) {
@@ -102,6 +84,45 @@ class DashboardCubit extends Cubit<DashboardState> {
       result.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> getUserAdvices() async {
+    emit(GetUserAdvicesLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getUserAdvicesUseCase.call(const FirebaseNoParameters());
+      result.fold(
+            (failure) => emit(GetUserAdvicesErrorState(failure.message)),
+            (userAdvices) => emit(GetUserAdvicesSuccessState(userAdvices)),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> updateUserPermissions(UserPermissionsModel userPermissionsModel) async {
+    emit(UpdateUserPermissionsLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await updateUserPermissionsUseCase.call(userPermissionsModel);
+      result.fold(
+            (failure) => emit(UpdateUserPermissionsErrorState(failure.message)),
+            (userPermissionUpdated) => emit(UpdateUserPermissionsSuccessState()),
+      );
+    } else {
+      emit(NoInternetState());
+    }
+  }
+
+  Future<void> sendReply(SendReplyRequest sendReplyRequest) async {
+    emit(SendReplyLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await sendReplyUseCase.call(sendReplyRequest);
+      result.fold(
+            (failure) => emit(SendReplyErrorState(failure.message)),
+            (replySent) => emit(SendReplySuccessState()),
       );
     } else {
       emit(NoInternetState());

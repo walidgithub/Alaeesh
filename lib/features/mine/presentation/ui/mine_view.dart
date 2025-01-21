@@ -77,8 +77,7 @@ class _MineViewState extends State<MineView> {
       Center(
         child: Text(
           AppStrings.mineSubscriptions,
-          style: AppTypography.kBold24
-              .copyWith(color: AppColors.cTitle),
+          style: AppTypography.kBold24.copyWith(color: AppColors.cTitle),
         ),
       ),
       SizedBox(height: AppConstants.heightBetweenElements),
@@ -108,73 +107,71 @@ class _MineViewState extends State<MineView> {
           builder: (context, state) {
             return mineModel.isNotEmpty
                 ? RefreshIndicator(
-                  color: AppColors.cTitle,
-                  backgroundColor: AppColors.cWhite,
-                  onRefresh: refresh,
-                  child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return MinePostView(
-                          index: index,
-                          id: mineModel[index].postModel.id!,
-                          time: mineModel[index].postModel.time!,
-                          postUsername: mineModel[index].postModel.username,
-                          postUserImage:
-                              mineModel[index].postModel.userImage,
-                          loggedInUserName: displayName,
-                          loggedInUserImage: photoUrl,
-                          postAlsha: mineModel[index].postModel.postAlsha,
-                          commentsList:
-                              mineModel[index].postModel.commentsList,
-                          emojisList: mineModel[index].postModel.emojisList,
-                          addNewEmoji: (int status) {
-                            if (status == -1) {
-                              DeletePostSubscriberRequest
-                                  deletePostSubscriberRequest =
-                                  DeletePostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                postId: mineModel[index].postModel.id!,
-                              ));
-                              MineCubit.get(context).deletePostSubscriber(
-                                  deletePostSubscriberRequest);
-                            } else if (status == 0) {
+                    color: AppColors.cTitle,
+                    backgroundColor: AppColors.cWhite,
+                    onRefresh: refresh,
+                    child: ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return MinePostView(
+                            index: index,
+                            id: mineModel[index].postModel.id!,
+                            time: mineModel[index].postModel.time!,
+                            postUsername: mineModel[index].postModel.username,
+                            postUserImage: mineModel[index].postModel.userImage,
+                            loggedInUserName: displayName,
+                            loggedInUserImage: photoUrl,
+                            postAlsha: mineModel[index].postModel.postAlsha,
+                            commentsList:
+                                mineModel[index].postModel.commentsList,
+                            emojisList: mineModel[index].postModel.emojisList,
+                            addNewEmoji: (int status) {
+                              if (status == -1) {
+                                DeletePostSubscriberRequest
+                                    deletePostSubscriberRequest =
+                                    DeletePostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  postId: mineModel[index].postModel.id!,
+                                ));
+                                MineCubit.get(context).deletePostSubscriber(
+                                    deletePostSubscriberRequest);
+                              } else if (status == 0) {
+                                MineCubit.get(context).getMine(
+                                    GetMineRequest(userName: displayName));
+                              }
+                            },
+                            statusBarHeight: statusBarHeight,
+                            postSubscribersList:
+                                mineModel[index].postModel.postSubscribersList,
+                            postUpdated: () {
                               MineCubit.get(context).getMine(
                                   GetMineRequest(userName: displayName));
-                            }
-                          },
-                          statusBarHeight: statusBarHeight,
-                          postSubscribersList: mineModel[index]
-                              .postModel
-                              .postSubscribersList,
-                          postUpdated: () {
-                            MineCubit.get(context).getMine(
-                                GetMineRequest(userName: displayName));
-                          },
-                          updateComment: (int status) {
-                            if (status == -1) {
-                              DeletePostSubscriberRequest
-                                  deletePostSubscriberRequest =
-                                  DeletePostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                postId: mineModel[index].postModel.id!,
-                              ));
-                              MineCubit.get(context).deletePostSubscriber(
-                                  deletePostSubscriberRequest);
-                            } else if (status == 0) {
-                              MineCubit.get(context).getMine(
-                                  GetMineRequest(userName: displayName));
-                            }
-                          },
-                        );
-                      },
-                      itemCount: mineModel.length),
-                )
+                            },
+                            updateComment: (int status) {
+                              if (status == -1) {
+                                DeletePostSubscriberRequest
+                                    deletePostSubscriberRequest =
+                                    DeletePostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  postId: mineModel[index].postModel.id!,
+                                ));
+                                MineCubit.get(context).deletePostSubscriber(
+                                    deletePostSubscriberRequest);
+                              } else if (status == 0) {
+                                MineCubit.get(context).getMine(
+                                    GetMineRequest(userName: displayName));
+                              }
+                            },
+                          );
+                        },
+                        itemCount: mineModel.length),
+                  )
                 : SizedBox(
                     height: MediaQuery.sizeOf(context).height,
                     child: Column(

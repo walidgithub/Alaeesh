@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:last/core/utils/constant/app_assets.dart';
 import 'package:last/core/utils/constant/app_typography.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/layout/presentation/bloc/layout_cubit.dart';
 import 'package:launch_app_store/launch_app_store.dart';
 import '../../../../../core/di/di.dart';
+import '../../../../../core/preferences/secure_local_data.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
 import '../../../../../core/utils/dialogs/error_dialog.dart';
@@ -17,6 +19,7 @@ import '../../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/requests/send_advise_request.dart';
 import '../../bloc/layout_state.dart';
+import 'dart:ui' as ui;
 
 class DrawerInfo extends StatefulWidget {
   const DrawerInfo({super.key});
@@ -27,6 +30,31 @@ class DrawerInfo extends StatefulWidget {
 
 class _DrawerInfoState extends State<DrawerInfo> {
   final TextEditingController _adviseUsController = TextEditingController();
+  final SecureStorageLoginHelper _appSecureDataHelper =
+  sl<SecureStorageLoginHelper>();
+
+  String id = "";
+  String email = "";
+  String displayName = "";
+  String photoUrl = "";
+  var userData;
+
+  @override
+  void initState() {
+    userData = _appSecureDataHelper.loadUserData();
+    _loadSavedUserData();
+    super.initState();
+  }
+
+  Future<void> _loadSavedUserData() async {
+    userData = await _appSecureDataHelper.loadUserData();
+    setState(() {
+      id = userData['id'] ?? '';
+      email = userData['email'] ?? '';
+      displayName = userData['displayName'] ?? '';
+      photoUrl = userData['photoUrl'] ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +84,9 @@ class _DrawerInfoState extends State<DrawerInfo> {
                         contentPadding: EdgeInsets.all(15.w),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          const BorderSide(color: AppColors.cSecondary),
+                              const BorderSide(color: AppColors.cSecondary),
                           borderRadius:
-                          BorderRadius.circular(AppConstants.radius),
+                              BorderRadius.circular(AppConstants.radius),
                         ),
                         labelText: AppStrings.advice,
                         border: InputBorder.none)),
@@ -69,13 +97,13 @@ class _DrawerInfoState extends State<DrawerInfo> {
                   create: (context) => sl<LayoutCubit>(),
                   child: BlocConsumer<LayoutCubit, LayoutState>(
                     listener: (context, state) async {
-                      if (state is SendAdviseSuccessState) {
+                      if (state is SendAdviceLoadingState) {
                         showLoading();
-                      } else if (state is SendAdviseSuccessState) {
+                      } else if (state is SendAdviceSuccessState) {
                         hideLoading();
                         showSnackBar(context, AppStrings.addSuccess);
                         Navigator.pop(context);
-                      } else if (state is SendAdviseErrorState) {
+                      } else if (state is SendAdviceErrorState) {
                         hideLoading();
                         showSnackBar(context, state.errorMessage);
                       } else if (state is NoInternetState) {
@@ -86,12 +114,21 @@ class _DrawerInfoState extends State<DrawerInfo> {
                     builder: (context, state) {
                       return PrimaryButton(
                         onTap: () {
-                          SendAdviseRequest sendAdviseRequest =
-                          SendAdviseRequest(
+                          DateTime now = DateTime.now();
+                          String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(now);
+                          String formattedTime =
+                          DateFormat('hh:mm a').format(now);
+
+                          SendAdviceRequest sendAdviceRequest =
+                              SendAdviceRequest(
                             adviceText: _adviseUsController.text,
+                            username: displayName,
+                            userImage: photoUrl,
+                            time: '$formattedDate $formattedTime',
                           );
                           LayoutCubit.get(context)
-                              .sendAdvise(sendAdviseRequest);
+                              .sendAdvice(sendAdviceRequest);
                         },
                         text: AppStrings.addAlsha,
                         width: 120.w,
@@ -115,7 +152,7 @@ class _DrawerInfoState extends State<DrawerInfo> {
                 Text(
                   AppStrings.info,
                   style: TextStyle(fontSize: 15.sp, color: AppColors.cBlack),
-                  textDirection: TextDirection.rtl,
+                  textDirection: ui.TextDirection.rtl,
                 ),
                 const Divider(),
                 Padding(
@@ -166,8 +203,6 @@ class _DrawerInfoState extends State<DrawerInfo> {
                     ],
                   ),
                 ),
-
-
               ],
             ),
           ),

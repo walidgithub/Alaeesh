@@ -41,22 +41,6 @@ class DeleteCommentErrorState extends DashboardState{
   DeleteCommentErrorState(this.errorMessage);
 }
 
-class DeleteEmojiLoadingState extends DashboardState{}
-class DeleteEmojiSuccessState extends DashboardState{}
-class DeleteEmojiErrorState extends DashboardState{
-  final String errorMessage;
-
-  DeleteEmojiErrorState(this.errorMessage);
-}
-
-class DeleteCommentEmojiLoadingState extends DashboardState{}
-class DeleteCommentEmojiSuccessState extends DashboardState{}
-class DeleteCommentEmojiErrorState extends DashboardState{
-  final String errorMessage;
-
-  DeleteCommentEmojiErrorState(this.errorMessage);
-}
-
 class DeletePostSubscriberLoadingState extends DashboardState{}
 class DeletePostSubscriberSuccessState extends DashboardState{}
 class DeletePostSubscriberErrorState extends DashboardState{
@@ -75,6 +59,14 @@ class GetAllPostsErrorState extends DashboardState{
   final String errorMessage;
 
   GetAllPostsErrorState(this.errorMessage);
+}
+
+class SendReplyLoadingState extends DashboardState{}
+class SendReplySuccessState extends DashboardState{}
+class SendReplyErrorState extends DashboardState{
+  final String errorMessage;
+
+  SendReplyErrorState(this.errorMessage);
 }
 
 class NoInternetState extends DashboardState{}

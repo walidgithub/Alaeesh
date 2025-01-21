@@ -27,13 +27,15 @@ class SwitchUserView extends StatefulWidget {
 
 class _SwitchUserViewState extends State<SwitchUserView> {
   final AppPreferences _appPreferences = sl<AppPreferences>();
-  final SecureStorageLoginHelper _appSecureDataHelper = sl<SecureStorageLoginHelper>();
+  final SecureStorageLoginHelper _appSecureDataHelper =
+      sl<SecureStorageLoginHelper>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => onBackButtonPressed(context),
-      child: SafeArea(child: Scaffold(
+      child: SafeArea(
+          child: Scaffold(
         body: bodyContent(context),
       )),
     );
@@ -91,19 +93,30 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                               children: [
                                 BlocProvider(
                                   create: (context) => sl<SwitchUserCubit>(),
-                                  child: BlocConsumer<SwitchUserCubit, SwitchUserState>(
+                                  child: BlocConsumer<SwitchUserCubit,
+                                      SwitchUserState>(
                                     listener: (context, state) async {
                                       if (state is SwitchUserLoadingState) {
                                         showLoading();
-                                        await _appSecureDataHelper.clearUserData();
-                                        await _appPreferences.setUserLoggedOut();
-                                      } else if (state is SwitchUserSuccessState) {
+                                        await _appSecureDataHelper
+                                            .clearUserData();
+                                        await _appPreferences
+                                            .setUserLoggedOut();
+                                      } else if (state
+                                          is SwitchUserSuccessState) {
                                         hideLoading();
-                                        await _appSecureDataHelper.saveUserData(id: state.user.id!, email: state.user.email!, displayName: state.user.name!, photoUrl: state.user.photoUrl!);
+                                        await _appSecureDataHelper.saveUserData(
+                                            id: state.user.id!,
+                                            email: state.user.email!,
+                                            displayName: state.user.name!,
+                                            photoUrl: state.user.photoUrl!);
                                         await _appPreferences.setUserLoggedIn();
-                                        Navigator.pushReplacementNamed(context, Routes.layoutRoute);
-                                      } else if (state is SwitchUserErrorState) {
-                                        showSnackBar(context, state.errorMessage);
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.layoutRoute);
+                                      } else if (state
+                                          is SwitchUserErrorState) {
+                                        showSnackBar(
+                                            context, state.errorMessage);
                                         hideLoading();
                                       } else if (state is NoInternetState) {
                                         hideLoading();
@@ -111,9 +124,15 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                       }
                                     },
                                     builder: (context, state) {
-                                      return PrimaryButton(onTap: () async {
-                                        SwitchUserCubit.get(context).switchUser();
-                                      },text: AppStrings.loginWithOtherUser,width: 300.w,gradient: false,);
+                                      return PrimaryButton(
+                                        onTap: () async {
+                                          SwitchUserCubit.get(context)
+                                              .switchUser();
+                                        },
+                                        text: AppStrings.loginWithOtherUser,
+                                        width: 300.w,
+                                        gradient: false,
+                                      );
                                     },
                                   ),
                                 )
@@ -136,4 +155,3 @@ class _SwitchUserViewState extends State<SwitchUserView> {
     );
   }
 }
-

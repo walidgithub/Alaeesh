@@ -30,13 +30,15 @@ class WelcomeView extends StatefulWidget {
 
 class _WelcomeViewState extends State<WelcomeView> {
   final AppPreferences _appPreferences = sl<AppPreferences>();
-  final SecureStorageLoginHelper _appSecureDataHelper = sl<SecureStorageLoginHelper>();
+  final SecureStorageLoginHelper _appSecureDataHelper =
+      sl<SecureStorageLoginHelper>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => onBackButtonPressed(context),
-      child: SafeArea(child: Scaffold(
+      child: SafeArea(
+          child: Scaffold(
         body: bodyContent(context),
       )),
     );
@@ -87,11 +89,16 @@ class _WelcomeViewState extends State<WelcomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         FadeInLeft(
-                          duration: Duration(milliseconds: AppConstants.animation),
+                          duration:
+                              Duration(milliseconds: AppConstants.animation),
                           child: Row(
                             children: [
-                              Text(AppStrings.welcome ,style: AppTypography.kBold36),
-                              Image.asset(AppAssets.splash, width: MediaQuery.of(context).size.width / 3,)
+                              Text(AppStrings.welcome,
+                                  style: AppTypography.kBold36),
+                              Image.asset(
+                                AppAssets.splash,
+                                width: MediaQuery.of(context).size.width / 3,
+                              )
                             ],
                           ),
                         ),
@@ -100,7 +107,8 @@ class _WelcomeViewState extends State<WelcomeView> {
                           height: AppConstants.moreHeightBetweenElements,
                         ),
                         FadeInRight(
-                          duration: Duration(milliseconds: AppConstants.animation),
+                          duration:
+                              Duration(milliseconds: AppConstants.animation),
                           child: BlocProvider(
                             create: (context) => sl<WelcomeCubit>(),
                             child: BlocConsumer<WelcomeCubit, WelcomeState>(
@@ -109,9 +117,14 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   showLoading();
                                 } else if (state is LoginSuccessState) {
                                   hideLoading();
-                                  await _appSecureDataHelper.saveUserData(id: state.user.id!, email: state.user.email!, displayName: state.user.name!, photoUrl: state.user.photoUrl!);
+                                  await _appSecureDataHelper.saveUserData(
+                                      id: state.user.id!,
+                                      email: state.user.email!,
+                                      displayName: state.user.name!,
+                                      photoUrl: state.user.photoUrl!);
                                   await _appPreferences.setUserLoggedIn();
-                                  Navigator.pushReplacementNamed(context, Routes.layoutRoute);
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.layoutRoute);
                                 } else if (state is LoginErrorState) {
                                   showSnackBar(context, state.errorMessage);
                                   hideLoading();
@@ -121,9 +134,18 @@ class _WelcomeViewState extends State<WelcomeView> {
                                 }
                               },
                               builder: (context, state) {
-                                return PrimaryButton(onTap: () {
-                                  WelcomeCubit.get(context).login();
-                                },text: AppStrings.google,width: 200.w,gradient: false,child: SvgPicture.asset(AppAssets.google,width: 30.w,),);
+                                return PrimaryButton(
+                                  onTap: () {
+                                    WelcomeCubit.get(context).login();
+                                  },
+                                  text: AppStrings.google,
+                                  width: 200.w,
+                                  gradient: false,
+                                  child: SvgPicture.asset(
+                                    AppAssets.google,
+                                    width: 30.w,
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -140,4 +162,3 @@ class _WelcomeViewState extends State<WelcomeView> {
     );
   }
 }
-

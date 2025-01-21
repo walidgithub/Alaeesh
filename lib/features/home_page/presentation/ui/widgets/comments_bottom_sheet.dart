@@ -44,7 +44,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.userImage,
       required this.postAlsha,
       required this.addOrRemoveSubscriber,
-        required this.getUserPosts,
+      required this.getUserPosts,
       required this.addNewComment});
 
   @override
@@ -221,13 +221,12 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                   commentsModel: CommentsModel(
                                       postId: widget.postId,
                                       username: widget.userName,
-                                      userImage:
-                                          widget.userImage,
+                                      userImage: widget.userImage,
                                       time: '$formattedDate $formattedTime',
                                       comment: _commentController.text.trim(),
                                       commentEmojiModel: []),
-                              lastTimeUpdate: '$formattedDate $formattedTime'
-                              );
+                                  lastTimeUpdate:
+                                      '$formattedDate $formattedTime');
                           HomePageCubit.get(context)
                               .addComment(addCommentRequest);
                         },
@@ -266,9 +265,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               hideLoading();
                               showSnackBar(context, state.errorMessage);
                               Navigator.pop(context);
-                            } else if (state is DeleteCommentEmojiLoadingState) {
+                            } else if (state
+                                is DeleteCommentEmojiLoadingState) {
                               showLoading();
-                            } else if (state is DeleteCommentEmojiSuccessState) {
+                            } else if (state
+                                is DeleteCommentEmojiSuccessState) {
                               hideLoading();
                             } else if (state is DeleteCommentEmojiErrorState) {
                               hideLoading();
@@ -300,13 +301,16 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               postId: widget.commentsList[index].postId,
                               addNewCommentEmoji:
                                   (EmojiEntity returnedEmojiData) {
-                                    userReacted = widget.commentsList[0].commentEmojiModel.where(
-                                            (element) => element.username == widget.userName).isNotEmpty;
+                                userReacted = widget
+                                    .commentsList[0].commentEmojiModel
+                                    .where((element) =>
+                                        element.username == widget.userName)
+                                    .isNotEmpty;
 
-                                    DateTime now = DateTime.now();
-                                    String formattedDate =
+                                DateTime now = DateTime.now();
+                                String formattedDate =
                                     DateFormat('yyyy-MM-dd').format(now);
-                                    String formattedTime =
+                                String formattedTime =
                                     DateFormat('hh:mm a').format(now);
 
                                 AddCommentEmojiRequest addCommentEmojiRequest =
@@ -315,14 +319,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                         commentEmojiModel: CommentEmojiModel(
                                             commentId:
                                                 widget.commentsList[index].id!,
-                                            postId: widget.commentsList[0].postId,
+                                            postId:
+                                                widget.commentsList[0].postId,
                                             emojiData:
                                                 returnedEmojiData.emojiData,
-                                            username:
-                                                widget.userName,
+                                            username: widget.userName,
                                             userImage: widget.userImage),
-                                    lastTimeUpdate: '$formattedDate $formattedTime'
-                                    );
+                                        lastTimeUpdate:
+                                            '$formattedDate $formattedTime');
                                 HomePageCubit.get(context)
                                     .addCommentEmoji(addCommentEmojiRequest);
                               },

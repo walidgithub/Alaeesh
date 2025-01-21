@@ -1,13 +1,16 @@
 class AppStrings {
   static const String appName = "ألائـــيـش";
   static const String google = "الـدخـول بـجـوجـل";
+  static const String lastPosts = "تـحـديـثـات";
+  static const String suggestions = "مـقـتـرحـات";
   static const String loading = 'اصـبـر 😴';
   static const String close = 'ســلام 👋';
+  static const String ok = 'تــمــام 👍';
   static const String yes = 'كـفـايـة كـده 👍';
   static const String no = 'آســف 🙄';
   static const String warning = 'مـتـأكـد؟ 🧐';
   static const String error = 'خـطـأ 😵‍';
-  static const String noInternet = 'فـى مـشـكـلـة فـى الـنـت تـقـريـبـًا 😵‍';
+  static const String noInternet = 'فـى مـشـكـلـة فـى الـنـت تـقـريـبـًا!! 😵‍';
   static const String closeApp = 'هـان عـلـيـك تـقـفـل ألائـــيـش؟ 😌';
   static const String welcome = 'أهـلاً بـك 🥰 فـى ';
   static const String loginWithOtherUser = 'الـدخـول بـمـسـتـخـدم آخــر';
@@ -47,6 +50,7 @@ class AppStrings {
   static const String rating = 'الـتـقـيـيـم 🤩';
   static const String adviseUs = ' شـاركـنـا رأيـك 😘 🤝';
   static const String advice = 'رأيـك ايـه 👍';
+  static const String reply = 'الــرد';
   static const String send = 'إرسـال وشـكـرًا 🤝';
   static const String searchForPost = 'ابـحـث عــن ألـشـة 🕵🏼‍';
   static const String info = '''هل تحب الضحك والمزاح؟ تطبيقنا هو المكان المثالي لك! 🥳

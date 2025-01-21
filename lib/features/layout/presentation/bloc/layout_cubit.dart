@@ -10,10 +10,10 @@ import '../../domain/usecases/send_advise_usecase.dart';
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
-  LayoutCubit(this.addPostUseCase, this.sendAdviseUseCase, this.getUserPermissionsUseCase) : super(LayoutInitial());
+  LayoutCubit(this.addPostUseCase, this.sendAdviceUseCase, this.getUserPermissionsUseCase) : super(LayoutInitial());
 
   final AddPostUseCase addPostUseCase;
-  final SendAdviseUseCase sendAdviseUseCase;
+  final SendAdviceUseCase sendAdviceUseCase;
   final GetUserPermissionsUseCase getUserPermissionsUseCase;
 
   static LayoutCubit get(context) => BlocProvider.of(context);
@@ -33,13 +33,13 @@ class LayoutCubit extends Cubit<LayoutState> {
     }
   }
 
-  Future<void> sendAdvise(SendAdviseRequest sendAdviseRequest) async {
-    emit(SendAdviseLoadingState());
+  Future<void> sendAdvice(SendAdviceRequest sendAdviceRequest) async {
+    emit(SendAdviceLoadingState());
     if (await _networkInfo.isConnected) {
-      final result = await sendAdviseUseCase.call(sendAdviseRequest);
+      final result = await sendAdviceUseCase.call(sendAdviceRequest);
       result.fold(
-            (failure) => emit(SendAdviseErrorState(failure.message)),
-            (adviseSent) => emit(SendAdviseSuccessState()),
+            (failure) => emit(SendAdviceErrorState(failure.message)),
+            (adviseSent) => emit(SendAdviceSuccessState()),
       );
     } else {
       emit(NoInternetState());

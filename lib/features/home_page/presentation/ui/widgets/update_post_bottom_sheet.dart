@@ -103,7 +103,8 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                             showLoading();
                           } else if (state is UpdatePostSuccessState) {
                             hideLoading();
-                            showSnackBar(context, AppStrings.updatedSuccessfully);
+                            showSnackBar(
+                                context, AppStrings.updatedSuccessfully);
                             widget.postUpdated();
                             Navigator.pop(context);
                           } else if (state is UpdatePostErrorState) {
@@ -137,7 +138,8 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                                               widget.postModel.commentsList,
                                           emojisList:
                                               widget.postModel.emojisList,
-                                          postSubscribersList: widget.postModel.postSubscribersList,
+                                          postSubscribersList: widget
+                                              .postModel.postSubscribersList,
                                           lastUpdateTime:
                                               '$formattedDate $formattedTime'));
                               HomePageCubit.get(context)

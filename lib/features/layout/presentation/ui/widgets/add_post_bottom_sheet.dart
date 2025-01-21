@@ -22,7 +22,12 @@ class AddPostBottomSheet extends StatefulWidget {
   String username;
   String userImage;
   Function postAdded;
-  AddPostBottomSheet({super.key, required this.statusBarHeight, required this.username, required this.userImage, required this.postAdded});
+  AddPostBottomSheet(
+      {super.key,
+      required this.statusBarHeight,
+      required this.username,
+      required this.userImage,
+      required this.postAdded});
 
   @override
   State<AddPostBottomSheet> createState() => _AddPostBottomSheetState();
@@ -55,8 +60,8 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
             SizedBox(height: AppConstants.heightBetweenElements),
             Center(
               child: Text(AppStrings.addPost,
-                  style: AppTypography.kBold24
-                      .copyWith(color: AppColors.cTitle)),
+                  style:
+                      AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
             ),
             SizedBox(
               height: AppConstants.moreHeightBetweenElements,
@@ -75,8 +80,8 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(15.w),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: AppColors.cSecondary),
+                              borderSide:
+                                  const BorderSide(color: AppColors.cSecondary),
                               borderRadius:
                                   BorderRadius.circular(AppConstants.radius),
                             ),
@@ -109,8 +114,10 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                           return PrimaryButton(
                             onTap: () {
                               DateTime now = DateTime.now();
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-                              String formattedTime = DateFormat('hh:mm a').format(now);
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(now);
+                              String formattedTime =
+                                  DateFormat('hh:mm a').format(now);
 
                               PostModel postModel = PostModel(
                                   userImage: widget.userImage,
@@ -120,8 +127,8 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                                   emojisList: [],
                                   postSubscribersList: [],
                                   time: '$formattedDate $formattedTime',
-                              lastUpdateTime: '$formattedDate $formattedTime'
-                              );
+                                  lastUpdateTime:
+                                      '$formattedDate $formattedTime');
                               LayoutCubit.get(context).addPost(postModel);
                             },
                             text: AppStrings.addAlsha,

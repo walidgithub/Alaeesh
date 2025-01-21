@@ -67,7 +67,7 @@ class _LayoutViewState extends State<LayoutView> {
       searching = value;
     });
     screens = [
-      HomeView(searching: searching,showAllAgain: showAllAgain),
+      HomeView(searching: searching, showAllAgain: showAllAgain),
       MineView(),
       TrendingView(),
       NotificationsView(),
@@ -282,33 +282,33 @@ class _LayoutViewState extends State<LayoutView> {
                         children: [
                           addPost
                               ? Bounceable(
-                            onTap: () {
-                              Navigator.pop(context);
-                              updateSearching(true);
-                            },
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.search,
-                                  width: 30.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  AppStrings.searchForPost,
-                                  style: AppTypography.kLight14,
-                                ),
-                              ],
-                            ),
-                          )
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    updateSearching(true);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.search,
+                                        width: 30.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        AppStrings.searchForPost,
+                                        style: AppTypography.kLight14,
+                                      ),
+                                    ],
+                                  ),
+                                )
                               : Container(),
                           addPost
                               ? SizedBox(
-                            height: 10.h,
-                          )
+                                  height: 10.h,
+                                )
                               : Container(),
                           Bounceable(
                             onTap: () {
@@ -347,7 +347,10 @@ class _LayoutViewState extends State<LayoutView> {
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
     screens = [
-      HomeView(searching: searching,showAllAgain: showAllAgain,),
+      HomeView(
+        searching: searching,
+        showAllAgain: showAllAgain,
+      ),
       MineView(),
       TrendingView(),
       NotificationsView(),
@@ -418,14 +421,13 @@ class _LayoutViewState extends State<LayoutView> {
                       child: Row(
                         children: [
                           Bounceable(
-                            onTap: () {
-                              _showMenuPopupMenu();
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.mainMenu,
-                              width: 30.w,
-                            )
-                          ),
+                              onTap: () {
+                                _showMenuPopupMenu();
+                              },
+                              child: SvgPicture.asset(
+                                AppAssets.mainMenu,
+                                width: 30.w,
+                              )),
                           SizedBox(
                             width: 10.w,
                           ),
@@ -567,10 +569,10 @@ class _LayoutViewState extends State<LayoutView> {
                       },
                       child: badges.Badge(
                         position:
-                        badges.BadgePosition.topStart(top: 0, start: 0),
+                            badges.BadgePosition.topStart(top: 0, start: 0),
                         badgeAnimation: const badges.BadgeAnimation.slide(
                           disappearanceFadeAnimationDuration:
-                          Duration(milliseconds: 200),
+                              Duration(milliseconds: 200),
                           curve: Curves.bounceInOut,
                         ),
                         showBadge: _messagesBadge,
@@ -618,10 +620,10 @@ class _LayoutViewState extends State<LayoutView> {
                       },
                       child: badges.Badge(
                         position:
-                        badges.BadgePosition.topStart(top: 0, start: 0),
+                            badges.BadgePosition.topStart(top: 0, start: 0),
                         badgeAnimation: const badges.BadgeAnimation.slide(
                           disappearanceFadeAnimationDuration:
-                          Duration(milliseconds: 200),
+                              Duration(milliseconds: 200),
                           curve: Curves.bounceInOut,
                         ),
                         showBadge: _showNotificationBadge,

@@ -24,19 +24,20 @@ class MineCommentsBottomSheet extends StatefulWidget {
   double statusBarHeight;
   List<CommentsModel> commentsList;
   Function updateComment;
-  MineCommentsBottomSheet(
-      {super.key,
-      required this.statusBarHeight,
-      required this.commentsList,
-      required this.postId,
-      required this.userName,
-      required this.userImage,
-      required this.postAlsha,
-      required this.updateComment,
-      });
+  MineCommentsBottomSheet({
+    super.key,
+    required this.statusBarHeight,
+    required this.commentsList,
+    required this.postId,
+    required this.userName,
+    required this.userImage,
+    required this.postAlsha,
+    required this.updateComment,
+  });
 
   @override
-  State<MineCommentsBottomSheet> createState() => _MineCommentsBottomSheetState();
+  State<MineCommentsBottomSheet> createState() =>
+      _MineCommentsBottomSheetState();
 }
 
 class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
@@ -140,7 +141,8 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
                               listener: (context, state) {
                             if (state is DeleteCommentEmojiLoadingState) {
                               showLoading();
-                            } else if (state is DeleteCommentEmojiSuccessState) {
+                            } else if (state
+                                is DeleteCommentEmojiSuccessState) {
                               hideLoading();
                             } else if (state is DeleteCommentEmojiErrorState) {
                               hideLoading();

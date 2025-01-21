@@ -4,10 +4,10 @@ import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../repository/layout_repository.dart';
 
-class SendAdviseUseCase extends FirebaseBaseUseCase{
+class SendAdviceUseCase extends FirebaseBaseUseCase{
   final LayoutRepository layoutRepository;
 
-  SendAdviseUseCase(this.layoutRepository);
+  SendAdviceUseCase(this.layoutRepository);
 
   @override
   Future<Either<FirebaseFailure, void>> call(parameters) async {

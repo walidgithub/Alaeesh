@@ -29,7 +29,8 @@ class UpdateCommentBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<UpdateCommentBottomSheet> createState() => _UpdateCommentBottomSheetState();
+  State<UpdateCommentBottomSheet> createState() =>
+      _UpdateCommentBottomSheetState();
 }
 
 class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
@@ -40,6 +41,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
     _commentController.text = widget.commentModel.comment;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -123,17 +125,22 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                               String formattedTime =
                                   DateFormat('hh:mm a').format(now);
 
-                              UpdateCommentRequest updateCommentRequest = UpdateCommentRequest(
-                                  postId: widget.commentModel.postId,
-                                  commentsModel: CommentsModel(
-                                    id: widget.commentModel.id,
+                              UpdateCommentRequest updateCommentRequest =
+                                  UpdateCommentRequest(
                                       postId: widget.commentModel.postId,
-                                      username: widget.commentModel.username,
-                                      userImage: widget.commentModel.userImage,
-                                      comment: _commentController.text.trim(),
-                                      commentEmojiModel: widget.commentModel.commentEmojiModel),
-                                lastTimeUpdate: '$formattedDate $formattedTime'
-                              );
+                                      commentsModel: CommentsModel(
+                                          id: widget.commentModel.id,
+                                          postId: widget.commentModel.postId,
+                                          username:
+                                              widget.commentModel.username,
+                                          userImage:
+                                              widget.commentModel.userImage,
+                                          comment:
+                                              _commentController.text.trim(),
+                                          commentEmojiModel: widget
+                                              .commentModel.commentEmojiModel),
+                                      lastTimeUpdate:
+                                          '$formattedDate $formattedTime');
                               HomePageCubit.get(context)
                                   .updateComment(updateCommentRequest);
                             },

@@ -27,12 +27,12 @@ class GetUserPermissionsErrorState extends LayoutState{
   GetUserPermissionsErrorState(this.errorMessage);
 }
 
-class SendAdviseLoadingState extends LayoutState{}
-class SendAdviseSuccessState extends LayoutState{}
-class SendAdviseErrorState extends LayoutState{
+class SendAdviceLoadingState extends LayoutState{}
+class SendAdviceSuccessState extends LayoutState{}
+class SendAdviceErrorState extends LayoutState{
   final String errorMessage;
 
-  SendAdviseErrorState(this.errorMessage);
+  SendAdviceErrorState(this.errorMessage);
 }
 
 class NoInternetState extends LayoutState{}

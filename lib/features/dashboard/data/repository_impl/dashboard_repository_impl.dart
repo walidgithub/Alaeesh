@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
 import 'package:last/features/layout/data/model/advice_model.dart';
 import 'package:last/features/welcome/data/model/user_permissions_model.dart';
 
@@ -26,34 +27,6 @@ class DashboardRepositoryImpl extends DashboardRepository{
   Future<Either<FirebaseFailure, void>> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
     try {
       final result = await _homePageDataSource.deleteComment(deleteCommentRequest);
-      return Right(result);
-    } on FirebaseAuthException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
-    } on FirebaseException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
-    } catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
-    }
-  }
-
-  @override
-  Future<Either<FirebaseFailure, void>> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
-    try {
-      final result = await _homePageDataSource.deleteCommentEmoji(deleteCommentEmojiRequest);
-      return Right(result);
-    } on FirebaseAuthException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
-    } on FirebaseException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
-    } catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
-    }
-  }
-
-  @override
-  Future<Either<FirebaseFailure, void>> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
-    try {
-      final result = await _homePageDataSource.deleteEmoji(deleteEmojiRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -124,6 +97,20 @@ class DashboardRepositoryImpl extends DashboardRepository{
   Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest) async {
     try {
       final result = await _homePageDataSource.getAllPosts(getPostsRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> sendReply(SendReplyRequest sendReplyRequest) async {
+    try {
+      final result = await _dashboardDataSource.sendReply(sendReplyRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

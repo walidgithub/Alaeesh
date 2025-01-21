@@ -7,7 +7,7 @@ import '../model/requests/send_advise_request.dart';
 
 abstract class BaseDataSource {
   Future<AddPostResponse> addPost(PostModel postModel);
-  Future<void> sendAdvice(SendAdviseRequest sendAdviseRequest);
+  Future<void> sendAdvice(SendAdviceRequest sendAdviceRequest);
   Future<UserPermissionsModel> getUserPermission(String username);
 }
 
@@ -28,12 +28,12 @@ class LayoutDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> sendAdvice(SendAdviseRequest sendAdviseRequest) async {
+  Future<void> sendAdvice(SendAdviceRequest sendAdviceRequest) async {
     try {
       final collection = firestore.collection('advices');
       final docRef = collection.doc();
-      sendAdviseRequest.adviceId = docRef.id;
-      await docRef.set(sendAdviseRequest.toMap());
+      sendAdviceRequest.adviceId = docRef.id;
+      await docRef.set(sendAdviceRequest.toMap());
     } catch (e) {
       rethrow;
     }

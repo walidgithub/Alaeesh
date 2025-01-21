@@ -6,6 +6,7 @@ import 'package:last/features/dashboard/data/data_source/dashboard_datasource.da
 import 'package:last/features/dashboard/data/repository_impl/dashboard_repository_impl.dart';
 import 'package:last/features/dashboard/domain/repository/dashboard_repository.dart';
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
+import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/update_user_permissions_usecase.dart';
 import 'package:last/features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
@@ -129,7 +130,7 @@ class ServiceLocator {
 
     // layout useCases
     sl.registerLazySingleton<AddPostUseCase>(() => AddPostUseCase(sl()));
-    sl.registerLazySingleton<SendAdviseUseCase>(() => SendAdviseUseCase(sl()));
+    sl.registerLazySingleton<SendAdviceUseCase>(() => SendAdviceUseCase(sl()));
     sl.registerLazySingleton<GetUserPermissionsUseCase>(() => GetUserPermissionsUseCase(sl()));
 
     // homepage useCases
@@ -172,6 +173,7 @@ class ServiceLocator {
     // dashboard useCases
     sl.registerLazySingleton<UpdateUserPermissionsUseCase>(() => UpdateUserPermissionsUseCase(sl()));
     sl.registerLazySingleton<GetUserAdvicesUseCase>(() => GetUserAdvicesUseCase(sl()));
+    sl.registerLazySingleton<SendReplyUseCase>(() => SendReplyUseCase(sl()));
 
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
@@ -181,6 +183,6 @@ class ServiceLocator {
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   }
 }

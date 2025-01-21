@@ -27,3 +27,5 @@ class AdviceModel {
     };
   }
 }
+
+List<AdviceModel> adviceModel = [];

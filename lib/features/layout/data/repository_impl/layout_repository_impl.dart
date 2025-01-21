@@ -28,9 +28,9 @@ class LayoutRepositoryImpl extends LayoutRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, void>> sendAdvice(SendAdviseRequest sendAdviseRequest) async {
+  Future<Either<FirebaseFailure, void>> sendAdvice(SendAdviceRequest sendAdviceRequest) async {
     try {
-      final result = await _layoutDataSource.sendAdvice(sendAdviseRequest);
+      final result = await _layoutDataSource.sendAdvice(sendAdviceRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

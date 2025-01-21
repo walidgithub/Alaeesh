@@ -123,10 +123,12 @@ class _TopPostViewState extends State<TopPostView> {
                       Navigator.pop(context);
                     } else if (state is DeletePostErrorState) {
                       hideLoading();
-                      showSnackBar(context, state.errorMessage);
+                      _removePopup();
+showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
                     } else if (state is NoInternetState) {
                       hideLoading();
+                      _removePopup();
                       onError(context, AppStrings.noInternet);
                     }
                   },
@@ -264,7 +266,8 @@ class _TopPostViewState extends State<TopPostView> {
                         _removePopup();
                       } else if (state is AddEmojiErrorState) {
                         hideLoading();
-                        showSnackBar(context, state.errorMessage);
+                        _removePopup();
+showSnackBar(context, state.errorMessage);
                       } else if (state is DeleteEmojiLoadingState) {
                         showLoading();
                       } else if (state is DeleteEmojiSuccessState) {
@@ -273,10 +276,12 @@ class _TopPostViewState extends State<TopPostView> {
                         _removePopup();
                       } else if (state is DeleteEmojiErrorState) {
                         hideLoading();
-                        showSnackBar(context, state.errorMessage);
+                        _removePopup();
+showSnackBar(context, state.errorMessage);
                       } else if (state is NoInternetState) {
                         hideLoading();
-                        onError(context, AppStrings.noInternet);
+                        _removePopup();
+                      onError(context, AppStrings.noInternet);
                       }
                     },
                     builder: (context, state) {
