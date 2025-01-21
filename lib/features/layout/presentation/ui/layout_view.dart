@@ -28,7 +28,7 @@ import '../../../home_page/data/model/requests/add_post_subscriber_request.dart'
 import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
-import '../../../messages/presentation/ui/messages.dart';
+import '../../../messages/presentation/ui/messages_view.dart';
 import '../../../mine/presentation/ui/mine_view.dart';
 import '../../../notifications/presentation/ui/notifications_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
