@@ -3,10 +3,14 @@ import 'package:last/features/messages/data/model/messages_model.dart';
 
 import '../../../../core/di/di.dart';
 import '../model/requests/get_messages_request.dart';
+import '../model/requests/update_message_to_seeen_request.dart';
 
 abstract class BaseDataSource {
   Future<List<MessagesModel>> getUserMessages(
       GetMessagesRequest getMessagesRequest);
+
+  Future<void> updateMessageToSeen(
+      UpdateMessageToSeenRequest updateMessageToSeenRequest);
 }
 
 class MessagesDataSource extends BaseDataSource {
@@ -28,10 +32,25 @@ class MessagesDataSource extends BaseDataSource {
             id: doc.id,
             message: data['message'] ?? '',
             time: data['time'] ?? '',
-            username: data['username'] ?? '');
+            username: data['username'] ?? '',
+            seen: data['seen'] ?? false);
       }).toList();
 
       return messagesList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateMessageToSeen(UpdateMessageToSeenRequest updateMessageToSeenRequest) async {
+    try {
+      final messageRef = firestore
+          .collection('messages')
+          .doc(updateMessageToSeenRequest.id);
+
+      await messageRef.update({'seen': true});
+
     } catch (e) {
       rethrow;
     }

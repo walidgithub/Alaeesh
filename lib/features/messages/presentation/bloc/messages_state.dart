@@ -15,4 +15,12 @@ class GetMessagesErrorState extends MessagesState{
   GetMessagesErrorState(this.errorMessage);
 }
 
+class UpdateMessageToSeenLoadingState extends MessagesState{}
+class UpdateMessageToSeenSuccessState extends MessagesState{}
+class UpdateMessageToSeenErrorState extends MessagesState{
+  final String errorMessage;
+
+  UpdateMessageToSeenErrorState(this.errorMessage);
+}
+
 class NoInternetState extends MessagesState{}

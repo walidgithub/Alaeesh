@@ -22,6 +22,8 @@ import 'package:last/features/home_page/domain/usecases/delete_post_usecase.dart
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
+import 'package:last/features/messages/domain/repository/messgaes_repository.dart';
+import 'package:last/features/messages/presentation/bloc/messages_cubit.dart';
 import 'package:last/features/notifications/domain/repository/notifications_repository.dart';
 import 'package:last/features/notifications/presentation/bloc/notifications_cubit.dart';
 import 'package:last/features/trending/data/data_source/trending_datasource.dart';
@@ -53,6 +55,10 @@ import '../../features/layout/domain/usecases/add_post_usecase.dart';
 import '../../features/layout/domain/usecases/get_user_permissions_usecase.dart';
 import '../../features/layout/domain/usecases/send_advise_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
+import '../../features/messages/data/data_source/messages_datasource.dart';
+import '../../features/messages/data/repository_impl/messages_repository_impl.dart';
+import '../../features/messages/domain/usecases/get_messages_usecase.dart';
+import '../../features/messages/domain/usecases/update_message_to_seen_usecase.dart';
 import '../../features/mine/data/datasource/mine_datasource.dart';
 import '../../features/mine/data/repository_impl/mine_repository_impl.dart';
 import '../../features/mine/domain/repository/mine_repository.dart';
@@ -108,6 +114,7 @@ class ServiceLocator {
     sl.registerLazySingleton<MineDataSource>(() => MineDataSource());
     sl.registerLazySingleton<NotificationsDataSource>(() => NotificationsDataSource());
     sl.registerLazySingleton<DashboardDataSource>(() => DashboardDataSource());
+    sl.registerLazySingleton<MessagesDataSource>(() => MessagesDataSource());
 
     // Repositories
     sl.registerLazySingleton<WelcomeRepository>(() => WelcomeRepositoryImpl(sl()));
@@ -118,6 +125,7 @@ class ServiceLocator {
     sl.registerLazySingleton<MineRepository>(() => MineRepositoryImpl(sl(), sl()));
     sl.registerLazySingleton<NotificationsRepository>(() => NotificationsRepositoryImpl(sl()));
     sl.registerLazySingleton<DashboardRepository>(() => DashboardRepositoryImpl(sl(), sl()));
+    sl.registerLazySingleton<MessagesRepository>(() => MessagesRepositoryImpl(sl()));
 
     // UseCases
     // welcome useCases
@@ -175,6 +183,10 @@ class ServiceLocator {
     sl.registerLazySingleton<GetUserAdvicesUseCase>(() => GetUserAdvicesUseCase(sl()));
     sl.registerLazySingleton<SendReplyUseCase>(() => SendReplyUseCase(sl()));
 
+    // messages useCases
+    sl.registerLazySingleton<GetMessagesUseCase>(() => GetMessagesUseCase(sl()));
+    sl.registerLazySingleton<UpdateMessageToSeenUseCase>(() => UpdateMessageToSeenUseCase(sl()));
+
     // Bloc
     sl.registerFactory(() => SwitchUserCubit(sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl()));
@@ -184,5 +196,6 @@ class ServiceLocator {
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => MessagesCubit(sl(), sl()));
   }
 }

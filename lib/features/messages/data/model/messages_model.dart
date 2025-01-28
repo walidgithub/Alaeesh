@@ -3,7 +3,8 @@ class MessagesModel {
   String message;
   String username;
   String time;
-  MessagesModel({this.id, required this.message, required this.username, required this.time});
+  bool seen;
+  MessagesModel({this.id, required this.message, required this.username, required this.time, required this.seen});
 
   static MessagesModel fromMap(Map<String, dynamic> map) {
     MessagesModel messagesModel = MessagesModel(
@@ -11,6 +12,7 @@ class MessagesModel {
       username: map['username'],
       message: map['message'],
       time: map['time'],
+      seen: map['seen'],
     );
     return messagesModel;
   }
@@ -21,6 +23,9 @@ class MessagesModel {
       'username': username,
       'message': message,
       'time': time,
+      'seen': seen,
     };
   }
 }
+
+List<MessagesModel> messagesModel = [];

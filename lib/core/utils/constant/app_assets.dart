@@ -24,6 +24,8 @@ class AppAssets {
   static const String delete = '$imagePath/delete.svg';
   static const String edit = '$imagePath/edit.svg';
   static const String menu = '$imagePath/menu.svg';
+  static const String seen = '$imagePath/seen.svg';
+  static const String unseen = '$imagePath/unseen.svg';
   static const String share = '$imagePath/share.svg';
   static const String trending = '$imagePath/trending.svg';
   static const String trendingWhite = '$imagePath/trending_white.svg';
