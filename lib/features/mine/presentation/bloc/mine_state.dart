@@ -58,4 +58,4 @@ class DeleteCommentEmojiErrorState extends MineState{
   DeleteCommentEmojiErrorState(this.errorMessage);
 }
 
-class NoInternetState extends MineState{}
+class MineNoInternetState extends MineState{}

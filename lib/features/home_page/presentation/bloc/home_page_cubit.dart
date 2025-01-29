@@ -72,7 +72,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (posts) => emit(GetAllPostsSuccessState(posts)),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -85,7 +85,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (posts) => emit(SearchPostSuccessState(posts)),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -98,7 +98,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (postDeleted) => emit(DeletePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -111,7 +111,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (postUpdated) => emit(UpdatePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -124,7 +124,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (commentAdded) => emit(AddCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -137,7 +137,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (commentAdded) => emit(UpdateCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -150,7 +150,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (commentDeleted) => emit(DeleteCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -163,7 +163,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (postSubscriberAdded) => emit(AddPostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -176,7 +176,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -189,7 +189,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (subscriberAdded) => emit(AddSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -202,7 +202,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (subscriberDeleted) => emit(DeleteSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -215,7 +215,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (subscribers) => emit(GetSubscribersSuccessState(subscribers)),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -228,7 +228,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (emojiAdded) => emit(AddEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -241,7 +241,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (emojiDeleted) => emit(DeleteEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -254,7 +254,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (commentEmojiAdded) => emit(AddCommentEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 
@@ -267,7 +267,7 @@ class HomePageCubit extends Cubit<HomePageState> {
             (commentEmojiDeleted) => emit(DeleteCommentEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(HomePageNoInternetState());
     }
   }
 }

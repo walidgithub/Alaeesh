@@ -124,7 +124,7 @@ class _PostViewState extends State<PostView> {
                       _removePopup();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
                       onError(context, AppStrings.noInternet);
@@ -274,7 +274,7 @@ class _PostViewState extends State<PostView> {
                         hideLoading();
                         _removePopup();
                         showSnackBar(context, state.errorMessage);
-                      } else if (state is NoInternetState) {
+                      } else if (state is HomePageNoInternetState) {
                         hideLoading();
                         _removePopup();
                         onError(context, AppStrings.noInternet);

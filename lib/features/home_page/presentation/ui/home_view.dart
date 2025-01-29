@@ -174,7 +174,7 @@ class _HomeViewState extends State<HomeView> {
                           } else if (state is SearchPostErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
-                          } else if (state is NoInternetState) {
+                          } else if (state is HomePageNoInternetState) {
                             hideLoading();
                             onError(context, AppStrings.noInternet);
                           }
@@ -396,7 +396,7 @@ class _HomeViewState extends State<HomeView> {
                 }
               } else if (state is DeletePostSubscriberErrorState) {
                 showSnackBar(context, state.errorMessage);
-              } else if (state is NoInternetState) {
+              } else if (state is HomePageNoInternetState) {
                 hideLoading();
                 onError(context, AppStrings.noInternet);
               }

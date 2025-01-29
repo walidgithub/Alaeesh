@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
-import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
@@ -21,8 +20,6 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import 'dart:ui' as ui;
-import '../../../../home_page/data/model/comments_model.dart';
-import '../../../../home_page/data/model/emoji_model.dart';
 import '../../bloc/dashboard_cubit.dart';
 import '../../bloc/dashboard_state.dart';
 import 'dashboard_comments_bottom_sheet.dart';
@@ -82,7 +79,7 @@ class _AdviceViewState extends State<AdviceView> {
                 create: (context) => sl<DashboardCubit>(),
                 child: BlocConsumer<DashboardCubit, DashboardState>(
                   listener: (context, state) async {
-                    if (state is NoInternetState) {
+                    if (state is DashboardNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -259,10 +256,10 @@ class _AdviceViewState extends State<AdviceView> {
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(15.w),
                               focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                const BorderSide(color: AppColors.cSecondary),
+                                borderSide: const BorderSide(
+                                    color: AppColors.cSecondary),
                                 borderRadius:
-                                BorderRadius.circular(AppConstants.radius),
+                                    BorderRadius.circular(AppConstants.radius),
                               ),
                               labelText: AppStrings.reply,
                               border: InputBorder.none)),
@@ -283,7 +280,7 @@ class _AdviceViewState extends State<AdviceView> {
                         } else if (state is SendReplyErrorState) {
                           hideLoading();
                           showSnackBar(context, state.errorMessage);
-                        } else if (state is NoInternetState) {
+                        } else if (state is DashboardNoInternetState) {
                           hideLoading();
                           onError(context, AppStrings.noInternet);
                         }
@@ -299,6 +296,7 @@ class _AdviceViewState extends State<AdviceView> {
 
                               SendReplyRequest sendReplyRequest =
                                   SendReplyRequest(
+                                      seen: false,
                                       username: widget.username,
                                       time: '$formattedDate $formattedTime',
                                       message: _replyUsController.text.trim());

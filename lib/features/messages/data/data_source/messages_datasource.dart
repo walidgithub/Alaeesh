@@ -11,6 +11,8 @@ abstract class BaseDataSource {
 
   Future<void> updateMessageToSeen(
       UpdateMessageToSeenRequest updateMessageToSeenRequest);
+
+  Future<int> getUnSeenMessages(GetMessagesRequest getMessagesRequest);
 }
 
 class MessagesDataSource extends BaseDataSource {
@@ -36,6 +38,8 @@ class MessagesDataSource extends BaseDataSource {
             seen: data['seen'] ?? false);
       }).toList();
 
+      messagesList.sort((a, b) => b.time.compareTo(a.time));
+
       return messagesList;
     } catch (e) {
       rethrow;
@@ -51,6 +55,33 @@ class MessagesDataSource extends BaseDataSource {
 
       await messageRef.update({'seen': true});
 
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int> getUnSeenMessages(GetMessagesRequest getMessagesRequest) async {
+    try {
+      List<MessagesModel> messagesList = [];
+
+      var docs = await firestore
+          .collection('messages')
+          .where('username', isEqualTo: getMessagesRequest.username)
+          .where('seen', isEqualTo: false)
+          .get();
+
+
+      messagesList = docs.docs.map((doc) {
+        var data = doc.data();
+        return MessagesModel(
+            id: doc.id,
+            message: data['message'] ?? '',
+            time: data['time'] ?? '',
+            username: data['username'] ?? '',
+            seen: data['seen'] ?? false);
+      }).toList();
+      return messagesList.length;
     } catch (e) {
       rethrow;
     }

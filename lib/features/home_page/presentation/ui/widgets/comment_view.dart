@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:last/features/home_page/data/model/comments_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_emoji_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_comment_bottom_sheet.dart';
@@ -26,6 +27,7 @@ import '../../bloc/home_page_cubit.dart';
 import '../../bloc/home_page_state.dart';
 import 'update_comment_bottom_sheet.dart';
 import 'reactions_view.dart';
+import 'dart:ui' as ui;
 
 class CommentView extends StatefulWidget {
   final String id;
@@ -112,7 +114,7 @@ class _CommentViewState extends State<CommentView> {
                       _removePopup();
 showSnackBar(context, state.errorMessage);
                       _removePopup();
-                    } else if (state is NoInternetState) {
+                    } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
                       onError(context, AppStrings.noInternet);
@@ -196,7 +198,7 @@ showSnackBar(context, state.errorMessage);
                       _removePopup();
 showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
                       onError(context, AppStrings.noInternet);
@@ -212,8 +214,15 @@ showSnackBar(context, state.errorMessage);
                         children: [
                           Bounceable(
                             onTap: () {
+                              DateTime now = DateTime.now();
+                              String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(now);
+                              String formattedTime =
+                              DateFormat('hh:mm a').format(now);
+
                               DeleteCommentRequest deleteCommentRequest =
                                   DeleteCommentRequest(
+                                    lastTimeUpdate: '$formattedDate $formattedTime',
                                       postId: widget.postId,
                                       commentId: widget.id);
                               HomePageCubit.get(context)
@@ -258,7 +267,7 @@ showSnackBar(context, state.errorMessage);
                                 ),
                                 builder: (context2) {
                                   return Directionality(
-                                      textDirection: TextDirection.rtl,
+                                      textDirection: ui.TextDirection.rtl,
                                       child: UpdateCommentBottomSheet(
                                           statusBarHeight:
                                               widget.statusBarHeight,
@@ -311,7 +320,7 @@ showSnackBar(context, state.errorMessage);
     return FadeInUp(
       duration: Duration(milliseconds: AppConstants.animation),
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: ui.TextDirection.rtl,
         child: Container(
           width: MediaQuery.sizeOf(context).width,
           padding: EdgeInsets.all(8.w),
@@ -379,7 +388,7 @@ showSnackBar(context, state.errorMessage);
                                                   color: AppColors.cTitle),
                                             ),
                                             Directionality(
-                                              textDirection: TextDirection.ltr,
+                                              textDirection: ui.TextDirection.ltr,
                                               child: Text(
                                                 timeAgoText,
                                                 style: AppTypography.kLight12
@@ -474,7 +483,7 @@ showSnackBar(context, state.errorMessage);
                                 ),
                                 builder: (context2) {
                                   return Directionality(
-                                    textDirection: TextDirection.rtl,
+                                    textDirection: ui.TextDirection.rtl,
                                     child:
                                     ReactionsCommentBottomSheet(
                                         statusBarHeight: widget

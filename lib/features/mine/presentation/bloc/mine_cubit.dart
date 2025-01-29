@@ -43,7 +43,7 @@ class MineCubit extends Cubit<MineState> {
             (mine) => emit(GetMineSuccessState(mine)),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
   
@@ -56,7 +56,7 @@ class MineCubit extends Cubit<MineState> {
             (postDeleted) => emit(DeletePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
 
@@ -69,7 +69,7 @@ class MineCubit extends Cubit<MineState> {
             (commentDeleted) => emit(DeleteCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
 
@@ -82,7 +82,7 @@ class MineCubit extends Cubit<MineState> {
             (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
 
@@ -95,7 +95,7 @@ class MineCubit extends Cubit<MineState> {
             (emojiDeleted) => emit(DeleteEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
 
@@ -108,7 +108,7 @@ class MineCubit extends Cubit<MineState> {
             (commentEmojiDeleted) => emit(DeleteCommentEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MineNoInternetState());
     }
   }
 }

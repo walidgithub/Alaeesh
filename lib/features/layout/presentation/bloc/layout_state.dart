@@ -35,4 +35,4 @@ class SendAdviceErrorState extends LayoutState{
   SendAdviceErrorState(this.errorMessage);
 }
 
-class NoInternetState extends LayoutState{}
+class LayoutNoInternetState extends LayoutState{}

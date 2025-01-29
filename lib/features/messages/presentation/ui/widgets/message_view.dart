@@ -66,7 +66,7 @@ class _MessageViewState extends State<MessageView> {
         } else if (state is UpdateMessageToSeenErrorState) {
           hideLoading();
           showSnackBar(context, state.errorMessage);
-        } else if (state is NoInternetState) {
+        } else if (state is MessagesNoInternetState) {
           hideLoading();
           onError(context, AppStrings.noInternet);
         }

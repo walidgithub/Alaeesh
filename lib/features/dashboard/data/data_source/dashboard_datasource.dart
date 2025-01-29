@@ -49,6 +49,8 @@ class DashboardDataSource extends BaseDataSource {
         return AdviceModel.fromMap(doc.data(), doc.id);
       }).toList();
 
+      adviceModels.sort((a, b) => b.time.compareTo(a.time));
+
       return adviceModels;
     } catch(e) {
       rethrow;

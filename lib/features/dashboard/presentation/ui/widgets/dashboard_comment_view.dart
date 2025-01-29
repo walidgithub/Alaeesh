@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_comment_bottom_sheet.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
@@ -21,6 +22,7 @@ import '../../../../home_page/data/model/comment_emoji_model.dart';
 import '../../../../home_page/data/model/requests/delete_comment_request.dart';
 import '../../bloc/dashboard_cubit.dart';
 import '../../bloc/dashboard_state.dart';
+import 'dart:ui' as ui;
 
 class DashboardCommentView extends StatefulWidget {
   final String id;
@@ -102,7 +104,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is DashboardNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -117,8 +119,15 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                         children: [
                           Bounceable(
                             onTap: () {
+                              DateTime now = DateTime.now();
+                              String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(now);
+                              String formattedTime =
+                              DateFormat('hh:mm a').format(now);
+
                               DeleteCommentRequest deleteCommentRequest =
                               DeleteCommentRequest(
+                                lastTimeUpdate: '$formattedDate $formattedTime',
                                   postId: widget.postId,
                                   commentId: widget.id);
                               DashboardCubit.get(context)
@@ -156,7 +165,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
     return FadeInUp(
       duration: Duration(milliseconds: AppConstants.animation),
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: ui.TextDirection.rtl,
         child: Container(
           width: MediaQuery.sizeOf(context).width,
           padding: EdgeInsets.all(8.w),
@@ -220,7 +229,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                                                 color: AppColors.cTitle),
                                           ),
                                           Directionality(
-                                            textDirection: TextDirection.ltr,
+                                            textDirection: ui.TextDirection.ltr,
                                             child: Text(
                                               timeAgoText,
                                               style: AppTypography.kLight12
@@ -295,7 +304,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                                 ),
                                 builder: (context2) {
                                   return Directionality(
-                                    textDirection: TextDirection.rtl,
+                                    textDirection: ui.TextDirection.rtl,
                                     child:
                                     ReactionsCommentBottomSheet(
                                         statusBarHeight: widget

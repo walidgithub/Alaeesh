@@ -44,4 +44,19 @@ class MessagesRepositoryImpl extends MessagesRepository {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
     }
   }
+
+  @override
+  Future<Either<FirebaseFailure, int>> getUnSeenMessages(GetMessagesRequest getMessagesRequest) async {
+    try {
+      final result =
+          await messagesDataSource.getUnSeenMessages(getMessagesRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
 }

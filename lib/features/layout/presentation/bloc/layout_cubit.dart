@@ -29,7 +29,7 @@ class LayoutCubit extends Cubit<LayoutState> {
             (postAdded) => emit(AddPostSuccessState(postAdded)),
       );
     } else {
-      emit(NoInternetState());
+      emit(LayoutNoInternetState());
     }
   }
 
@@ -42,7 +42,7 @@ class LayoutCubit extends Cubit<LayoutState> {
             (adviseSent) => emit(SendAdviceSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(LayoutNoInternetState());
     }
   }
 
@@ -55,7 +55,7 @@ class LayoutCubit extends Cubit<LayoutState> {
             (userPermissions) => emit(GetUserPermissionsSuccessState(userPermissions)),
       );
     } else {
-      emit(NoInternetState());
+      emit(LayoutNoInternetState());
     }
   }
 }

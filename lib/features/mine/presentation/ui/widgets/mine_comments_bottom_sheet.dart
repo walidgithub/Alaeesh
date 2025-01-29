@@ -12,7 +12,7 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/comments_model.dart';
-import '../../bloc/myine_cubit.dart';
+import '../../bloc/mine_cubit.dart';
 import '../../bloc/mine_state.dart';
 import 'mine_comment_view.dart';
 
@@ -148,7 +148,7 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
                               hideLoading();
                               showSnackBar(context, state.errorMessage);
                               Navigator.pop(context);
-                            } else if (state is NoInternetState) {
+                            } else if (state is MineNoInternetState) {
                               hideLoading();
                               onError(context, AppStrings.noInternet);
                             }

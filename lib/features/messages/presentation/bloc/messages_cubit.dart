@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/messages/domain/usecases/get_messages_usecase.dart';
+import 'package:last/features/messages/domain/usecases/get_unseen_messages_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../data/model/requests/get_messages_request.dart';
@@ -8,10 +9,11 @@ import '../../domain/usecases/update_message_to_seen_usecase.dart';
 import 'messages_state.dart';
 
 class MessagesCubit extends Cubit<MessagesState> {
-  MessagesCubit(this.getMessagesUseCase, this.updateMessageToSeenUseCase)
+  MessagesCubit(this.getMessagesUseCase, this.updateMessageToSeenUseCase, this.getUnSeenMessagesUseCase)
       : super(MessagesInitial());
 
   final GetMessagesUseCase getMessagesUseCase;
+  final GetUnSeenMessagesUseCase getUnSeenMessagesUseCase;
   final UpdateMessageToSeenUseCase updateMessageToSeenUseCase;
 
   static MessagesCubit get(context) => BlocProvider.of(context);
@@ -27,7 +29,7 @@ class MessagesCubit extends Cubit<MessagesState> {
             (messages) => emit(GetMessagesSuccessState(messages)),
       );
     } else {
-      emit(NoInternetState());
+      emit(MessagesNoInternetState());
     }
   }
 
@@ -40,7 +42,20 @@ class MessagesCubit extends Cubit<MessagesState> {
             (messageUpdated) => emit(UpdateMessageToSeenSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(MessagesNoInternetState());
+    }
+  }
+
+  Future<void> getUnSeenMessages(GetMessagesRequest getMessagesRequest) async {
+    emit(GetUnSeenMessagesLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getUnSeenMessagesUseCase.call(getMessagesRequest);
+      result.fold(
+            (failure) => emit(GetUnSeenMessagesErrorState(failure.message)),
+            (unSeenMessages) => emit(GetUnSeenMessagesSuccessState(unSeenMessages)),
+      );
+    } else {
+      emit(MessagesNoInternetState());
     }
   }
 }

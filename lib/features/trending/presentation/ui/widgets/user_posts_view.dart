@@ -286,7 +286,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                       username: widget.arguments.username));
                 } else if (state is DeletePostSubscriberErrorState) {
                   showSnackBar(context, state.errorMessage);
-                } else if (state is NoInternetState) {
+                } else if (state is HomePageNoInternetState) {
                   hideLoading();
                   onError(context, AppStrings.noInternet);
                 }

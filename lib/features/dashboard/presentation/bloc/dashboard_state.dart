@@ -69,4 +69,4 @@ class SendReplyErrorState extends DashboardState{
   SendReplyErrorState(this.errorMessage);
 }
 
-class NoInternetState extends DashboardState{}
+class DashboardNoInternetState extends DashboardState{}

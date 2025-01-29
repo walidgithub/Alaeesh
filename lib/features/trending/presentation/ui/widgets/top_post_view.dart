@@ -126,7 +126,7 @@ class _TopPostViewState extends State<TopPostView> {
                       _removePopup();
 showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is TrendingNoInternetState) {
                       hideLoading();
                       _removePopup();
                       onError(context, AppStrings.noInternet);
@@ -278,7 +278,7 @@ showSnackBar(context, state.errorMessage);
                         hideLoading();
                         _removePopup();
 showSnackBar(context, state.errorMessage);
-                      } else if (state is NoInternetState) {
+                      } else if (state is TrendingNoInternetState) {
                         hideLoading();
                         _removePopup();
                       onError(context, AppStrings.noInternet);

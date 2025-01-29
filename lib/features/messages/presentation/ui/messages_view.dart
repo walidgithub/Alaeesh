@@ -82,7 +82,7 @@ class _MessagesViewState extends State<MessagesView> {
             } else if (state is GetMessagesErrorState) {
               hideLoading();
               showSnackBar(context, state.errorMessage);
-            } else if (state is NoInternetState) {
+            } else if (state is MessagesNoInternetState) {
               hideLoading();
               onError(context, AppStrings.noInternet);
             }

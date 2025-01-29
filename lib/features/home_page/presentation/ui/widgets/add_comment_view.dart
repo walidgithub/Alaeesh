@@ -110,7 +110,7 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
-                          } else if (state is NoInternetState) {
+                          } else if (state is HomePageNoInternetState) {
                             hideLoading();
                             onError(context, AppStrings.noInternet);
                           }

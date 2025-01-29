@@ -326,7 +326,7 @@ class _TrendingViewState extends State<TrendingView> {
               .getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is DeletePostSubscriberErrorState) {
           showSnackBar(context, state.errorMessage);
-        } else if (state is NoInternetState) {
+        } else if (state is TrendingNoInternetState) {
           hideLoading();
           onError(context, AppStrings.noInternet);
         }

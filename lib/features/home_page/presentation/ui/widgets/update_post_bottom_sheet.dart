@@ -111,7 +111,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
-                          } else if (state is NoInternetState) {
+                          } else if (state is HomePageNoInternetState) {
                             hideLoading();
                             onError(context, AppStrings.noInternet);
                           }

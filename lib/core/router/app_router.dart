@@ -7,7 +7,7 @@ import 'package:last/features/trending/presentation/bloc/trending_cubit.dart';
 import 'package:last/features/trending/presentation/ui/widgets/user_posts_view.dart';
 import '../../features/home_page/presentation/bloc/home_page_cubit.dart';
 import '../../features/layout/presentation/ui/layout_view.dart';
-import '../../features/mine/presentation/bloc/myine_cubit.dart';
+import '../../features/mine/presentation/bloc/mine_cubit.dart';
 import '../../features/welcome/presentation/ui/welcome_view.dart';
 import '../di/di.dart';
 import 'arguments.dart';

@@ -10,4 +10,6 @@ abstract class MessagesRepository {
       GetMessagesRequest getMessagesRequest);
 
   Future<Either<FirebaseFailure, void>> updateMessageToSeen(UpdateMessageToSeenRequest updateMessageToSeenRequest);
+
+  Future<Either<FirebaseFailure, int>> getUnSeenMessages(GetMessagesRequest getMessagesRequest);
 }

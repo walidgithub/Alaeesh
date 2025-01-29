@@ -3,7 +3,8 @@ class SendReplyRequest {
   String message;
   String username;
   String time;
-  SendReplyRequest({this.id, required this.message, required this.username, required this.time});
+  bool seen;
+  SendReplyRequest({this.id, required this.message, required this.username, required this.time, required this.seen});
 
   static SendReplyRequest fromMap(Map<String, dynamic> map, String? id) {
     SendReplyRequest sndReplyRequest = SendReplyRequest(
@@ -11,6 +12,7 @@ class SendReplyRequest {
       message: map['message'],
       username: map['username'],
       time: map['time'],
+      seen: map['seen'],
     );
     return sndReplyRequest;
   }
@@ -21,6 +23,7 @@ class SendReplyRequest {
       'message': message,
       'username': username,
       'time': time,
+      'seen': seen,
     };
   }
 

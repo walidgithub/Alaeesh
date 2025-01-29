@@ -105,7 +105,7 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
-                          } else if (state is NoInternetState) {
+                          } else if (state is LayoutNoInternetState) {
                             hideLoading();
                             onError(context, AppStrings.noInternet);
                           }

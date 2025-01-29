@@ -23,6 +23,7 @@ import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_u
 import 'package:last/features/home_page/domain/usecases/get_all_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
 import 'package:last/features/messages/domain/repository/messgaes_repository.dart';
+import 'package:last/features/messages/domain/usecases/get_unseen_messages_usecase.dart';
 import 'package:last/features/messages/presentation/bloc/messages_cubit.dart';
 import 'package:last/features/notifications/domain/repository/notifications_repository.dart';
 import 'package:last/features/notifications/presentation/bloc/notifications_cubit.dart';
@@ -63,7 +64,7 @@ import '../../features/mine/data/datasource/mine_datasource.dart';
 import '../../features/mine/data/repository_impl/mine_repository_impl.dart';
 import '../../features/mine/domain/repository/mine_repository.dart';
 import '../../features/mine/domain/usecases/get_mine_usecase.dart';
-import '../../features/mine/presentation/bloc/myine_cubit.dart';
+import '../../features/mine/presentation/bloc/mine_cubit.dart';
 import '../../features/notifications/data/data_source/notifications_datasource.dart';
 import '../../features/notifications/data/repository_impl/notifications_repository_impl.dart';
 import '../../features/notifications/domain/usecases/delete_notification_usecase.dart';
@@ -185,6 +186,7 @@ class ServiceLocator {
 
     // messages useCases
     sl.registerLazySingleton<GetMessagesUseCase>(() => GetMessagesUseCase(sl()));
+    sl.registerLazySingleton<GetUnSeenMessagesUseCase>(() => GetUnSeenMessagesUseCase(sl()));
     sl.registerLazySingleton<UpdateMessageToSeenUseCase>(() => UpdateMessageToSeenUseCase(sl()));
 
     // Bloc
@@ -196,6 +198,6 @@ class ServiceLocator {
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => MessagesCubit(sl(), sl()));
+    sl.registerFactory(() => MessagesCubit(sl(), sl(), sl()));
   }
 }

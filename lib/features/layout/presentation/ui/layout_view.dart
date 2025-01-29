@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/layout/presentation/ui/widgets/add_post_bottom_sheet.dart';
 import 'package:last/features/layout/presentation/ui/widgets/drawer_info_page.dart';
+import 'package:last/features/messages/data/model/requests/get_messages_request.dart';
+import 'package:last/features/messages/presentation/bloc/messages_cubit.dart';
 import 'package:last/features/trending/presentation/ui/trending_view.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -28,6 +30,7 @@ import '../../../home_page/data/model/requests/add_post_subscriber_request.dart'
 import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../home_page/presentation/bloc/home_page_cubit.dart';
 import '../../../home_page/presentation/ui/home_view.dart';
+import '../../../messages/presentation/bloc/messages_state.dart';
 import '../../../messages/presentation/ui/messages_view.dart';
 import '../../../mine/presentation/ui/mine_view.dart';
 import '../../../notifications/presentation/ui/notifications_view.dart';
@@ -44,7 +47,7 @@ class LayoutView extends StatefulWidget {
 
 class _LayoutViewState extends State<LayoutView> {
   final int _notificationBadgeAmount = 0;
-  final int _messagesBadgeAmount = 0;
+  int _messagesBadgeAmount = 0;
   final bool _showNotificationBadge = true;
   final bool _messagesBadge = true;
   String returnedUserName = '';
@@ -122,7 +125,7 @@ class _LayoutViewState extends State<LayoutView> {
                     } else if (state is LogoutErrorState) {
                       showSnackBar(context, state.errorMessage);
                       hideLoading();
-                    } else if (state is NoInternetState) {
+                    } else if (state is WelcomeNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -266,7 +269,7 @@ class _LayoutViewState extends State<LayoutView> {
                     } else if (state is LogoutErrorState) {
                       showSnackBar(context, state.errorMessage);
                       hideLoading();
-                    } else if (state is NoInternetState) {
+                    } else if (state is WelcomeNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -364,6 +367,11 @@ class _LayoutViewState extends State<LayoutView> {
     getAllPosts(displayName, allPosts: true);
   }
 
+  void getUnSeenMessagesCount() {
+    MessagesCubit.get(context)
+        .getUnSeenMessages(GetMessagesRequest(username: displayName));
+  }
+
   Future<void> _loadSavedUserData() async {
     userData = await _appSecureDataHelper.loadUserData();
     setState(() {
@@ -373,6 +381,7 @@ class _LayoutViewState extends State<LayoutView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
     });
+    getUnSeenMessagesCount();
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -560,30 +569,58 @@ class _LayoutViewState extends State<LayoutView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          addPost = false;
-                        });
-                        toggleIcon(5);
-                      },
-                      child: badges.Badge(
-                        position:
-                            badges.BadgePosition.topStart(top: 0, start: 0),
-                        badgeAnimation: const badges.BadgeAnimation.slide(
-                          disappearanceFadeAnimationDuration:
-                              Duration(milliseconds: 200),
-                          curve: Curves.bounceInOut,
-                        ),
-                        showBadge: _messagesBadge,
-                        badgeStyle: const badges.BadgeStyle(
-                          badgeColor: AppColors.cPrimary,
-                        ),
-                        badgeContent: Text(
-                          _messagesBadgeAmount.toString(),
-                          style: const TextStyle(color: AppColors.cWhite),
-                        ),
-                        child: TabIcon(
+                  BlocConsumer<MessagesCubit, MessagesState>(
+                      listener: (context, state) {
+                    if (state is GetUnSeenMessagesLoadingState) {
+                      showLoading();
+                    } else if (state is GetUnSeenMessagesSuccessState) {
+                      hideLoading();
+                      setState(() {
+                        _messagesBadgeAmount = state.unSeenMessagesCount;
+                      });
+                    } else if (state is GetUnSeenMessagesErrorState) {
+                      hideLoading();
+                      showSnackBar(context, state.errorMessage);
+                    } else if (state is MessagesNoInternetState) {
+                      hideLoading();
+                      onError(context, AppStrings.noInternet);
+                    }
+                  }, builder: (context, state) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            addPost = false;
+                            _messagesBadgeAmount = 0;
+                          });
+                          toggleIcon(5);
+                        },
+                        child: _messagesBadgeAmount > 0 ? badges.Badge(
+                          position:
+                          badges.BadgePosition.topStart(top: 0, start: 0),
+                          badgeAnimation: const badges.BadgeAnimation.slide(
+                            disappearanceFadeAnimationDuration:
+                            Duration(milliseconds: 200),
+                            curve: Curves.bounceInOut,
+                          ),
+                          showBadge: _messagesBadge,
+                          badgeStyle: const badges.BadgeStyle(
+                            badgeColor: AppColors.cPrimary,
+                          ),
+                          badgeContent: Text(
+                            _messagesBadgeAmount.toString(),
+                            style: const TextStyle(color: AppColors.cWhite),
+                          ),
+                          child: TabIcon(
+                            selectedWidgets: selectedWidgets,
+                            selectScreen: selectScreen,
+                            index: 5,
+                            heightSize: 50.h,
+                            widthSize: 50.w,
+                            blueIcon: AppAssets.message,
+                            whiteIcon: AppAssets.messageWhite,
+                            padding: 5.w,
+                          ),
+                        ) : TabIcon(
                           selectedWidgets: selectedWidgets,
                           selectScreen: selectScreen,
                           index: 5,
@@ -592,8 +629,8 @@ class _LayoutViewState extends State<LayoutView> {
                           blueIcon: AppAssets.message,
                           whiteIcon: AppAssets.messageWhite,
                           padding: 5.w,
-                        ),
-                      )),
+                        ));
+                  }),
                   GestureDetector(
                       onTap: () {
                         setState(() {

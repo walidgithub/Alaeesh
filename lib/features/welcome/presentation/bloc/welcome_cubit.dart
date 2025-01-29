@@ -29,7 +29,7 @@ class WelcomeCubit extends Cubit<WelcomeState> {
             (user) => emit(LoginSuccessState(user)),
       );
     } else {
-      emit(NoInternetState());
+      emit(WelcomeNoInternetState());
     }
   }
 
@@ -42,7 +42,7 @@ class WelcomeCubit extends Cubit<WelcomeState> {
             (loggedOut) => emit(LogoutSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(WelcomeNoInternetState());
     }
   }
 
@@ -55,7 +55,7 @@ class WelcomeCubit extends Cubit<WelcomeState> {
             (loggedOut) => emit(AddUserPermissionSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(WelcomeNoInternetState());
     }
   }
 }

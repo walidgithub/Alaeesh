@@ -198,7 +198,7 @@ class _DashboardViewState extends State<DashboardView> {
                           currentUser: displayName, allPosts: true));
                     } else if (state is DeletePostSubscriberErrorState) {
                       showSnackBar(context, state.errorMessage);
-                    } else if (state is NoInternetState) {
+                    } else if (state is DashboardNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -275,7 +275,7 @@ class _DashboardViewState extends State<DashboardView> {
                     } else if (state is GetUserAdvicesErrorState) {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
-                    } else if (state is NoInternetState) {
+                    } else if (state is DashboardNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }

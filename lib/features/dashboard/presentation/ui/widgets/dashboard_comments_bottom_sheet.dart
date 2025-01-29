@@ -32,7 +32,6 @@ class DashboardCommentsBottomSheet extends StatefulWidget {
 }
 
 class _DashboardCommentsBottomSheetState extends State<DashboardCommentsBottomSheet> {
-  final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool textAutofocus = false;
   String commentId = "";

@@ -23,4 +23,15 @@ class UpdateMessageToSeenErrorState extends MessagesState{
   UpdateMessageToSeenErrorState(this.errorMessage);
 }
 
-class NoInternetState extends MessagesState{}
+class GetUnSeenMessagesLoadingState extends MessagesState{}
+class GetUnSeenMessagesSuccessState extends MessagesState{
+  int unSeenMessagesCount;
+  GetUnSeenMessagesSuccessState(this.unSeenMessagesCount);
+}
+class GetUnSeenMessagesErrorState extends MessagesState{
+  final String errorMessage;
+
+  GetUnSeenMessagesErrorState(this.errorMessage);
+}
+
+class MessagesNoInternetState extends MessagesState{}

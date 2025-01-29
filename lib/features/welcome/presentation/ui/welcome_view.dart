@@ -128,7 +128,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                                 } else if (state is LoginErrorState) {
                                   showSnackBar(context, state.errorMessage);
                                   hideLoading();
-                                } else if (state is NoInternetState) {
+                                } else if (state is WelcomeNoInternetState) {
                                   hideLoading();
                                   onError(context, AppStrings.noInternet);
                                 }

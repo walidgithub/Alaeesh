@@ -47,7 +47,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (postDeleted) => emit(DeletePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -60,7 +60,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (commentDeleted) => emit(DeleteCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -73,7 +73,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -86,7 +86,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (posts) => emit(GetAllPostsSuccessState(posts)),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -99,7 +99,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (userAdvices) => emit(GetUserAdvicesSuccessState(userAdvices)),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -112,7 +112,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (userPermissionUpdated) => emit(UpdateUserPermissionsSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 
@@ -125,7 +125,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             (replySent) => emit(SendReplySuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(DashboardNoInternetState());
     }
   }
 }

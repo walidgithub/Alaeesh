@@ -103,7 +103,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is DashboardNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }

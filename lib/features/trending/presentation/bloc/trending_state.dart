@@ -158,4 +158,4 @@ class CheckIfUserSubscribedErrorState extends TrendingState{
   CheckIfUserSubscribedErrorState(this.errorMessage);
 }
 
-class NoInternetState extends TrendingState{}
+class TrendingNoInternetState extends TrendingState{}

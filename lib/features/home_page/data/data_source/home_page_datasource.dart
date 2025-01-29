@@ -224,7 +224,7 @@ class HomePageDataSource extends BaseDataSource {
         commentsList.removeWhere(
             (comment) => comment['id'] == deleteCommentRequest.commentId);
 
-        await postRef.update({'commentsList': commentsList});
+        await postRef.update({'commentsList': commentsList,'lastUpdateTime':  deleteCommentRequest.lastTimeUpdate});
       } else {
         throw "Post document does not exist.";
       }

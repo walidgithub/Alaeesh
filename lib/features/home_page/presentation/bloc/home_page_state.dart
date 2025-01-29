@@ -146,4 +146,4 @@ class AddCommentEmojiErrorState extends HomePageState{
   AddCommentEmojiErrorState(this.errorMessage);
 }
 
-class NoInternetState extends HomePageState{}
+class HomePageNoInternetState extends HomePageState{}

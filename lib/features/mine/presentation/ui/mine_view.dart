@@ -15,7 +15,7 @@ import '../../../home_page/data/model/post_subscribers_model.dart';
 import '../../../home_page/data/model/requests/delete_post_subscriber_request.dart';
 import '../../data/model/requests/get_mine_request.dart';
 import '../bloc/mine_state.dart';
-import '../bloc/myine_cubit.dart';
+import '../bloc/mine_cubit.dart';
 
 class MineView extends StatefulWidget {
   const MineView({super.key});
@@ -99,7 +99,7 @@ class _MineViewState extends State<MineView> {
                   .getMine(GetMineRequest(userName: displayName));
             } else if (state is DeletePostSubscriberErrorState) {
               showSnackBar(context, state.errorMessage);
-            } else if (state is NoInternetState) {
+            } else if (state is MineNoInternetState) {
               hideLoading();
               onError(context, AppStrings.noInternet);
             }

@@ -23,7 +23,7 @@ class SwitchUserCubit extends Cubit<SwitchUserState> {
             (user) => emit(SwitchUserSuccessState(user)),
       );
     } else {
-      emit(NoInternetState());
+      emit(SwitchUserNoInternetState());
     }
   }
 }

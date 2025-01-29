@@ -32,4 +32,4 @@ class AddUserPermissionErrorState extends WelcomeState{
 }
 class AddUserPermissionLoadingState extends WelcomeState{}
 
-class NoInternetState extends WelcomeState{}
+class WelcomeNoInternetState extends WelcomeState{}

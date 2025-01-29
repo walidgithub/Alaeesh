@@ -118,7 +118,7 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                         showSnackBar(
                                             context, state.errorMessage);
                                         hideLoading();
-                                      } else if (state is NoInternetState) {
+                                      } else if (state is SwitchUserNoInternetState) {
                                         hideLoading();
                                         onError(context, AppStrings.noInternet);
                                       }

@@ -106,7 +106,7 @@ class _DrawerInfoState extends State<DrawerInfo> {
                       } else if (state is SendAdviceErrorState) {
                         hideLoading();
                         showSnackBar(context, state.errorMessage);
-                      } else if (state is NoInternetState) {
+                      } else if (state is LayoutNoInternetState) {
                         hideLoading();
                         onError(context, AppStrings.noInternet);
                       }

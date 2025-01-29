@@ -79,7 +79,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (posts) => emit(GetTopPostsSuccessState(posts)),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -92,7 +92,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (suggestedUsers) => emit(GetSuggestedUsersSuccessState(suggestedUsers)),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -105,7 +105,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (suggestedUserPosts) => emit(GetSuggestedUserPostsSuccessState(suggestedUserPosts)),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -118,7 +118,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (subscriberAdded) => emit(AddSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -131,7 +131,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (subscriberDeleted) => emit(DeleteSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -144,7 +144,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (postDeleted) => emit(DeletePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -157,7 +157,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (postUpdated) => emit(UpdatePostSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -170,7 +170,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (commentAdded) => emit(AddCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -183,7 +183,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (commentAdded) => emit(UpdateCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -196,7 +196,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (commentDeleted) => emit(DeleteCommentSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -209,7 +209,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (postSubscriberAdded) => emit(AddPostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -222,7 +222,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (postSubscriberDeleted) => emit(DeletePostSubscriberSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -235,7 +235,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (emojiAdded) => emit(AddEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -248,7 +248,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (emojiDeleted) => emit(DeleteEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -261,7 +261,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (commentEmojiAdded) => emit(AddCommentEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -274,7 +274,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (commentEmojiDeleted) => emit(DeleteCommentEmojiSuccessState()),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 
@@ -287,7 +287,7 @@ class TrendingCubit extends Cubit<TrendingState> {
             (checkIfUserSubscribed) => emit(CheckIfUserSubscribedSuccessState(checkIfUserSubscribed)),
       );
     } else {
-      emit(NoInternetState());
+      emit(TrendingNoInternetState());
     }
   }
 }

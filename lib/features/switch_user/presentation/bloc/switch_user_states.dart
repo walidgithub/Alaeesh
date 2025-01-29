@@ -16,4 +16,4 @@ class SwitchUserErrorState extends SwitchUserState{
 }
 class SwitchUserLoadingState extends SwitchUserState{}
 
-class NoInternetState extends SwitchUserState{}
+class SwitchUserNoInternetState extends SwitchUserState{}

@@ -21,7 +21,7 @@ import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
 import '../../../../home_page/data/model/post_subscribers_model.dart';
-import '../../bloc/myine_cubit.dart';
+import '../../bloc/mine_cubit.dart';
 import '../../bloc/mine_state.dart';
 import 'mine_comments_bottom_sheet.dart';
 
@@ -112,7 +112,7 @@ class _MinePostViewState extends State<MinePostView> {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
-                    } else if (state is NoInternetState) {
+                    } else if (state is MineNoInternetState) {
                       hideLoading();
                       onError(context, AppStrings.noInternet);
                     }
@@ -369,7 +369,7 @@ class _MinePostViewState extends State<MinePostView> {
                                         hideLoading();
                                         showSnackBar(
                                             context, state.errorMessage);
-                                      } else if (state is NoInternetState) {
+                                      } else if (state is MineNoInternetState) {
                                         hideLoading();
                                         onError(context, AppStrings.noInternet);
                                       }
