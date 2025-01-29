@@ -37,4 +37,7 @@ class AppAssets {
   static const String back = '$imagePath/back.svg';
   static const String message = '$imagePath/message.svg';
   static const String messageWhite = '$imagePath/message_white.svg';
+  static const String send = '$imagePath/send.svg';
+  static const String preventAdd = '$imagePath/prevent_add.svg';
+  static const String enableAdd = '$imagePath/enable_add.svg';
 }

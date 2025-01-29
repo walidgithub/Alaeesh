@@ -52,7 +52,7 @@ class WelcomeCubit extends Cubit<WelcomeState> {
       final signOutResult = await addUserPermissionsUseCase.call(userPermissionsModel);
       signOutResult.fold(
             (failure) => emit(AddUserPermissionErrorState(failure.message)),
-            (loggedOut) => emit(AddUserPermissionSuccessState()),
+            (userPermissionAdded) => emit(AddUserPermissionSuccessState()),
       );
     } else {
       emit(WelcomeNoInternetState());

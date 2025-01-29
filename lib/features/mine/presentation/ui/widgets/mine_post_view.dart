@@ -134,7 +134,7 @@ class _MinePostViewState extends State<MinePostView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.delete,
-                                  width: 15.w,
+                                  width: 18.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,

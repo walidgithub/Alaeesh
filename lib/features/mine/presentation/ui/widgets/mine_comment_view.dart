@@ -136,7 +136,7 @@ class _MineCommentViewState extends State<MineCommentView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.delete,
-                                  width: 15.w,
+                                  width: 18.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,

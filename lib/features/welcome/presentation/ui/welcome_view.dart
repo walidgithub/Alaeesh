@@ -33,6 +33,11 @@ class _WelcomeViewState extends State<WelcomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  String id = "";
+  String email = "";
+  String displayName = "";
+  String photoUrl = "";
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -117,17 +122,36 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   showLoading();
                                 } else if (state is LoginSuccessState) {
                                   hideLoading();
-                                  await _appSecureDataHelper.saveUserData(
-                                      id: state.user.id!,
-                                      email: state.user.email!,
-                                      displayName: state.user.name!,
-                                      photoUrl: state.user.photoUrl!);
-                                  await _appPreferences.setUserLoggedIn();
-                                  Navigator.pushReplacementNamed(
-                                      context, Routes.layoutRoute);
+                                  id = state.user.id!;
+                                  email = state.user.email!;
+                                  displayName = state.user.name!;
+                                  photoUrl = state.user.photoUrl!;
                                 } else if (state is LoginErrorState) {
                                   showSnackBar(context, state.errorMessage);
                                   hideLoading();
+                                } else if (state
+                                    is AddUserPermissionLoadingState) {
+                                  showLoading();
+                                } else if (state
+                                    is AddUserPermissionSuccessState) {
+                                  hideLoading();
+                                  // if new add this
+                                  await _appSecureDataHelper.saveUserData(
+                                    id: id,
+                                    email: email,
+                                    displayName: displayName,
+                                    photoUrl: photoUrl,
+                                    enableAdd: "yes",
+                                    role: "user",
+                                  );
+                                  // else add saved data in firebase here
+                                  await _appPreferences.setUserLoggedIn();
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.layoutRoute);
+                                } else if (state
+                                    is AddUserPermissionErrorState) {
+                                  hideLoading();
+                                  showSnackBar(context, state.errorMessage);
                                 } else if (state is WelcomeNoInternetState) {
                                   hideLoading();
                                   onError(context, AppStrings.noInternet);

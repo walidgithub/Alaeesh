@@ -2,22 +2,19 @@ class UserPermissionsModel {
   String? id;
   String username;
   String role;
-  bool addOrEditPost;
-  bool addOrEditComment;
+  String enableAdd;
   UserPermissionsModel(
       {this.id,
       required this.role,
       required this.username,
-      required this.addOrEditPost,
-      required this.addOrEditComment});
+      required this.enableAdd});
 
   static UserPermissionsModel fromMap(Map<String, dynamic> map) {
     UserPermissionsModel userPermissionsModel = UserPermissionsModel(
       id: map['id'],
       username: map['username'],
       role: map['role'],
-      addOrEditPost: map['addOrEditPost'],
-      addOrEditComment: map['addOrEditComment'],
+      enableAdd: map['enableAdd'],
     );
     return userPermissionsModel;
   }
@@ -27,8 +24,7 @@ class UserPermissionsModel {
       'id': id,
       'username': username,
       'role': role,
-      'addOrEditPost': addOrEditPost,
-      'addOrEditComment': addOrEditComment,
+      'enableAdd': enableAdd,
     };
   }
 }

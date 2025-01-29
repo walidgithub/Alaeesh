@@ -52,6 +52,9 @@ class AppStrings {
   static const String advice = 'رأيـك ايـه 👍';
   static const String reply = 'الــرد';
   static const String send = 'إرسـال وشـكـرًا 🤝';
+  static const String preventAdd = 'حـظـر إضـافـة 🤐';
+  static const String enableAdd = 'إتـاحـة إضـافـة 🤝';
+  static const String sendMessage = 'إرسـال رسـالـة ✍️';
   static const String messageFromAdmin = 'رســالـة مـن الأدمــن';
   static const String searchForPost = 'ابـحـث عــن ألـشـة 🕵🏼‍';
   static const String info = '''هل تحب الضحك والمزاح؟ تطبيقنا هو المكان المثالي لك! 🥳

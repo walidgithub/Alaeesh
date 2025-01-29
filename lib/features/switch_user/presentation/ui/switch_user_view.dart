@@ -105,11 +105,15 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                       } else if (state
                                           is SwitchUserSuccessState) {
                                         hideLoading();
+                                        // if new add this
                                         await _appSecureDataHelper.saveUserData(
                                             id: state.user.id!,
                                             email: state.user.email!,
                                             displayName: state.user.name!,
-                                            photoUrl: state.user.photoUrl!);
+                                            photoUrl: state.user.photoUrl!,
+                                          enableAdd: "yes",
+                                          role: "user",);
+                                        // else add saved data in firebase here
                                         await _appPreferences.setUserLoggedIn();
                                         Navigator.pushReplacementNamed(
                                             context, Routes.layoutRoute);

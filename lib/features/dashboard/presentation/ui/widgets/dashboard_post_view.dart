@@ -64,6 +64,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
   bool userReacted = false;
+  bool isEnabled = true;
 
   @override
   void initState() {
@@ -125,13 +126,61 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.delete,
-                                  width: 15.w,
+                                  width: 18.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
                                 ),
                                 Text(
                                   AppStrings.delete,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  isEnabled ? AppAssets.enableAdd : AppAssets.preventAdd,
+                                  width: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  isEnabled ? AppStrings.enableAdd : AppStrings.preventAdd,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.send,
+                                  width: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.sendMessage,
                                   style: AppTypography.kLight13,
                                 ),
                               ],

@@ -102,7 +102,7 @@ class _AdviceViewState extends State<AdviceView> {
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.delete,
-                                  width: 15.w,
+                                  width: 18.w,
                                 ),
                                 SizedBox(
                                   width: 10.w,
@@ -304,7 +304,7 @@ class _AdviceViewState extends State<AdviceView> {
                                   .sendReply(sendReplyRequest);
                             },
                             child: SvgPicture.asset(
-                              AppAssets.comments,
+                              AppAssets.send,
                               width: 30.w,
                             ));
                       }),
