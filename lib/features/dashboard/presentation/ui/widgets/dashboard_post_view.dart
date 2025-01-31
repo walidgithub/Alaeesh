@@ -65,7 +65,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
   String timeAgoText = "";
   bool userReacted = false;
   bool isEnabled = true;
-
+  bool _isErrorDialogShown = false;
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -106,7 +106,16 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                       Navigator.pop(context);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -379,7 +388,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                               width: 5.w,
                             ),
                             Text(
-                              AppStrings.comments,
+                              widget.commentsList.length > 1 && widget.commentsList.length < 11 ? AppStrings.comments : AppStrings.comment,
                               style: AppTypography.kBold14
                                   .copyWith(color: AppColors.cTitle),
                             ),

@@ -40,6 +40,8 @@ class _HomeViewState extends State<HomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  bool _isErrorDialogShown = false;
+
   final TextEditingController _searchingController = TextEditingController();
 
   String id = "";
@@ -79,7 +81,9 @@ class _HomeViewState extends State<HomeView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
     });
-    getAllPosts(displayName, allPosts: true);
+    if (_isErrorDialogShown) {
+      getAllPosts(displayName, allPosts: true);
+    }
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -176,7 +180,16 @@ class _HomeViewState extends State<HomeView> {
                             showSnackBar(context, state.errorMessage);
                           } else if (state is HomePageNoInternetState) {
                             hideLoading();
-                            onError(context, AppStrings.noInternet);
+                            setState(() {
+                              _isErrorDialogShown = true;
+                            });
+                            if (_isErrorDialogShown) {
+                              onError(context, AppStrings.noInternet, () {
+                                setState(() {
+                                  _isErrorDialogShown = false;
+                                });
+                              });
+                            }
                           }
                         },
                         builder: (context, state) {
@@ -398,7 +411,16 @@ class _HomeViewState extends State<HomeView> {
                 showSnackBar(context, state.errorMessage);
               } else if (state is HomePageNoInternetState) {
                 hideLoading();
-                onError(context, AppStrings.noInternet);
+                setState(() {
+                  _isErrorDialogShown = true;
+                });
+                if (_isErrorDialogShown) {
+                  onError(context, AppStrings.noInternet, () {
+                    setState(() {
+                      _isErrorDialogShown = false;
+                    });
+                  });
+                }
               }
             },
             builder: (context, state) {

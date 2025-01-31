@@ -62,6 +62,7 @@ class _MineCommentViewState extends State<MineCommentView> {
   double reactPosition = 20.0;
   int reactionsCount = 0;
   String timeAgoText = "";
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -105,7 +106,16 @@ class _MineCommentViewState extends State<MineCommentView> {
                       Navigator.pop(context);
                     } else if (state is MineNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -301,7 +311,16 @@ class _MineCommentViewState extends State<MineCommentView> {
                                       showSnackBar(context, state.errorMessage);
                                     } else if (state is MineNoInternetState) {
                                       hideLoading();
-                                      onError(context, AppStrings.noInternet);
+                                      setState(() {
+                                        _isErrorDialogShown = true;
+                                      });
+                                      if (_isErrorDialogShown) {
+                                        onError(context, AppStrings.noInternet, () {
+                                          setState(() {
+                                            _isErrorDialogShown = false;
+                                          });
+                                        });
+                                      }
                                     }
                                   },
                                   builder: (context, state) {

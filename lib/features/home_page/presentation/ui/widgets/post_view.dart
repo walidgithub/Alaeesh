@@ -84,6 +84,7 @@ class _PostViewState extends State<PostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
   bool userReacted = false;
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -127,7 +128,16 @@ class _PostViewState extends State<PostView> {
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -277,7 +287,16 @@ class _PostViewState extends State<PostView> {
                       } else if (state is HomePageNoInternetState) {
                         hideLoading();
                         _removePopup();
-                        onError(context, AppStrings.noInternet);
+                        setState(() {
+                          _isErrorDialogShown = true;
+                        });
+                        if (_isErrorDialogShown) {
+                          onError(context, AppStrings.noInternet, () {
+                            setState(() {
+                              _isErrorDialogShown = false;
+                            });
+                          });
+                        }
                       }
                     },
                     builder: (context, state) {
@@ -555,7 +574,7 @@ class _PostViewState extends State<PostView> {
                                     width: 5.w,
                                   ),
                                   Text(
-                                    AppStrings.comments,
+                                    widget.commentsList.length > 1 && widget.commentsList.length < 11 ? AppStrings.comments : AppStrings.comment,
                                     style: AppTypography.kBold14
                                         .copyWith(color: AppColors.cTitle),
                                   ),

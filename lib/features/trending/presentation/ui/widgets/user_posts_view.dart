@@ -48,6 +48,7 @@ class _UserPostsViewState extends State<UserPostsView> {
   String photoUrl = "";
   List<SubscribersModel> subscribersList = [];
   var userData;
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -288,7 +289,16 @@ class _UserPostsViewState extends State<UserPostsView> {
                   showSnackBar(context, state.errorMessage);
                 } else if (state is HomePageNoInternetState) {
                   hideLoading();
-                  onError(context, AppStrings.noInternet);
+                  setState(() {
+                    _isErrorDialogShown = true;
+                  });
+                  if (_isErrorDialogShown) {
+                    onError(context, AppStrings.noInternet, () {
+                      setState(() {
+                        _isErrorDialogShown = false;
+                      });
+                    });
+                  }
                 }
               },
               builder: (context, state) {

@@ -19,7 +19,8 @@ class AppStrings {
   static const String updatePost = 'حـعـدل الألـشـة ✍️';
   static const String addComment = 'ايـه رأيـك ✍️';
   static const String editComment = 'حـعـدل رأيــى ✍️';
-  static const String comments = 'تـعـلـيـقـات';
+  static const String comments = 'كـومـنـتـهـات';
+  static const String comment = 'كـومـنـت';
   static const String alsha = 'الألــشـة';
   static const String addAlsha = 'إضـافـة';
   static const String notifications = 'إشـعـارات';

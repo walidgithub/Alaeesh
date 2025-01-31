@@ -60,6 +60,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   String commentId = "";
   var commentData;
   bool userReacted = false;
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -203,7 +204,16 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       Navigator.pop(context);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   }, builder: (context, state) {
                     return Bounceable(
@@ -231,7 +241,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               .addComment(addCommentRequest);
                         },
                         child: SvgPicture.asset(
-                          AppAssets.comments,
+                          AppAssets.send,
                           width: 30.w,
                         ));
                   }),
@@ -277,7 +287,16 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               Navigator.pop(context);
                             } else if (state is HomePageNoInternetState) {
                               hideLoading();
-                              onError(context, AppStrings.noInternet);
+                              setState(() {
+                                _isErrorDialogShown = true;
+                              });
+                              if (_isErrorDialogShown) {
+                                onError(context, AppStrings.noInternet, () {
+                                  setState(() {
+                                    _isErrorDialogShown = false;
+                                  });
+                                });
+                              }
                             }
                           }, builder: (context, state) {
                             return CommentView(

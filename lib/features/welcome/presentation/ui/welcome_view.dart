@@ -33,6 +33,8 @@ class _WelcomeViewState extends State<WelcomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  bool _isErrorDialogShown = false;
+
   String id = "";
   String email = "";
   String displayName = "";
@@ -154,7 +156,16 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   showSnackBar(context, state.errorMessage);
                                 } else if (state is WelcomeNoInternetState) {
                                   hideLoading();
-                                  onError(context, AppStrings.noInternet);
+                                  setState(() {
+                                    _isErrorDialogShown = true;
+                                  });
+                                  if (_isErrorDialogShown) {
+                                    onError(context, AppStrings.noInternet, () {
+                                      setState(() {
+                                        _isErrorDialogShown = false;
+                                      });
+                                    });
+                                  }
                                 }
                               },
                               builder: (context, state) {

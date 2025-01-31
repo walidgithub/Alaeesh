@@ -30,6 +30,7 @@ class _MessagesViewState extends State<MessagesView> {
   String displayName = "";
   String photoUrl = "";
   var userData;
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -52,7 +53,9 @@ class _MessagesViewState extends State<MessagesView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
     });
-    getMessages();
+    if (_isErrorDialogShown) {
+      getMessages();
+    }
   }
 
   getMessages() {
@@ -84,7 +87,16 @@ class _MessagesViewState extends State<MessagesView> {
               showSnackBar(context, state.errorMessage);
             } else if (state is MessagesNoInternetState) {
               hideLoading();
-              onError(context, AppStrings.noInternet);
+              setState(() {
+                _isErrorDialogShown = true;
+              });
+              if (_isErrorDialogShown) {
+                onError(context, AppStrings.noInternet, () {
+                  setState(() {
+                    _isErrorDialogShown = false;
+                  });
+                });
+              }
             }
           },
           builder: (context, state) {

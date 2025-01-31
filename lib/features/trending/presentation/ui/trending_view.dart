@@ -46,6 +46,7 @@ class _TrendingViewState extends State<TrendingView> {
 
   String selectedUserName = "";
   bool userSubscribed = false;
+  bool _isErrorDialogShown = false;
 
   String id = "";
   String email = "";
@@ -77,7 +78,9 @@ class _TrendingViewState extends State<TrendingView> {
       photoUrl = userData['photoUrl'] ?? '';
     });
     getTopPosts(displayName);
-    getSuggestedUsers();
+    if (_isErrorDialogShown) {
+      getSuggestedUsers();
+    }
   }
 
   getTopPosts(String displayName) {
@@ -328,7 +331,16 @@ class _TrendingViewState extends State<TrendingView> {
           showSnackBar(context, state.errorMessage);
         } else if (state is TrendingNoInternetState) {
           hideLoading();
-          onError(context, AppStrings.noInternet);
+          setState(() {
+            _isErrorDialogShown = true;
+          });
+          if (_isErrorDialogShown) {
+            onError(context, AppStrings.noInternet, () {
+              setState(() {
+                _isErrorDialogShown = false;
+              });
+            });
+          }
         }
       },
       builder: (context, state) {

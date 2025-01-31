@@ -72,6 +72,7 @@ class _CommentViewState extends State<CommentView> {
   double reactPosition = 20.0;
   int reactionsCount = 0;
   String timeAgoText = "";
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -117,7 +118,16 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -201,7 +211,16 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {

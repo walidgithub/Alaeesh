@@ -30,6 +30,8 @@ class _SwitchUserViewState extends State<SwitchUserView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  bool _isErrorDialogShown = false;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -124,7 +126,16 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                         hideLoading();
                                       } else if (state is SwitchUserNoInternetState) {
                                         hideLoading();
-                                        onError(context, AppStrings.noInternet);
+                                        setState(() {
+                                          _isErrorDialogShown = true;
+                                        });
+                                        if (_isErrorDialogShown) {
+                                          onError(context, AppStrings.noInternet, () {
+                                            setState(() {
+                                              _isErrorDialogShown = false;
+                                            });
+                                          });
+                                        }
                                       }
                                     },
                                     builder: (context, state) {

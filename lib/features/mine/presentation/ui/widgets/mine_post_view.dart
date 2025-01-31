@@ -68,6 +68,7 @@ class _MinePostViewState extends State<MinePostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
   List<EmojiModel> mineEmojisList = [];
+  bool _isErrorDialogShown = false;
 
   bool userReacted = false;
 
@@ -114,7 +115,16 @@ class _MinePostViewState extends State<MinePostView> {
                       Navigator.pop(context);
                     } else if (state is MineNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -343,7 +353,7 @@ class _MinePostViewState extends State<MinePostView> {
                                     width: 5.w,
                                   ),
                                   Text(
-                                    AppStrings.comments,
+                                    widget.commentsList.length > 1 && widget.commentsList.length < 11 ? AppStrings.comments : AppStrings.comment,
                                     style: AppTypography.kBold14
                                         .copyWith(color: AppColors.cTitle),
                                   ),
@@ -371,7 +381,16 @@ class _MinePostViewState extends State<MinePostView> {
                                             context, state.errorMessage);
                                       } else if (state is MineNoInternetState) {
                                         hideLoading();
-                                        onError(context, AppStrings.noInternet);
+                                        setState(() {
+                                          _isErrorDialogShown = true;
+                                        });
+                                        if (_isErrorDialogShown) {
+                                          onError(context, AppStrings.noInternet, () {
+                                            setState(() {
+                                              _isErrorDialogShown = false;
+                                            });
+                                          });
+                                        }
                                       }
                                     },
                                     builder: (context, state) {

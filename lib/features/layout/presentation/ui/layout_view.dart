@@ -52,6 +52,7 @@ class _LayoutViewState extends State<LayoutView> {
   final bool _messagesBadge = true;
   String returnedUserName = '';
   bool addPost = true;
+  bool _isErrorDialogShown = false;
 
   final AppPreferences _appPreferences = sl<AppPreferences>();
   final SecureStorageLoginHelper _appSecureDataHelper =
@@ -127,7 +128,16 @@ class _LayoutViewState extends State<LayoutView> {
                       hideLoading();
                     } else if (state is WelcomeNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -271,7 +281,16 @@ class _LayoutViewState extends State<LayoutView> {
                       hideLoading();
                     } else if (state is WelcomeNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -583,7 +602,16 @@ class _LayoutViewState extends State<LayoutView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is MessagesNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   }, builder: (context, state) {
                     return GestureDetector(

@@ -5,32 +5,7 @@ import 'package:last/core/utils/style/app_colors.dart';
 import '../constant/app_strings.dart';
 import '../constant/app_typography.dart';
 
-// Future<bool> onError(BuildContext context, String errorText) async {
-//   bool exitApp = await showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return Directionality(
-//           textDirection: TextDirection.rtl,
-//           child: AlertDialog(
-//             backgroundColor: AppColors.cWhite,
-//             title: Text(AppStrings.error,style: AppTypography.kBold24,),
-//             content: Text(errorText,style: AppTypography.kBold16),
-//             actions: [
-//               Center(
-//                 child: TextButton(
-//                     onPressed: () {
-//                       Navigator.of(context).pop(false);
-//                     },
-//                     child: Text(AppStrings.close,style: AppTypography.kLight14)),
-//               ),
-//             ],
-//           ),
-//         );
-//       });
-//   return exitApp;
-// }
-
-Future<bool> onError(BuildContext context, String errorText) async {
+Future<bool> onError(BuildContext context, String errorText, Function closeDialog) async {
   bool exitApp = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -72,6 +47,7 @@ Future<bool> onError(BuildContext context, String errorText) async {
                     children: [
                       TextButton(
                         onPressed: () {
+                          closeDialog();
                           Navigator.of(context).pop(false);
                         },
                         style: ButtonStyle(

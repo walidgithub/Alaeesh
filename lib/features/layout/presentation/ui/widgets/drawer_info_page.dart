@@ -38,7 +38,7 @@ class _DrawerInfoState extends State<DrawerInfo> {
   String displayName = "";
   String photoUrl = "";
   var userData;
-
+  bool _isErrorDialogShown = false;
   @override
   void initState() {
     userData = _appSecureDataHelper.loadUserData();
@@ -108,7 +108,16 @@ class _DrawerInfoState extends State<DrawerInfo> {
                         showSnackBar(context, state.errorMessage);
                       } else if (state is LayoutNoInternetState) {
                         hideLoading();
-                        onError(context, AppStrings.noInternet);
+                        setState(() {
+                          _isErrorDialogShown = true;
+                        });
+                        if (_isErrorDialogShown) {
+                          onError(context, AppStrings.noInternet, () {
+                            setState(() {
+                              _isErrorDialogShown = false;
+                            });
+                          });
+                        }
                       }
                     },
                     builder: (context, state) {

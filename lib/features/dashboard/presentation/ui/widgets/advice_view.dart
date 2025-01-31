@@ -50,7 +50,7 @@ class AdviceView extends StatefulWidget {
 class _AdviceViewState extends State<AdviceView> {
   String timeAgoText = "";
   final TextEditingController _replyUsController = TextEditingController();
-
+  bool _isErrorDialogShown = false;
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -81,7 +81,16 @@ class _AdviceViewState extends State<AdviceView> {
                   listener: (context, state) async {
                     if (state is DashboardNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -282,7 +291,16 @@ class _AdviceViewState extends State<AdviceView> {
                           showSnackBar(context, state.errorMessage);
                         } else if (state is DashboardNoInternetState) {
                           hideLoading();
-                          onError(context, AppStrings.noInternet);
+                          setState(() {
+                            _isErrorDialogShown = true;
+                          });
+                          if (_isErrorDialogShown) {
+                            onError(context, AppStrings.noInternet, () {
+                              setState(() {
+                                _isErrorDialogShown = false;
+                              });
+                            });
+                          }
                         }
                       }, builder: (context, state) {
                         return Bounceable(

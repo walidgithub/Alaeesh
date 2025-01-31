@@ -36,6 +36,7 @@ class _DashboardViewState extends State<DashboardView> {
   String displayName = "";
   String photoUrl = "";
   var userData;
+  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -66,7 +67,9 @@ class _DashboardViewState extends State<DashboardView> {
       photoUrl = userData['photoUrl'] ?? '';
     });
     getAllPosts(displayName, allPosts: true);
-    getUserAdvices();
+    if (_isErrorDialogShown) {
+      getUserAdvices();
+    }
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -200,7 +203,16 @@ class _DashboardViewState extends State<DashboardView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -277,7 +289,16 @@ class _DashboardViewState extends State<DashboardView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      onError(context, AppStrings.noInternet);
+                      setState(() {
+                        _isErrorDialogShown = true;
+                      });
+                      if (_isErrorDialogShown) {
+                        onError(context, AppStrings.noInternet, () {
+                          setState(() {
+                            _isErrorDialogShown = false;
+                          });
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
