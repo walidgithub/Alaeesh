@@ -13,15 +13,17 @@ import '../../../home_page/data/model/requests/delete_comment_request.dart';
 import '../../../home_page/data/model/requests/delete_emoji_request.dart';
 import '../../../home_page/data/model/requests/delete_post_subscriber_request.dart';
 import '../../../home_page/data/model/requests/get_posts_request.dart';
+import '../../../welcome/data/data_source/welcome_datasource.dart';
 import '../../domain/repository/dashboard_repository.dart';
 import '../data_source/dashboard_datasource.dart';
 
 class DashboardRepositoryImpl extends DashboardRepository{
   final DashboardDataSource _dashboardDataSource;
+  final WelcomeDataSource _welcomeDataSource;
   final HomePageDataSource _homePageDataSource;
 
   DashboardRepositoryImpl(this._dashboardDataSource,
-      this._homePageDataSource);
+      this._homePageDataSource, this._welcomeDataSource);
 
   @override
   Future<Either<FirebaseFailure, void>> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
@@ -68,7 +70,7 @@ class DashboardRepositoryImpl extends DashboardRepository{
   @override
   Future<Either<FirebaseFailure, void>> updateUserPermissions(UserPermissionsModel userPermissionsModel) async {
     try {
-      final result = await _dashboardDataSource.updateUserPermissions(userPermissionsModel);
+      final result = await _welcomeDataSource.updateUserPermission(userPermissionsModel);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

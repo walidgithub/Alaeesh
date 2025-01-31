@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
-import 'package:last/features/welcome/presentation/bloc/welcome_states.dart';
+import 'package:last/features/welcome/presentation/bloc/welcome_state.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/app_pref.dart';
 import '../../../../core/preferences/secure_local_data.dart';

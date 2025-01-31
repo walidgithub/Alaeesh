@@ -1,4 +1,5 @@
 import '../../data/model/user_model.dart';
+import '../../data/model/user_permissions_model.dart';
 
 abstract class WelcomeState{}
 
@@ -31,5 +32,16 @@ class AddUserPermissionErrorState extends WelcomeState{
   AddUserPermissionErrorState(this.errorMessage);
 }
 class AddUserPermissionLoadingState extends WelcomeState{}
+
+class GetUserPermissionsLoadingState extends WelcomeState{}
+class GetUserPermissionsSuccessState extends WelcomeState{
+  UserPermissionsModel userPermissionsModel;
+  GetUserPermissionsSuccessState(this.userPermissionsModel);
+}
+class GetUserPermissionsErrorState extends WelcomeState{
+  final String errorMessage;
+
+  GetUserPermissionsErrorState(this.errorMessage);
+}
 
 class WelcomeNoInternetState extends WelcomeState{}

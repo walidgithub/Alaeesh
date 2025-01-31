@@ -35,7 +35,7 @@ import '../../../messages/presentation/ui/messages_view.dart';
 import '../../../mine/presentation/ui/mine_view.dart';
 import '../../../notifications/presentation/ui/notifications_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
-import '../../../welcome/presentation/bloc/welcome_states.dart';
+import '../../../welcome/presentation/bloc/welcome_state.dart';
 import 'package:badges/badges.dart' as badges;
 
 class LayoutView extends StatefulWidget {

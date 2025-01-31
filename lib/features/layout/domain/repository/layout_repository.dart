@@ -8,5 +8,4 @@ import '../../data/model/requests/send_advise_request.dart';
 abstract class LayoutRepository {
   Future<Either<FirebaseFailure, AddPostResponse>> addPost(PostModel postModel);
   Future<Either<FirebaseFailure, void>> sendAdvice(SendAdviceRequest sendAdviceRequest);
-  Future<Either<FirebaseFailure, UserPermissionsModel>> getUserPermission(String username);
 }

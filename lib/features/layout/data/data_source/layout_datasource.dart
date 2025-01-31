@@ -8,7 +8,6 @@ import '../model/requests/send_advise_request.dart';
 abstract class BaseDataSource {
   Future<AddPostResponse> addPost(PostModel postModel);
   Future<void> sendAdvice(SendAdviceRequest sendAdviceRequest);
-  Future<UserPermissionsModel> getUserPermission(String username);
 }
 
 class LayoutDataSource extends BaseDataSource {
@@ -34,21 +33,6 @@ class LayoutDataSource extends BaseDataSource {
       final docRef = collection.doc();
       sendAdviceRequest.adviceId = docRef.id;
       await docRef.set(sendAdviceRequest.toMap());
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<UserPermissionsModel> getUserPermission(String username) async {
-    try {
-      final collection = firestore.collection('userPermissions');
-      final querySnapshot = await collection
-          .where('username', isEqualTo: username)
-          .get();
-
-      final doc = querySnapshot.docs.first;
-      return UserPermissionsModel.fromMap(doc.data());
     } catch (e) {
       rethrow;
     }

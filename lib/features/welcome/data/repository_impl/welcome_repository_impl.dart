@@ -8,14 +8,14 @@ import '../data_source/welcome_datasource.dart';
 import '../model/user_model.dart';
 
 class WelcomeRepositoryImpl extends WelcomeRepository {
-  final WelcomeDataSource _authDataSource;
+  final WelcomeDataSource _welcomeDataSource;
 
-  WelcomeRepositoryImpl(this._authDataSource);
+  WelcomeRepositoryImpl(this._welcomeDataSource);
 
   @override
   Future<Either<FirebaseFailure, UserModel>> login() async {
     try {
-      final result = await _authDataSource.login();
+      final result = await _welcomeDataSource.login();
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -29,7 +29,7 @@ class WelcomeRepositoryImpl extends WelcomeRepository {
   @override
   Future<Either<FirebaseFailure, void>> logout() async {
     try {
-      final result = await _authDataSource.logout();
+      final result = await _welcomeDataSource.logout();
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
@@ -43,7 +43,35 @@ class WelcomeRepositoryImpl extends WelcomeRepository {
   @override
   Future<Either<FirebaseFailure, void>> addUserPermission(UserPermissionsModel userPermissionsModel) async {
     try {
-      final result = await _authDataSource.addUserPermission(userPermissionsModel);
+      final result = await _welcomeDataSource.addUserPermission(userPermissionsModel);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, UserPermissionsModel>> getUserPermission(String username) async {
+    try {
+      final result = await _welcomeDataSource.getUserPermission(username);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> updateUserPermission(UserPermissionsModel userPermissionsModel) async {
+    try {
+      final result = await _welcomeDataSource.updateUserPermission(userPermissionsModel);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

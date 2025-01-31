@@ -16,17 +16,6 @@ class AddPostErrorState extends LayoutState{
   AddPostErrorState(this.errorMessage);
 }
 
-class GetUserPermissionsLoadingState extends LayoutState{}
-class GetUserPermissionsSuccessState extends LayoutState{
-  UserPermissionsModel userPermissionsModel;
-  GetUserPermissionsSuccessState(this.userPermissionsModel);
-}
-class GetUserPermissionsErrorState extends LayoutState{
-  final String errorMessage;
-
-  GetUserPermissionsErrorState(this.errorMessage);
-}
-
 class SendAdviceLoadingState extends LayoutState{}
 class SendAdviceSuccessState extends LayoutState{}
 class SendAdviceErrorState extends LayoutState{

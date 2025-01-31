@@ -8,11 +8,12 @@ import '../model/user_permissions_model.dart';
 abstract class BaseDataSource {
   Future<UserModel> login();
   Future<void> addUserPermission(UserPermissionsModel userPermissionsModel);
+  Future<void> updateUserPermission(UserPermissionsModel userPermissionsModel);
+  Future<UserPermissionsModel> getUserPermission(String username);
   Future<void> logout();
 }
 
 class WelcomeDataSource extends BaseDataSource {
-
   GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth auth = sl<FirebaseAuth>();
   final FirebaseFirestore firestore = sl<FirebaseFirestore>();
@@ -54,7 +55,8 @@ class WelcomeDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> addUserPermission(UserPermissionsModel userPermissionsModel) async {
+  Future<void> addUserPermission(
+      UserPermissionsModel userPermissionsModel) async {
     try {
       final collection = firestore.collection('userPermissions');
 
@@ -68,6 +70,43 @@ class WelcomeDataSource extends BaseDataSource {
       final docRef = collection.doc();
       userPermissionsModel.id = docRef.id;
       await docRef.set(userPermissionsModel.toMap());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateUserPermission(
+      UserPermissionsModel userPermissionsModel) async {
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('userPermissions')
+          .where('username', isEqualTo: userPermissionsModel.username)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentReference docRef = querySnapshot.docs[0].reference;
+
+        await docRef.update({
+          'role': userPermissionsModel.role,
+          'enableAdd': userPermissionsModel.enableAdd,
+        });
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserPermissionsModel> getUserPermission(String username) async {
+    try {
+      final collection = firestore.collection('userPermissions');
+      final querySnapshot = await collection
+          .where('username', isEqualTo: username)
+          .get();
+
+      final doc = querySnapshot.docs.first;
+      return UserPermissionsModel.fromMap(doc.data());
     } catch (e) {
       rethrow;
     }

@@ -2,22 +2,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
-import 'package:last/features/dashboard/domain/usecases/update_user_permissions_usecase.dart';
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
-import '../../../home_page/data/model/requests/delete_comment_emoji_request.dart';
 import '../../../home_page/data/model/requests/delete_comment_request.dart';
-import '../../../home_page/data/model/requests/delete_emoji_request.dart';
 import '../../../home_page/data/model/requests/delete_post_subscriber_request.dart';
 import '../../../home_page/data/model/requests/get_posts_request.dart';
-import '../../../home_page/domain/usecases/delete_comment_emoji_usecase.dart';
 import '../../../home_page/domain/usecases/delete_comment_usecase.dart';
-import '../../../home_page/domain/usecases/delete_emoji_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/get_all_posts_usecase.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
+import '../../domain/usecases/update_user_permissions_usecase.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {

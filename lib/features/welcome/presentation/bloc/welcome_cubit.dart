@@ -1,19 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/core/base_usecase/firebase_base_usecase.dart';
 import 'package:last/features/welcome/domain/usecases/login_usecase.dart';
-import 'package:last/features/welcome/presentation/bloc/welcome_states.dart';
+import 'package:last/features/welcome/presentation/bloc/welcome_state.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../data/model/user_permissions_model.dart';
 import '../../domain/usecases/add_user_permissions_usecase.dart';
+import '../../domain/usecases/get_user_permissions_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 
 class WelcomeCubit extends Cubit<WelcomeState> {
-  WelcomeCubit(this.loginUseCase, this.logoutUseCase, this.addUserPermissionsUseCase) : super(WelcomeInitial());
+  WelcomeCubit(this.loginUseCase, this.logoutUseCase, this.addUserPermissionsUseCase, this.getUserPermissionsUseCase) : super(WelcomeInitial());
 
   final LoginUseCase loginUseCase;
   final LogoutUseCase logoutUseCase;
   final AddUserPermissionsUseCase addUserPermissionsUseCase;
+  final GetUserPermissionsUseCase getUserPermissionsUseCase;
 
   static WelcomeCubit get(context) => BlocProvider.of(context);
 
@@ -53,6 +55,19 @@ class WelcomeCubit extends Cubit<WelcomeState> {
       signOutResult.fold(
             (failure) => emit(AddUserPermissionErrorState(failure.message)),
             (userPermissionAdded) => emit(AddUserPermissionSuccessState()),
+      );
+    } else {
+      emit(WelcomeNoInternetState());
+    }
+  }
+
+  Future<void> getUserPermissions(UserPermissionsModel userPermissionsModel) async {
+    emit(GetUserPermissionsLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getUserPermissionsUseCase.call(userPermissionsModel);
+      result.fold(
+            (failure) => emit(GetUserPermissionsErrorState(failure.message)),
+            (userPermissions) => emit(GetUserPermissionsSuccessState(userPermissions)),
       );
     } else {
       emit(WelcomeNoInternetState());

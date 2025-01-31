@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:last/features/dashboard/domain/repository/dashboard_repository.dart';
+
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
+import '../../../welcome/domain/repository/welcome_repository.dart';
 
-class UpdateUserPermissionsUseCase extends FirebaseBaseUseCase{
+class UpdateUserPermissionsUseCase extends FirebaseBaseUseCase {
   final DashboardRepository dashboardRepository;
 
   UpdateUserPermissionsUseCase(this.dashboardRepository);

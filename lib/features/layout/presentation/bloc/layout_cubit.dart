@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/layout/domain/usecases/add_post_usecase.dart';
-import 'package:last/features/layout/domain/usecases/get_user_permissions_usecase.dart';
+import 'package:last/features/welcome/domain/usecases/get_user_permissions_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../home_page/data/model/post_model.dart';
@@ -10,11 +10,10 @@ import '../../domain/usecases/send_advise_usecase.dart';
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
-  LayoutCubit(this.addPostUseCase, this.sendAdviceUseCase, this.getUserPermissionsUseCase) : super(LayoutInitial());
+  LayoutCubit(this.addPostUseCase, this.sendAdviceUseCase) : super(LayoutInitial());
 
   final AddPostUseCase addPostUseCase;
   final SendAdviceUseCase sendAdviceUseCase;
-  final GetUserPermissionsUseCase getUserPermissionsUseCase;
 
   static LayoutCubit get(context) => BlocProvider.of(context);
 
@@ -40,19 +39,6 @@ class LayoutCubit extends Cubit<LayoutState> {
       result.fold(
             (failure) => emit(SendAdviceErrorState(failure.message)),
             (adviseSent) => emit(SendAdviceSuccessState()),
-      );
-    } else {
-      emit(LayoutNoInternetState());
-    }
-  }
-
-  Future<void> getUserPermissions(UserPermissionsModel userPermissionsModel) async {
-    emit(GetUserPermissionsLoadingState());
-    if (await _networkInfo.isConnected) {
-      final result = await getUserPermissionsUseCase.call(userPermissionsModel);
-      result.fold(
-            (failure) => emit(GetUserPermissionsErrorState(failure.message)),
-            (userPermissions) => emit(GetUserPermissionsSuccessState(userPermissions)),
       );
     } else {
       emit(LayoutNoInternetState());
