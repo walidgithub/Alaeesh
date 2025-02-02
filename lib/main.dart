@@ -9,6 +9,7 @@ import 'core/router/app_router.dart';
 import 'core/utils/constant/app_strings.dart';
 import 'core/utils/style/app_theme.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
