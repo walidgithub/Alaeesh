@@ -49,7 +49,7 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
   String commentId = "";
   var commentData;
   bool userReacted = false;
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -151,16 +151,7 @@ class _MineCommentsBottomSheetState extends State<MineCommentsBottomSheet> {
                               Navigator.pop(context);
                             } else if (state is MineNoInternetState) {
                               hideLoading();
-                              setState(() {
-                                _isErrorDialogShown = true;
-                              });
-                              if (_isErrorDialogShown) {
-                                onError(context, AppStrings.noInternet, () {
-                                  setState(() {
-                                    _isErrorDialogShown = false;
-                                  });
-                                });
-                              }
+                              onError(context, AppStrings.noInternet);
                             }
                           }, builder: (context, state) {
                             return MineCommentView(

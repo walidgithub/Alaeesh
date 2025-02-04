@@ -24,6 +24,8 @@ import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../welcome/presentation/bloc/welcome_cubit.dart';
+import '../../../../welcome/presentation/bloc/welcome_state.dart';
 import '../../../data/model/comments_model.dart';
 import '../../../data/model/emoji_model.dart';
 import '../../../data/model/requests/add_emoji_request.dart';
@@ -84,8 +86,6 @@ class _PostViewState extends State<PostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
   bool userReacted = false;
-  bool _isErrorDialogShown = false;
-
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -128,16 +128,7 @@ class _PostViewState extends State<PostView> {
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -287,16 +278,7 @@ class _PostViewState extends State<PostView> {
                       } else if (state is HomePageNoInternetState) {
                         hideLoading();
                         _removePopup();
-                        setState(() {
-                          _isErrorDialogShown = true;
-                        });
-                        if (_isErrorDialogShown) {
-                          onError(context, AppStrings.noInternet, () {
-                            setState(() {
-                              _isErrorDialogShown = false;
-                            });
-                          });
-                        }
+                        onError(context, AppStrings.noInternet);
                       }
                     },
                     builder: (context, state) {
@@ -720,40 +702,72 @@ class _PostViewState extends State<PostView> {
                         SizedBox(
                           width: 30.w,
                         ),
-                        Bounceable(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              constraints: BoxConstraints.expand(
-                                  height: MediaQuery.sizeOf(context).height -
-                                      widget.statusBarHeight -
-                                      100.h,
-                                  width: MediaQuery.sizeOf(context).width),
-                              isScrollControlled: true,
-                              barrierColor: AppColors.cTransparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(30.r),
-                                ),
-                              ),
-                              builder: (context2) {
-                                return Directionality(
-                                    textDirection: ui.TextDirection.rtl,
-                                    child: AddCommentBottomSheet(
-                                        postId: widget.id,
-                                        statusBarHeight: widget.statusBarHeight,
-                                        username: widget.loggedInUserName,
-                                        userImage: widget.loggedInUserImage,
-                                        addNewComment: (int status) {
-                                          widget.addNewComment(status);
+                        BlocProvider(
+                          create: (context) =>
+                          sl<WelcomeCubit>()..getUserPermissions(widget.loggedInUserName),
+                          child: BlocBuilder<WelcomeCubit, WelcomeState>(
+                            builder: (context, state) {
+                              if (state is GetUserPermissionsLoadingState) {
+                                return Center(child: CircularProgressIndicator(
+                                  strokeWidth: 2.w,
+                                  color: AppColors.cTitle,
+                                ));
+                              } else if (state is GetUserPermissionsSuccessState) {
+                                if (state.userPermissionsModel.enableAdd == "yes") {
+                                  return Bounceable(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        constraints: BoxConstraints.expand(
+                                            height: MediaQuery.sizeOf(context).height -
+                                                widget.statusBarHeight -
+                                                100.h,
+                                            width: MediaQuery.sizeOf(context).width),
+                                        isScrollControlled: true,
+                                        barrierColor: AppColors.cTransparent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(30.r),
+                                          ),
+                                        ),
+                                        builder: (context2) {
+                                          return Directionality(
+                                              textDirection: ui.TextDirection.rtl,
+                                              child: AddCommentBottomSheet(
+                                                  postId: widget.id,
+                                                  statusBarHeight: widget.statusBarHeight,
+                                                  username: widget.loggedInUserName,
+                                                  userImage: widget.loggedInUserImage,
+                                                  addNewComment: (int status) {
+                                                    widget.addNewComment(status);
+                                                  },
+                                                  id: widget.id));
                                         },
-                                        id: widget.id));
-                              },
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.comments,
-                            width: 30.w,
+                                      );
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppAssets.comments,
+                                      width: 30.w,
+                                    ),
+                                  );
+                                } else {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onError(context, AppStrings.addError);
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppAssets.preventAdd,
+                                      width: 25.w,
+                                    ),
+                                  );;
+                                }
+                              } else if (state is GetUserPermissionsErrorState ||
+                                  state is WelcomeNoInternetState) {
+                                return SizedBox.shrink();
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            },
                           ),
                         ),
                         SizedBox(

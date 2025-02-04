@@ -5,6 +5,7 @@ import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../data/model/user_permissions_model.dart';
 
 abstract class WelcomeRepository {
+  Future<Either<FirebaseFailure, void>> updateUserPermissions(UserPermissionsModel userPermissionsModel);
   Future<Either<FirebaseFailure, UserModel>> login();
   Future<Either<FirebaseFailure, void>> addUserPermission(UserPermissionsModel userPermissionsModel);
   Future<Either<FirebaseFailure, UserPermissionsModel>> getUserPermission(String username);

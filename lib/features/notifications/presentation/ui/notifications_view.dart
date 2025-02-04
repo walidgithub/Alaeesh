@@ -19,6 +19,9 @@ class _NotificationsViewState extends State<NotificationsView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+  String enableAdd = "";
+
   bool loadingUserData = true;
   var userData;
 
@@ -37,6 +40,8 @@ class _NotificationsViewState extends State<NotificationsView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
   }
 

@@ -32,9 +32,12 @@ class _MineViewState extends State<MineView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+  String enableAdd = "";
+
   var userData;
 
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -50,8 +53,11 @@ class _MineViewState extends State<MineView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
     getMine(displayName);
+
   }
 
   Future<void> refresh() async {
@@ -103,16 +109,7 @@ class _MineViewState extends State<MineView> {
               showSnackBar(context, state.errorMessage);
             } else if (state is MineNoInternetState) {
               hideLoading();
-              setState(() {
-                _isErrorDialogShown = true;
-              });
-              if (_isErrorDialogShown) {
-                onError(context, AppStrings.noInternet, () {
-                  setState(() {
-                    _isErrorDialogShown = false;
-                  });
-                });
-              }
+              onError(context, AppStrings.noInternet);
             }
           },
           builder: (context, state) {

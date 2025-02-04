@@ -35,7 +35,7 @@ class UpdateCommentBottomSheet extends StatefulWidget {
 
 class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
   final TextEditingController _commentController = TextEditingController();
-  bool _isErrorDialogShown = false;
+  
   @override
   void initState() {
     _commentController.text = widget.commentModel.comment;
@@ -113,16 +113,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                             Navigator.pop(context);
                           } else if (state is HomePageNoInternetState) {
                             hideLoading();
-                            setState(() {
-                              _isErrorDialogShown = true;
-                            });
-                            if (_isErrorDialogShown) {
-                              onError(context, AppStrings.noInternet, () {
-                                setState(() {
-                                  _isErrorDialogShown = false;
-                                });
-                              });
-                            }
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {

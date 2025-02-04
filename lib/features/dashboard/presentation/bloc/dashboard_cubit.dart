@@ -13,11 +13,11 @@ import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/get_all_posts_usecase.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
-import '../../domain/usecases/update_user_permissions_usecase.dart';
+import '../../../welcome/domain/usecases/update_user_permissions_usecase.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit(this.updateUserPermissionsUseCase, this.sendReplyUseCase, this.getUserAdvicesUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
+  DashboardCubit(this.sendReplyUseCase, this.getUserAdvicesUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
       : super(DashboardInitial());
 
   final DeletePostUseCase deletePostUseCase;
@@ -27,7 +27,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   final GetAllPostsUseCase getAllPostsUseCase;
   final GetUserAdvicesUseCase getUserAdvicesUseCase;
-  final UpdateUserPermissionsUseCase updateUserPermissionsUseCase;
+
 
 
   static DashboardCubit get(context) => BlocProvider.of(context);
@@ -99,26 +99,13 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
   }
 
-  Future<void> updateUserPermissions(UserPermissionsModel userPermissionsModel) async {
-    emit(UpdateUserPermissionsLoadingState());
-    if (await _networkInfo.isConnected) {
-      final result = await updateUserPermissionsUseCase.call(userPermissionsModel);
-      result.fold(
-            (failure) => emit(UpdateUserPermissionsErrorState(failure.message)),
-            (userPermissionUpdated) => emit(UpdateUserPermissionsSuccessState()),
-      );
-    } else {
-      emit(DashboardNoInternetState());
-    }
-  }
-
   Future<void> sendReply(SendReplyRequest sendReplyRequest) async {
-    emit(SendReplyLoadingState());
+    emit(DashboardSendReplyLoadingState());
     if (await _networkInfo.isConnected) {
       final result = await sendReplyUseCase.call(sendReplyRequest);
       result.fold(
-            (failure) => emit(SendReplyErrorState(failure.message)),
-            (replySent) => emit(SendReplySuccessState()),
+            (failure) => emit(DashboardSendReplyErrorState(failure.message)),
+            (replySent) => emit(DashboardSendReplySuccessState()),
       );
     } else {
       emit(DashboardNoInternetState());

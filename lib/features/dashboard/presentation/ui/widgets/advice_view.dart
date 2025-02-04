@@ -50,7 +50,6 @@ class AdviceView extends StatefulWidget {
 class _AdviceViewState extends State<AdviceView> {
   String timeAgoText = "";
   final TextEditingController _replyUsController = TextEditingController();
-  bool _isErrorDialogShown = false;
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -81,16 +80,7 @@ class _AdviceViewState extends State<AdviceView> {
                   listener: (context, state) async {
                     if (state is DashboardNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -280,27 +270,18 @@ class _AdviceViewState extends State<AdviceView> {
                       create: (context) => sl<DashboardCubit>(),
                       child: BlocConsumer<DashboardCubit, DashboardState>(
                           listener: (context, state) {
-                        if (state is SendReplyLoadingState) {
+                        if (state is DashboardSendReplyLoadingState) {
                           showLoading();
-                        } else if (state is SendReplySuccessState) {
+                        } else if (state is DashboardSendReplySuccessState) {
                           hideLoading();
                           showSnackBar(context, AppStrings.addSuccess);
                           _replyUsController.text = "";
-                        } else if (state is SendReplyErrorState) {
+                        } else if (state is DashboardSendReplyErrorState) {
                           hideLoading();
                           showSnackBar(context, state.errorMessage);
                         } else if (state is DashboardNoInternetState) {
                           hideLoading();
-                          setState(() {
-                            _isErrorDialogShown = true;
-                          });
-                          if (_isErrorDialogShown) {
-                            onError(context, AppStrings.noInternet, () {
-                              setState(() {
-                                _isErrorDialogShown = false;
-                              });
-                            });
-                          }
+                          onError(context, AppStrings.noInternet);
                         }
                       }, builder: (context, state) {
                         return Bounceable(

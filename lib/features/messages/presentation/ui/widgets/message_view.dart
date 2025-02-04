@@ -40,7 +40,7 @@ class MessageView extends StatefulWidget {
 
 class _MessageViewState extends State<MessageView> {
   String timeAgoText = "";
-  bool _isErrorDialogShown = false;
+  
 
   Future<void> updateMessageToSeen(String messageId) async {
     MessagesCubit.get(context).updateMessageToSeenUseCase(UpdateMessageToSeenRequest(id: messageId));
@@ -69,16 +69,7 @@ class _MessageViewState extends State<MessageView> {
           showSnackBar(context, state.errorMessage);
         } else if (state is MessagesNoInternetState) {
           hideLoading();
-          setState(() {
-            _isErrorDialogShown = true;
-          });
-          if (_isErrorDialogShown) {
-            onError(context, AppStrings.noInternet, () {
-              setState(() {
-                _isErrorDialogShown = false;
-              });
-            });
-          }
+          onError(context, AppStrings.noInternet);
         }
       },
       builder: (context, state) {

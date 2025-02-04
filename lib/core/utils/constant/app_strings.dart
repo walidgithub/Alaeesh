@@ -19,7 +19,7 @@ class AppStrings {
   static const String updatePost = 'حـعـدل الألـشـة ✍️';
   static const String addComment = 'ايـه رأيـك ✍️';
   static const String editComment = 'حـعـدل رأيــى ✍️';
-  static const String comments = 'كـومـنـتـهـات';
+  static const String comments = 'كـومـنـتـات';
   static const String comment = 'كـومـنـت';
   static const String alsha = 'الألــشـة';
   static const String addAlsha = 'إضـافـة';
@@ -44,6 +44,8 @@ class AppStrings {
   static const String topPosts = "أعـلـى ألـشـات 🤣";
   static const String updatedSuccessfully = 'تـمـام كـده 👍';
   static const String noPosts = 'لـو مـفـيـش ألـشـات، ابـدأ أنـت 🤷‍';
+  static const String noMessages = 'مـفـيـش رسـايـل اتـبـعـتـت لـك 🤝‍';
+  static const String noAdvices = 'مـفـيـش مـقـتـرحـات 🤝‍';
   static const String noActivities = 'مـفـيـش مـشـاركـات خـاصـة بـك 🤷‍';
   static const String addSuccess = 'شــكـرا 🥳';
   static const String showDrawer = 'حـاجـات تـانـيـة 🤩';
@@ -53,11 +55,18 @@ class AppStrings {
   static const String advice = 'رأيـك ايـه 👍';
   static const String reply = 'الــرد';
   static const String send = 'إرسـال وشـكـرًا 🤝';
+  static const String admin = 'خـلـيـه أدمـن ‍💻';
+  static const String user = 'خـلـيـه مـسـتـخـدم 🧖‍';
   static const String preventAdd = 'حـظـر إضـافـة 🤐';
   static const String enableAdd = 'إتـاحـة إضـافـة 🤝';
   static const String sendMessage = 'إرسـال رسـالـة ✍️';
+  static const String message = 'الـرسـالـة';
+  static const String closeDialog = 'لا خـلاص';
   static const String messageFromAdmin = 'رســالـة مـن الأدمــن';
+  static const String preventMessage = 'مـعـلـش انـت اتـمـنـعـت إنـك تـضـيـف أى ألـشـة أو كـومـنـت، شـويـة كـده وحـنـرجـعـك بـس خـد بـالـك الـمـرة الـجـايـة 🤝';
+  static const String addMessage = 'تـم فـك الـحـظـر، مـتـعـنـا بـألـشـاتـك تـانـى 🥳';
   static const String searchForPost = 'ابـحـث عــن ألـشـة 🕵🏼‍';
+  static const String addError = 'انـت اتـمـنـعـت إنـك تـضـيـف أى ألـشـة أو كـومـنـت حـتـلاقـى رسـالـة جـاتـلـك شـوف انـت عـمـلـت ايـه 🤐‍';
   static const String info = '''هل تحب الضحك والمزاح؟ تطبيقنا هو المكان المثالي لك! 🥳
   
 شارك ألشات هزار وفرفشة، أضف تعليقات مليئة بالطرافة، واستخدم الإيموجي لإبراز تعبيراتك. 😄

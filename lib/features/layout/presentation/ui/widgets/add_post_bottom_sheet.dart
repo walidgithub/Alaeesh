@@ -35,7 +35,7 @@ class AddPostBottomSheet extends StatefulWidget {
 
 class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
   final TextEditingController _postController = TextEditingController();
-  bool _isErrorDialogShown = false;
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -107,16 +107,7 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                             Navigator.pop(context);
                           } else if (state is LayoutNoInternetState) {
                             hideLoading();
-                            setState(() {
-                              _isErrorDialogShown = true;
-                            });
-                            if (_isErrorDialogShown) {
-                              onError(context, AppStrings.noInternet, () {
-                                setState(() {
-                                  _isErrorDialogShown = false;
-                                });
-                              });
-                            }
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {

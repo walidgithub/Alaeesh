@@ -46,9 +46,12 @@ class _UserPostsViewState extends State<UserPostsView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+  String enableAdd = "";
+
   List<SubscribersModel> subscribersList = [];
   var userData;
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -64,6 +67,8 @@ class _UserPostsViewState extends State<UserPostsView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
     getUserPosts(displayName, allPosts: true);
   }
@@ -289,16 +294,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                   showSnackBar(context, state.errorMessage);
                 } else if (state is HomePageNoInternetState) {
                   hideLoading();
-                  setState(() {
-                    _isErrorDialogShown = true;
-                  });
-                  if (_isErrorDialogShown) {
-                    onError(context, AppStrings.noInternet, () {
-                      setState(() {
-                        _isErrorDialogShown = false;
-                      });
-                    });
-                  }
+                  onError(context, AppStrings.noInternet);
                 }
               },
               builder: (context, state) {

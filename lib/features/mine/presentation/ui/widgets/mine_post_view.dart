@@ -68,7 +68,7 @@ class _MinePostViewState extends State<MinePostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
   List<EmojiModel> mineEmojisList = [];
-  bool _isErrorDialogShown = false;
+  
 
   bool userReacted = false;
 
@@ -115,16 +115,7 @@ class _MinePostViewState extends State<MinePostView> {
                       Navigator.pop(context);
                     } else if (state is MineNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -164,8 +155,6 @@ class _MinePostViewState extends State<MinePostView> {
               ))
         ]);
   }
-
-  OverlayEntry? _overlayEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -381,16 +370,7 @@ class _MinePostViewState extends State<MinePostView> {
                                             context, state.errorMessage);
                                       } else if (state is MineNoInternetState) {
                                         hideLoading();
-                                        setState(() {
-                                          _isErrorDialogShown = true;
-                                        });
-                                        if (_isErrorDialogShown) {
-                                          onError(context, AppStrings.noInternet, () {
-                                            setState(() {
-                                              _isErrorDialogShown = false;
-                                            });
-                                          });
-                                        }
+                                        onError(context, AppStrings.noInternet);
                                       }
                                     },
                                     builder: (context, state) {

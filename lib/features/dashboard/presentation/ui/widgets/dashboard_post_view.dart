@@ -5,8 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
+import 'package:last/features/dashboard/presentation/ui/widgets/send_message_view.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
+import 'package:last/features/welcome/data/model/user_permissions_model.dart';
+import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
@@ -21,6 +25,8 @@ import '../../../../../core/utils/ui_components/snackbar.dart';
 import 'dart:ui' as ui;
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
+import '../../../../welcome/presentation/bloc/welcome_state.dart';
+import '../../../data/model/requests/send_reply_request.dart';
 import '../../bloc/dashboard_cubit.dart';
 import '../../bloc/dashboard_state.dart';
 import 'dashboard_comments_bottom_sheet.dart';
@@ -65,7 +71,10 @@ class _DashboardPostViewState extends State<DashboardPostView> {
   String timeAgoText = "";
   bool userReacted = false;
   bool isEnabled = true;
-  bool _isErrorDialogShown = false;
+  bool isUser = true;
+  String role = "";
+  TapDownDetails postPopupMenuDetails = TapDownDetails();
+
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -106,16 +115,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                       Navigator.pop(context);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -150,51 +150,203 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Bounceable(
-                            onTap: () {
+                          BlocProvider(
+                            create: (homeContext) => sl<WelcomeCubit>(),
+                            child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                              listener: (context, state) async {
+                                if (state
+                                    is UpdateUserPermissionsLoadingState) {
+                                  showLoading();
+                                } else if (state
+                                    is UpdateUserPermissionsSuccessState) {
+                                  hideLoading();
+                                  DateTime now = DateTime.now();
+                                  String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(now);
+                                  String formattedTime =
+                                  DateFormat('hh:mm a').format(now);
 
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  isEnabled ? AppAssets.enableAdd : AppAssets.preventAdd,
-                                  width: 20.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  isEnabled ? AppStrings.enableAdd : AppStrings.preventAdd,
-                                  style: AppTypography.kLight13,
-                                ),
-                              ],
+                                  SendReplyRequest sendReplyRequest =
+                                  SendReplyRequest(
+                                      seen: false,
+                                      username: widget.postUsername,
+                                      time: '$formattedDate $formattedTime',
+                                      message: isEnabled ? AppStrings.preventMessage : AppStrings.addMessage);
+                                  WelcomeCubit.get(context)
+                                      .sendReply(sendReplyRequest);
+                                } else if (state
+                                    is UpdateUserPermissionsErrorState) {
+                                  showSnackBar(context, state.errorMessage);
+                                  hideLoading();
+                                } else if (state is SendReplyLoadingState) {
+                                  showLoading();
+                                } else if (state is SendReplySuccessState) {
+                                  hideLoading();
+                                  Navigator.pop(context);
+                                } else if (state is SendReplyErrorState) {
+                                  hideLoading();
+                                  showSnackBar(context, state.errorMessage);
+                                } else if (state is WelcomeNoInternetState) {
+                                  hideLoading();
+                                  onError(context, AppStrings.noInternet);
+                                }
+                              },
+                              builder: (context, state) {
+                                return Bounceable(
+                                  onTap: () {
+                                    if (isEnabled) {
+                                      UserPermissionsModel
+                                          userPermissionsModel =
+                                          UserPermissionsModel(
+                                              role: role,
+                                              username: widget.postUsername,
+                                              enableAdd: "no");
+                                      WelcomeCubit.get(context)
+                                          .updateUserPermissions(
+                                              userPermissionsModel);
+                                    } else {
+                                      UserPermissionsModel
+                                          userPermissionsModel =
+                                          UserPermissionsModel(
+                                              role: role,
+                                              username: widget.postUsername,
+                                              enableAdd: "yes");
+                                      WelcomeCubit.get(context)
+                                          .updateUserPermissions(
+                                              userPermissionsModel);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        isEnabled
+                                            ? AppAssets.preventAdd
+                                            : AppAssets.enableAdd,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        isEnabled
+                                            ? AppStrings.preventAdd
+                                            : AppStrings.enableAdd,
+                                        style: AppTypography.kLight13,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           SizedBox(
                             height: 10.h,
                           ),
-                          Bounceable(
-                            onTap: () {
-
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.send,
-                                  width: 20.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  AppStrings.sendMessage,
-                                  style: AppTypography.kLight13,
-                                ),
-                              ],
+                          BlocProvider(
+                            create: (homeContext) => sl<WelcomeCubit>(),
+                            child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                              listener: (context, state) async {
+                                if (state
+                                    is UpdateUserPermissionsLoadingState) {
+                                  showLoading();
+                                } else if (state
+                                    is UpdateUserPermissionsSuccessState) {
+                                  hideLoading();
+                                  Navigator.pop(context);
+                                } else if (state
+                                    is UpdateUserPermissionsErrorState) {
+                                  showSnackBar(context, state.errorMessage);
+                                  hideLoading();
+                                } else if (state is WelcomeNoInternetState) {
+                                  hideLoading();
+                                  onError(context, AppStrings.noInternet);
+                                }
+                              },
+                              builder: (context, state) {
+                                return Bounceable(
+                                  onTap: () {
+                                    if (isUser) {
+                                      UserPermissionsModel
+                                          userPermissionsModel =
+                                          UserPermissionsModel(
+                                              role: "admin",
+                                              username: widget.postUsername,
+                                              enableAdd:
+                                                  isEnabled ? "yes" : "no");
+                                      WelcomeCubit.get(context)
+                                          .updateUserPermissions(
+                                              userPermissionsModel);
+                                    } else {
+                                      UserPermissionsModel
+                                          userPermissionsModel =
+                                          UserPermissionsModel(
+                                              role: "user",
+                                              username: widget.postUsername,
+                                              enableAdd:
+                                                  isEnabled ? "yes" : "no");
+                                      WelcomeCubit.get(context)
+                                          .updateUserPermissions(
+                                              userPermissionsModel);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        isUser
+                                            ? AppAssets.admin
+                                            : AppAssets.profileIcon,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        isUser
+                                            ? AppStrings.admin
+                                            : AppStrings.user,
+                                        style: AppTypography.kLight13,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
+                          isUser
+                              ? Container()
+                              : SizedBox(
+                                  height: 10.h,
+                                ),
+                          isUser
+                              ? Container()
+                              : Bounceable(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    SendMessageDialog.show(
+                                        context, widget.postUsername);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.send,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        AppStrings.sendMessage,
+                                        style: AppTypography.kLight13,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                         ],
                       ),
                     );
@@ -223,120 +375,169 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                     ),
                     Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                        radius: 25.r,
-                                        backgroundColor: AppColors.cWhite,
-                                        child: Container(
-                                            padding: EdgeInsets.all(2.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.cTitle,
-                                                width: 2,
-                                              ),
+                                CircleAvatar(
+                                    radius: 25.r,
+                                    backgroundColor: AppColors.cWhite,
+                                    child: Container(
+                                        padding: EdgeInsets.all(2.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: AppColors.cTitle,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(
+                                              strokeWidth: 2.w,
+                                              color: AppColors.cTitle,
                                             ),
-                                            child: ClipOval(
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2.w,
-                                                      color: AppColors.cTitle,
-                                                    ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                    Image.asset(
-                                                        AppAssets.profile),
-                                                imageUrl: widget.postUserImage,
-                                              ),
-                                            ))),
+                                            errorWidget: (context, url,
+                                                    error) =>
+                                                Image.asset(AppAssets.profile),
+                                            imageUrl: widget.postUserImage,
+                                          ),
+                                        ))),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     SizedBox(
-                                      width: 10.w,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width:
-                                          MediaQuery.sizeOf(context).width *
-                                              0.50,
-                                          child: Row(
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  widget.postUsername,
-                                                  style: AppTypography.kBold14
-                                                      .copyWith(
-                                                      color:
-                                                      AppColors.cTitle),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textDirection:
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.50,
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              widget.postUsername,
+                                              style: AppTypography.kBold14
+                                                  .copyWith(
+                                                      color: AppColors.cTitle),
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection:
                                                   ui.TextDirection.ltr,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                        Directionality(
-                                          textDirection: ui.TextDirection.ltr,
-                                          child: Text(
-                                            timeAgoText,
-                                            style: AppTypography.kLight12
-                                                .copyWith(
-                                                color: AppColors.cBlack),
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                    ),
+                                    Directionality(
+                                      textDirection: ui.TextDirection.ltr,
+                                      child: Text(
+                                        timeAgoText,
+                                        style: AppTypography.kLight12
+                                            .copyWith(color: AppColors.cBlack),
+                                      ),
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                        onTapDown: (TapDownDetails details) {
-                                          _showPostPopupMenu(
-                                              context,
-                                              details.globalPosition,
-                                              widget.index);
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppAssets.menu,
-                                          width: 25.w,
-                                        ))
-                                  ],
-                                )
                               ],
                             ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            ReadMoreText(
-                              widget.postAlsha,
-                              style: AppTypography.kLight14,
-                              trimLines: 3,
-                              colorClickableText: AppColors.cTitle,
-                              trimMode: TrimMode.Line,
-                              trimCollapsedText: AppStrings.readMore,
-                              trimExpandedText: AppStrings.less,
+                            BlocProvider(
+                              create: (homeContext) => sl<WelcomeCubit>(),
+                              child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                                listener: (context, state) async {
+                                  if (state is GetUserPermissionsLoadingState) {
+                                    showLoading();
+                                  } else if (state
+                                      is GetUserPermissionsSuccessState) {
+                                    hideLoading();
+                                    role = state.userPermissionsModel.role;
+                                    if (state.userPermissionsModel.enableAdd ==
+                                        "yes") {
+                                      setState(() {
+                                        isEnabled = true;
+                                      });
+                                    } else if (state
+                                            .userPermissionsModel.enableAdd ==
+                                        "no") {
+                                      setState(() {
+                                        isEnabled = false;
+                                      });
+                                    }
+                                    if (state.userPermissionsModel.role ==
+                                        "admin") {
+                                      setState(() {
+                                        isUser = false;
+                                      });
+                                    } else if (state
+                                            .userPermissionsModel.role ==
+                                        "user") {
+                                      setState(() {
+                                        isUser = true;
+                                      });
+                                    }
+                                    _showPostPopupMenu(
+                                        context,
+                                        postPopupMenuDetails.globalPosition,
+                                        widget.index);
+                                  } else if (state
+                                      is GetUserPermissionsErrorState) {
+                                    showSnackBar(context, state.errorMessage);
+                                    hideLoading();
+                                  } else if (state is WelcomeNoInternetState) {
+                                    hideLoading();
+                                    onError(context, AppStrings.noInternet);
+                                  }
+                                },
+                                builder: (context, state) {
+                                  return Row(
+                                    children: [
+                                      GestureDetector(
+                                          onTapDown: (TapDownDetails details) {
+                                            WelcomeCubit.get(context)
+                                                .getUserPermissions(
+                                                    widget.postUsername);
+                                            setState(() {
+                                              postPopupMenuDetails = details;
+                                            });
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppAssets.menu,
+                                            width: 25.w,
+                                          ))
+                                    ],
+                                  );
+                                },
+                              ),
                             )
                           ],
-                        )),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        ReadMoreText(
+                          widget.postAlsha,
+                          style: AppTypography.kLight14,
+                          trimLines: 3,
+                          colorClickableText: AppColors.cTitle,
+                          trimMode: TrimMode.Line,
+                          trimCollapsedText: AppStrings.readMore,
+                          trimExpandedText: AppStrings.less,
+                        )
+                      ],
+                    )),
                   ],
                 ),
-                widget.commentsList.isNotEmpty ||
-                    widget.emojisList.isNotEmpty ? const Divider(
-                  color: AppColors.grey,
-                ) : Container(),
+                widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty
+                    ? const Divider(
+                        color: AppColors.grey,
+                      )
+                    : Container(),
                 SizedBox(
                   height: widget.commentsList.isNotEmpty ||
-                      widget.emojisList.isNotEmpty
+                          widget.emojisList.isNotEmpty
                       ? 40.h
                       : 0,
                   child: Row(
@@ -344,163 +545,166 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                     children: [
                       widget.commentsList.isNotEmpty
                           ? Bounceable(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            constraints: BoxConstraints.expand(
-                                height:
-                                MediaQuery.sizeOf(context).height -
-                                    widget.statusBarHeight -
-                                    50.h,
-                                width: MediaQuery.sizeOf(context).width),
-                            isScrollControlled: true,
-                            barrierColor: AppColors.cTransparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30.r),
-                              ),
-                            ),
-                            builder: (context2) {
-                              return Directionality(
-                                textDirection: ui.TextDirection.rtl,
-                                child: DashboardCommentsBottomSheet(
-                                  postAlsha: widget.postAlsha,
-                                  userImage: widget.loggedInUserImage,
-                                  userName: widget.loggedInUserName,
-                                  postId: widget.id,
-                                  addNewComment: (int status) {
-                                    widget.addNewComment(status);
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  constraints: BoxConstraints.expand(
+                                      height:
+                                          MediaQuery.sizeOf(context).height -
+                                              widget.statusBarHeight -
+                                              50.h,
+                                      width: MediaQuery.sizeOf(context).width),
+                                  isScrollControlled: true,
+                                  barrierColor: AppColors.cTransparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(30.r),
+                                    ),
+                                  ),
+                                  builder: (context2) {
+                                    return Directionality(
+                                      textDirection: ui.TextDirection.rtl,
+                                      child: DashboardCommentsBottomSheet(
+                                        postAlsha: widget.postAlsha,
+                                        userImage: widget.loggedInUserImage,
+                                        userName: widget.loggedInUserName,
+                                        postId: widget.id,
+                                        addNewComment: (int status) {
+                                          widget.addNewComment(status);
+                                        },
+                                        statusBarHeight: widget.statusBarHeight,
+                                        commentsList: widget.commentsList,
+                                      ),
+                                    );
                                   },
-                                  statusBarHeight: widget.statusBarHeight,
-                                  commentsList: widget.commentsList,
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              widget.commentsList.length.toString(),
-                              style: AppTypography.kLight14,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              widget.commentsList.length > 1 && widget.commentsList.length < 11 ? AppStrings.comments : AppStrings.comment,
-                              style: AppTypography.kBold14
-                                  .copyWith(color: AppColors.cTitle),
-                            ),
-                          ],
-                        ),
-                      )
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    widget.commentsList.length.toString(),
+                                    style: AppTypography.kLight14,
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Text(
+                                    widget.commentsList.length > 1 &&
+                                            widget.commentsList.length < 11
+                                        ? AppStrings.comments
+                                        : AppStrings.comment,
+                                    style: AppTypography.kBold14
+                                        .copyWith(color: AppColors.cTitle),
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(),
                       widget.emojisList.isNotEmpty
                           ? Row(
-                        children: [
-                          Bounceable(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context)
-                                        .height -
-                                        widget.statusBarHeight -
-                                        300.h,
-                                    width:
-                                    MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                    textDirection: ui.TextDirection.rtl,
-                                    child: ReactionsBottomSheet(
-                                        statusBarHeight:
-                                        widget.statusBarHeight,
-                                        emojisList: widget.emojisList),
-                                  );
-                                },
-                              );
-                            },
-                            child: SizedBox(
-                              width:
-                              MediaQuery.sizeOf(context).width * 0.55,
-                              height: 30.h,
-                              child: Stack(
-                                children: [
-                                  ...widget.emojisList
-                                      .asMap()
-                                      .entries
-                                      .toList()
-                                      .fold<List<MapEntry<int, dynamic>>>(
-                                      [], (acc, entry) {
-                                    if (!acc.any((e) =>
-                                    e.value.emojiData ==
-                                        entry.value.emojiData)) {
-                                      acc.add(entry);
-                                    }
-                                    return acc;
-                                  })
-                                      .take(4)
-                                      .map((entry) {
-                                    int index = entry.key;
-                                    return Positioned(
-                                      left: index * reactPosition,
-                                      child: CircleAvatar(
-                                        radius: 15.r,
-                                        backgroundColor:
-                                        AppColors.cWhite,
-                                        child: Container(
-                                          padding:
-                                          EdgeInsets.all(1.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors
-                                                  .cSecondary,
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: ClipOval(
-                                            child: Text(
-                                              entry.value.emojiData,
-                                              style: AppTypography
-                                                  .kExtraLight18,
-                                            ),
-                                          ),
+                              children: [
+                                Bounceable(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      constraints: BoxConstraints.expand(
+                                          height: MediaQuery.sizeOf(context)
+                                                  .height -
+                                              widget.statusBarHeight -
+                                              300.h,
+                                          width:
+                                              MediaQuery.sizeOf(context).width),
+                                      isScrollControlled: true,
+                                      barrierColor: AppColors.cTransparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(30.r),
                                         ),
                                       ),
+                                      builder: (context2) {
+                                        return Directionality(
+                                          textDirection: ui.TextDirection.rtl,
+                                          child: ReactionsBottomSheet(
+                                              statusBarHeight:
+                                                  widget.statusBarHeight,
+                                              emojisList: widget.emojisList),
+                                        );
+                                      },
                                     );
-                                  }),
-                                  if (widget.emojisList.length > 3)
-                                    Positioned(
-                                      top: 5.h,
-                                      left: 4.7 * reactPosition,
-                                      child: Text(
-                                        AppStrings.others,
-                                        style: AppTypography.kBold18
-                                            .copyWith(
-                                            color:
-                                            AppColors.cSecondary,
-                                            fontSize: 15.sp),
-                                      ),
+                                  },
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.55,
+                                    height: 30.h,
+                                    child: Stack(
+                                      children: [
+                                        ...widget.emojisList
+                                            .asMap()
+                                            .entries
+                                            .toList()
+                                            .fold<List<MapEntry<int, dynamic>>>(
+                                                [], (acc, entry) {
+                                              if (!acc.any((e) =>
+                                                  e.value.emojiData ==
+                                                  entry.value.emojiData)) {
+                                                acc.add(entry);
+                                              }
+                                              return acc;
+                                            })
+                                            .take(4)
+                                            .map((entry) {
+                                              int index = entry.key;
+                                              return Positioned(
+                                                left: index * reactPosition,
+                                                child: CircleAvatar(
+                                                  radius: 15.r,
+                                                  backgroundColor:
+                                                      AppColors.cWhite,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(1.w),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: AppColors
+                                                            .cSecondary,
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    child: ClipOval(
+                                                      child: Text(
+                                                        entry.value.emojiData,
+                                                        style: AppTypography
+                                                            .kExtraLight18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                        if (widget.emojisList.length > 3)
+                                          Positioned(
+                                            top: 5.h,
+                                            left: 4.7 * reactPosition,
+                                            child: Text(
+                                              AppStrings.others,
+                                              style: AppTypography.kBold18
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.cSecondary,
+                                                      fontSize: 15.sp),
+                                            ),
+                                          ),
+                                      ],
                                     ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(widget.emojisList.length.toString()),
-                        ],
-                      )
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(widget.emojisList.length.toString()),
+                              ],
+                            )
                           : Container(),
                     ],
                   ),

@@ -40,4 +40,5 @@ class AppAssets {
   static const String send = '$imagePath/send.svg';
   static const String preventAdd = '$imagePath/prevent_add.svg';
   static const String enableAdd = '$imagePath/enable_add.svg';
+  static const String admin = '$imagePath/admin.svg';
 }

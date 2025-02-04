@@ -7,7 +7,7 @@ import 'package:last/features/dashboard/data/repository_impl/dashboard_repositor
 import 'package:last/features/dashboard/domain/repository/dashboard_repository.dart';
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
-import 'package:last/features/dashboard/domain/usecases/update_user_permissions_usecase.dart';
+import 'package:last/features/welcome/domain/usecases/update_user_permissions_usecase.dart';
 import 'package:last/features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
 import 'package:last/features/home_page/data/repository_impl/home_page_repository_impl.dart';
@@ -133,8 +133,8 @@ class ServiceLocator {
     sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
     sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
     sl.registerLazySingleton<AddUserPermissionsUseCase>(() => AddUserPermissionsUseCase(sl()));
-    sl.registerLazySingleton<UpdateUserPermissionsUseCase>(() => UpdateUserPermissionsUseCase(sl()));
     sl.registerLazySingleton<GetUserPermissionsUseCase>(() => GetUserPermissionsUseCase(sl()));
+    sl.registerLazySingleton<UpdateUserPermissionsUseCase>(() => UpdateUserPermissionsUseCase(sl()));
 
     // switch user useCases
     sl.registerLazySingleton<SwitchUserUseCase>(() => SwitchUserUseCase(sl()));
@@ -181,7 +181,6 @@ class ServiceLocator {
     sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
 
     // dashboard useCases
-    sl.registerLazySingleton<UpdateUserPermissionsUseCase>(() => UpdateUserPermissionsUseCase(sl()));
     sl.registerLazySingleton<GetUserAdvicesUseCase>(() => GetUserAdvicesUseCase(sl()));
     sl.registerLazySingleton<SendReplyUseCase>(() => SendReplyUseCase(sl()));
 
@@ -191,14 +190,14 @@ class ServiceLocator {
     sl.registerLazySingleton<UpdateMessageToSeenUseCase>(() => UpdateMessageToSeenUseCase(sl()));
 
     // Bloc
-    sl.registerFactory(() => SwitchUserCubit(sl()));
-    sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => SwitchUserCubit(sl(), sl(), sl()));
+    sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl()));
     sl.registerFactory(() => NotificationsCubit(sl(), sl()));
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MessagesCubit(sl(), sl(), sl()));
   }
 }

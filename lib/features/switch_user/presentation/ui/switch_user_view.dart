@@ -15,6 +15,7 @@ import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/ui_components/curved_clipper.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../welcome/data/model/user_permissions_model.dart';
 import '../bloc/switch_user_cubit.dart';
 import '../bloc/switch_user_states.dart';
 
@@ -30,7 +31,12 @@ class _SwitchUserViewState extends State<SwitchUserView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
-  bool _isErrorDialogShown = false;
+  
+
+  String id = "";
+  String email = "";
+  String displayName = "";
+  String photoUrl = "";
 
   @override
   Widget build(BuildContext context) {
@@ -107,35 +113,68 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                       } else if (state
                                           is SwitchUserSuccessState) {
                                         hideLoading();
-                                        // if new add this
-                                        await _appSecureDataHelper.saveUserData(
-                                            id: state.user.id!,
-                                            email: state.user.email!,
-                                            displayName: state.user.name!,
-                                            photoUrl: state.user.photoUrl!,
-                                          enableAdd: "yes",
-                                          role: "user",);
-                                        // else add saved data in firebase here
-                                        await _appPreferences.setUserLoggedIn();
-                                        Navigator.pushReplacementNamed(
-                                            context, Routes.layoutRoute);
+                                        id = state.user.id!;
+                                        email = state.user.email!;
+                                        displayName = state.user.name!;
+                                        photoUrl = state.user.photoUrl!;
+                                        SwitchUserCubit.get(context)
+                                            .getUserPermissions(displayName);
                                       } else if (state
                                           is SwitchUserErrorState) {
                                         showSnackBar(
                                             context, state.errorMessage);
                                         hideLoading();
+                                      } else if (state
+                                      is AddUserPermissionLoadingState) {
+                                        showLoading();
+                                      } else if (state
+                                      is AddUserPermissionSuccessState) {
+                                        hideLoading();
+                                        await _appSecureDataHelper.saveUserData(
+                                          id: id,
+                                          email: email,
+                                          displayName: displayName,
+                                          photoUrl: photoUrl,
+                                          role: "user",
+                                        );
+                                        await _appPreferences.setUserLoggedIn();
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.layoutRoute);
+                                      } else if (state
+                                      is AddUserPermissionErrorState) {
+                                        hideLoading();
+                                        showSnackBar(context, state.errorMessage);
+                                      } else if (state
+                                      is GetUserPermissionsLoadingState) {
+                                        showLoading();
+                                      } else if (state
+                                      is GetUserPermissionsSuccessState) {
+                                        hideLoading();
+                                        await _appSecureDataHelper.clearUserData();
+                                        await _appSecureDataHelper.saveUserData(
+                                          id: id,
+                                          email: email,
+                                          displayName: displayName,
+                                          photoUrl: photoUrl,
+                                          role: state.userPermissionsModel.role,
+                                        );
+                                        await _appPreferences.setUserLoggedIn();
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.layoutRoute);
+                                      } else if (state
+                                      is GetUserPermissionsErrorState) {
+                                        UserPermissionsModel userPermissionsModel =
+                                        UserPermissionsModel(
+                                            username: displayName,
+                                            role: "user",
+                                            enableAdd: "yes");
+                                        SwitchUserCubit.get(context)
+                                            .addUserPermission(userPermissionsModel);
+                                        hideLoading();
+                                        showSnackBar(context, state.errorMessage);
                                       } else if (state is SwitchUserNoInternetState) {
                                         hideLoading();
-                                        setState(() {
-                                          _isErrorDialogShown = true;
-                                        });
-                                        if (_isErrorDialogShown) {
-                                          onError(context, AppStrings.noInternet, () {
-                                            setState(() {
-                                              _isErrorDialogShown = false;
-                                            });
-                                          });
-                                        }
+                                        onError(context, AppStrings.noInternet);
                                       }
                                     },
                                     builder: (context, state) {

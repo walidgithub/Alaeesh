@@ -17,14 +17,6 @@ class GetUserAdvicesErrorState extends DashboardState{
   GetUserAdvicesErrorState(this.errorMessage);
 }
 
-class UpdateUserPermissionsLoadingState extends DashboardState{}
-class UpdateUserPermissionsSuccessState extends DashboardState{}
-class UpdateUserPermissionsErrorState extends DashboardState{
-  final String errorMessage;
-
-  UpdateUserPermissionsErrorState(this.errorMessage);
-}
-
 class DeletePostLoadingState extends DashboardState{}
 class DeletePostSuccessState extends DashboardState{}
 class DeletePostErrorState extends DashboardState{
@@ -61,12 +53,12 @@ class GetAllPostsErrorState extends DashboardState{
   GetAllPostsErrorState(this.errorMessage);
 }
 
-class SendReplyLoadingState extends DashboardState{}
-class SendReplySuccessState extends DashboardState{}
-class SendReplyErrorState extends DashboardState{
+class DashboardSendReplyLoadingState extends DashboardState{}
+class DashboardSendReplySuccessState extends DashboardState{}
+class DashboardSendReplyErrorState extends DashboardState{
   final String errorMessage;
 
-  SendReplyErrorState(this.errorMessage);
+  DashboardSendReplyErrorState(this.errorMessage);
 }
 
 class DashboardNoInternetState extends DashboardState{}

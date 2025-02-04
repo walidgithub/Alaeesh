@@ -6,6 +6,7 @@ import 'package:last/features/messages/presentation/ui/widgets/message_view.dart
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/utils/constant/app_strings.dart';
+import '../../../../core/utils/constant/app_typography.dart';
 import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/style/app_colors.dart';
 import '../../../../core/utils/ui_components/loading_dialog.dart';
@@ -29,8 +30,11 @@ class _MessagesViewState extends State<MessagesView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+  String enableAdd = "";
+
   var userData;
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -52,10 +56,12 @@ class _MessagesViewState extends State<MessagesView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
-    if (_isErrorDialogShown) {
+    // if (!_isErrorDialogShown) {
       getMessages();
-    }
+    // }
   }
 
   getMessages() {
@@ -87,20 +93,11 @@ class _MessagesViewState extends State<MessagesView> {
               showSnackBar(context, state.errorMessage);
             } else if (state is MessagesNoInternetState) {
               hideLoading();
-              setState(() {
-                _isErrorDialogShown = true;
-              });
-              if (_isErrorDialogShown) {
-                onError(context, AppStrings.noInternet, () {
-                  setState(() {
-                    _isErrorDialogShown = false;
-                  });
-                });
-              }
+              onError(context, AppStrings.noInternet);
             }
           },
           builder: (context, state) {
-            return RefreshIndicator(
+            return messagesModel.isNotEmpty ? RefreshIndicator(
               color: AppColors.cTitle,
               backgroundColor: AppColors.cWhite,
               onRefresh: refreshLastPosts,
@@ -117,6 +114,19 @@ class _MessagesViewState extends State<MessagesView> {
                     );
                   },
                   itemCount: messagesModel.length),
+            ) : SizedBox(
+              height: MediaQuery.sizeOf(context).height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      AppStrings.noMessages,
+                      style: AppTypography.kBold14,
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

@@ -44,4 +44,20 @@ class GetUserPermissionsErrorState extends WelcomeState{
   GetUserPermissionsErrorState(this.errorMessage);
 }
 
+class UpdateUserPermissionsLoadingState extends WelcomeState{}
+class UpdateUserPermissionsSuccessState extends WelcomeState{}
+class UpdateUserPermissionsErrorState extends WelcomeState{
+  final String errorMessage;
+
+  UpdateUserPermissionsErrorState(this.errorMessage);
+}
+
+class SendReplyLoadingState extends WelcomeState{}
+class SendReplySuccessState extends WelcomeState{}
+class SendReplyErrorState extends WelcomeState{
+  final String errorMessage;
+
+  SendReplyErrorState(this.errorMessage);
+}
+
 class WelcomeNoInternetState extends WelcomeState{}

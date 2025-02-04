@@ -10,7 +10,6 @@ class SecureStorageLoginHelper {
     final email = await _secureStorage.read(key: 'email') ?? '';
     final displayName = await _secureStorage.read(key: 'displayName') ?? '';
     final photoUrl = await _secureStorage.read(key: 'photoUrl') ?? '';
-    final enableAdd = await _secureStorage.read(key: 'enableAdd') ?? '';
     final role = await _secureStorage.read(key: 'role') ?? '';
 
     return {
@@ -18,7 +17,6 @@ class SecureStorageLoginHelper {
       'email': email,
       'displayName': displayName,
       'photoUrl': photoUrl,
-      'enableAdd': enableAdd,
       'role': role,
     };
   }
@@ -29,14 +27,12 @@ class SecureStorageLoginHelper {
     required String email,
     required String displayName,
     required String photoUrl,
-    required String enableAdd,
     required String role,
   }) async {
     await _secureStorage.write(key: 'id', value: id);
     await _secureStorage.write(key: 'email', value: email);
     await _secureStorage.write(key: 'displayName', value: displayName);
     await _secureStorage.write(key: 'photoUrl', value: photoUrl);
-    await _secureStorage.write(key: 'enableAdd', value: enableAdd);
     await _secureStorage.write(key: 'role', value: role);
   }
 
@@ -46,7 +42,6 @@ class SecureStorageLoginHelper {
       await _secureStorage.delete(key: 'email');
       await _secureStorage.delete(key: 'displayName');
       await _secureStorage.delete(key: 'photoUrl');
-      await _secureStorage.delete(key: 'enableAdd');
       await _secureStorage.delete(key: 'role');
     } catch (e) {
       print("Error removing user data: $e");

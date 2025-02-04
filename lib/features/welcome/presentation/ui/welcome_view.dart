@@ -20,6 +20,7 @@ import '../../../../core/utils/ui_components/curved_clipper.dart';
 import '../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../data/model/user_permissions_model.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});
@@ -33,7 +34,7 @@ class _WelcomeViewState extends State<WelcomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
-  bool _isErrorDialogShown = false;
+  
 
   String id = "";
   String email = "";
@@ -101,7 +102,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                           child: Row(
                             children: [
                               Text(AppStrings.welcome,
-                                  style: AppTypography.kBold36),
+                                  style: AppTypography.kBold30),
                               Image.asset(
                                 AppAssets.splash,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -128,6 +129,8 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   email = state.user.email!;
                                   displayName = state.user.name!;
                                   photoUrl = state.user.photoUrl!;
+                                  WelcomeCubit.get(context)
+                                      .getUserPermissions(displayName);
                                 } else if (state is LoginErrorState) {
                                   showSnackBar(context, state.errorMessage);
                                   hideLoading();
@@ -137,16 +140,13 @@ class _WelcomeViewState extends State<WelcomeView> {
                                 } else if (state
                                     is AddUserPermissionSuccessState) {
                                   hideLoading();
-                                  // if new add this
                                   await _appSecureDataHelper.saveUserData(
                                     id: id,
                                     email: email,
                                     displayName: displayName,
                                     photoUrl: photoUrl,
-                                    enableAdd: "yes",
                                     role: "user",
                                   );
-                                  // else add saved data in firebase here
                                   await _appPreferences.setUserLoggedIn();
                                   Navigator.pushReplacementNamed(
                                       context, Routes.layoutRoute);
@@ -154,18 +154,37 @@ class _WelcomeViewState extends State<WelcomeView> {
                                     is AddUserPermissionErrorState) {
                                   hideLoading();
                                   showSnackBar(context, state.errorMessage);
+                                } else if (state
+                                    is GetUserPermissionsLoadingState) {
+                                  showLoading();
+                                } else if (state
+                                    is GetUserPermissionsSuccessState) {
+                                  hideLoading();
+                                  await _appSecureDataHelper.clearUserData();
+                                  await _appSecureDataHelper.saveUserData(
+                                    id: id,
+                                    email: email,
+                                    displayName: displayName,
+                                    photoUrl: photoUrl,
+                                    role: state.userPermissionsModel.role,
+                                  );
+                                  await _appPreferences.setUserLoggedIn();
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.layoutRoute);
+                                } else if (state
+                                    is GetUserPermissionsErrorState) {
+                                  UserPermissionsModel userPermissionsModel =
+                                      UserPermissionsModel(
+                                          username: displayName,
+                                          role: "user",
+                                          enableAdd: "yes");
+                                  WelcomeCubit.get(context)
+                                      .addUserPermission(userPermissionsModel);
+                                  hideLoading();
+                                  showSnackBar(context, state.errorMessage);
                                 } else if (state is WelcomeNoInternetState) {
                                   hideLoading();
-                                  setState(() {
-                                    _isErrorDialogShown = true;
-                                  });
-                                  if (_isErrorDialogShown) {
-                                    onError(context, AppStrings.noInternet, () {
-                                      setState(() {
-                                        _isErrorDialogShown = false;
-                                      });
-                                    });
-                                  }
+                                  onError(context, AppStrings.noInternet);
                                 }
                               },
                               builder: (context, state) {

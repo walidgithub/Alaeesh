@@ -52,7 +52,6 @@ class _LayoutViewState extends State<LayoutView> {
   final bool _messagesBadge = true;
   String returnedUserName = '';
   bool addPost = true;
-  bool _isErrorDialogShown = false;
 
   final AppPreferences _appPreferences = sl<AppPreferences>();
   final SecureStorageLoginHelper _appSecureDataHelper =
@@ -61,6 +60,8 @@ class _LayoutViewState extends State<LayoutView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+
   bool loadingUserData = true;
   var userData;
   bool showAll = true;
@@ -128,16 +129,7 @@ class _LayoutViewState extends State<LayoutView> {
                       hideLoading();
                     } else if (state is WelcomeNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -281,16 +273,7 @@ class _LayoutViewState extends State<LayoutView> {
                       hideLoading();
                     } else if (state is WelcomeNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -368,6 +351,7 @@ class _LayoutViewState extends State<LayoutView> {
     toggleIcon(0);
     userData = _appSecureDataHelper.loadUserData();
     _loadSavedUserData();
+
     screens = [
       HomeView(
         searching: searching,
@@ -391,6 +375,11 @@ class _LayoutViewState extends State<LayoutView> {
         .getUnSeenMessages(GetMessagesRequest(username: displayName));
   }
 
+  void getUserPermissions() {
+    WelcomeCubit.get(context)
+        .getUserPermissions(displayName);
+  }
+
   Future<void> _loadSavedUserData() async {
     userData = await _appSecureDataHelper.loadUserData();
     setState(() {
@@ -399,8 +388,10 @@ class _LayoutViewState extends State<LayoutView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
     });
     getUnSeenMessagesCount();
+    getUserPermissions();
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -460,57 +451,91 @@ class _LayoutViewState extends State<LayoutView> {
                             width: 10.w,
                           ),
                           addPost
-                              ? Bounceable(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      constraints: BoxConstraints.expand(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height -
-                                              statusBarHeight -
-                                              100.h,
-                                          width:
-                                              MediaQuery.sizeOf(context).width),
-                                      isScrollControlled: true,
-                                      barrierColor: AppColors.cTransparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(30.r),
-                                        ),
-                                      ),
-                                      builder: (context2) {
-                                        return Directionality(
-                                            textDirection: TextDirection.rtl,
-                                            child: AddPostBottomSheet(
-                                              username: displayName,
-                                              userImage: photoUrl,
-                                              statusBarHeight: statusBarHeight,
-                                              postAdded: (String postId) {
-                                                AddPostSubscriberRequest
-                                                    addPostSubscriberRequest =
-                                                    AddPostSubscriberRequest(
-                                                        postSubscribersModel:
-                                                            PostSubscribersModel(
-                                                  username: displayName,
-                                                  userImage: photoUrl,
-                                                  postId: postId,
-                                                ));
-                                                HomePageCubit.get(context)
-                                                    .addPostSubscriber(
-                                                        addPostSubscriberRequest);
+                              ? BlocBuilder<WelcomeCubit, WelcomeState>(
+                                builder: (context, state) {
+                                  if (state is GetUserPermissionsLoadingState) {
+                                    return Center(child: CircularProgressIndicator(
+                                      strokeWidth: 2.w,
+                                      color: AppColors.cTitle,
+                                    ));
+                                  } else if (state is GetUserPermissionsSuccessState) {
+                                    if (state.userPermissionsModel.enableAdd == "yes") {
+                                      return Bounceable(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            constraints: BoxConstraints.expand(
+                                                height:
+                                                MediaQuery.sizeOf(context)
+                                                    .height -
+                                                    statusBarHeight -
+                                                    100.h,
+                                                width:
+                                                MediaQuery.sizeOf(context)
+                                                    .width),
+                                            isScrollControlled: true,
+                                            barrierColor:
+                                            AppColors.cTransparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.vertical(
+                                                top: Radius.circular(30.r),
+                                              ),
+                                            ),
+                                            builder: (context2) {
+                                              return Directionality(
+                                                  textDirection:
+                                                  TextDirection.rtl,
+                                                  child: AddPostBottomSheet(
+                                                    username: displayName,
+                                                    userImage: photoUrl,
+                                                    statusBarHeight:
+                                                    statusBarHeight,
+                                                    postAdded: (String postId) {
+                                                      AddPostSubscriberRequest
+                                                      addPostSubscriberRequest =
+                                                      AddPostSubscriberRequest(
+                                                          postSubscribersModel:
+                                                          PostSubscribersModel(
+                                                            username: displayName,
+                                                            userImage: photoUrl,
+                                                            postId: postId,
+                                                          ));
+                                                      HomePageCubit.get(context)
+                                                          .addPostSubscriber(
+                                                          addPostSubscriberRequest);
 
-                                                getAllPosts(displayName,
-                                                    allPosts: true);
-                                              },
-                                            ));
-                                      },
-                                    );
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppAssets.addPost,
-                                    width: 30.w,
-                                  ),
-                                )
+                                                      getAllPosts(displayName,
+                                                          allPosts: true);
+                                                    },
+                                                  ));
+                                            },
+                                          );
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppAssets.addPost,
+                                          width: 30.w,
+                                        ),
+                                      );
+                                    } else {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          onError(context, AppStrings.addError);
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppAssets.preventAdd,
+                                          width: 30.w,
+                                        ),
+                                      );
+                                    }
+                                  } else if (state is GetUserPermissionsErrorState ||
+                                      state is WelcomeNoInternetState) {
+                                    return SizedBox.shrink();
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                },
+                              )
                               : Container(),
                         ],
                       ),
@@ -602,16 +627,7 @@ class _LayoutViewState extends State<LayoutView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is MessagesNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   }, builder: (context, state) {
                     return GestureDetector(
@@ -622,42 +638,46 @@ class _LayoutViewState extends State<LayoutView> {
                           });
                           toggleIcon(5);
                         },
-                        child: _messagesBadgeAmount > 0 ? badges.Badge(
-                          position:
-                          badges.BadgePosition.topStart(top: 0, start: 0),
-                          badgeAnimation: const badges.BadgeAnimation.slide(
-                            disappearanceFadeAnimationDuration:
-                            Duration(milliseconds: 200),
-                            curve: Curves.bounceInOut,
-                          ),
-                          showBadge: _messagesBadge,
-                          badgeStyle: const badges.BadgeStyle(
-                            badgeColor: AppColors.cPrimary,
-                          ),
-                          badgeContent: Text(
-                            _messagesBadgeAmount.toString(),
-                            style: const TextStyle(color: AppColors.cWhite),
-                          ),
-                          child: TabIcon(
-                            selectedWidgets: selectedWidgets,
-                            selectScreen: selectScreen,
-                            index: 5,
-                            heightSize: 50.h,
-                            widthSize: 50.w,
-                            blueIcon: AppAssets.message,
-                            whiteIcon: AppAssets.messageWhite,
-                            padding: 5.w,
-                          ),
-                        ) : TabIcon(
-                          selectedWidgets: selectedWidgets,
-                          selectScreen: selectScreen,
-                          index: 5,
-                          heightSize: 50.h,
-                          widthSize: 50.w,
-                          blueIcon: AppAssets.message,
-                          whiteIcon: AppAssets.messageWhite,
-                          padding: 5.w,
-                        ));
+                        child: _messagesBadgeAmount > 0
+                            ? badges.Badge(
+                                position: badges.BadgePosition.topStart(
+                                    top: 0, start: 0),
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.slide(
+                                  disappearanceFadeAnimationDuration:
+                                      Duration(milliseconds: 200),
+                                  curve: Curves.bounceInOut,
+                                ),
+                                showBadge: _messagesBadge,
+                                badgeStyle: const badges.BadgeStyle(
+                                  badgeColor: AppColors.cPrimary,
+                                ),
+                                badgeContent: Text(
+                                  _messagesBadgeAmount.toString(),
+                                  style:
+                                      const TextStyle(color: AppColors.cWhite),
+                                ),
+                                child: TabIcon(
+                                  selectedWidgets: selectedWidgets,
+                                  selectScreen: selectScreen,
+                                  index: 5,
+                                  heightSize: 50.h,
+                                  widthSize: 50.w,
+                                  blueIcon: AppAssets.message,
+                                  whiteIcon: AppAssets.messageWhite,
+                                  padding: 5.w,
+                                ),
+                              )
+                            : TabIcon(
+                                selectedWidgets: selectedWidgets,
+                                selectScreen: selectScreen,
+                                index: 5,
+                                heightSize: 50.h,
+                                widthSize: 50.w,
+                                blueIcon: AppAssets.message,
+                                whiteIcon: AppAssets.messageWhite,
+                                padding: 5.w,
+                              ));
                   }),
                   GestureDetector(
                       onTap: () {

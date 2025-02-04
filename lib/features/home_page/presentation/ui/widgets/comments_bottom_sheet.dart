@@ -4,6 +4,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/preferences/secure_local_data.dart';
@@ -16,6 +17,7 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../welcome/presentation/bloc/welcome_state.dart';
 import '../../../data/model/comment_emoji_model.dart';
 import '../../../data/model/comments_model.dart';
 import '../../../data/model/requests/add_comment_emoji_request.dart';
@@ -60,7 +62,6 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   String commentId = "";
   var commentData;
   bool userReacted = false;
-  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -150,103 +151,121 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             SizedBox(
               height: AppConstants.moreHeightBetweenElements,
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.75,
-                  child: TextField(
-                      onTap: () {
-                        setState(() {
-                          textAutofocus = true;
-                        });
-                      },
-                      onTapOutside: (done) {
-                        setState(() {
-                          textAutofocus = false;
-                        });
-                      },
-                      onSubmitted: (done) {
-                        setState(() {
-                          textAutofocus = false;
-                        });
-                      },
-                      autofocus: textAutofocus,
-                      keyboardType: TextInputType.text,
-                      controller: _commentController,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(15.w),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: AppColors.cSecondary),
-                            borderRadius:
-                                BorderRadius.circular(AppConstants.radius),
+            BlocProvider(
+              create: (context) =>
+                  sl<WelcomeCubit>()..getUserPermissions(widget.userName),
+              child: BlocBuilder<WelcomeCubit, WelcomeState>(
+                builder: (context, state) {
+                  if (state is GetUserPermissionsLoadingState) {
+                    return Center(child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                      color: AppColors.cTitle,
+                    ));
+                  } else if (state is GetUserPermissionsSuccessState) {
+                    if (state.userPermissionsModel.enableAdd == "yes") {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.75,
+                            child: TextField(
+                                onTap: () {
+                                  setState(() {
+                                    textAutofocus = true;
+                                  });
+                                },
+                                onTapOutside: (done) {
+                                  setState(() {
+                                    textAutofocus = false;
+                                  });
+                                },
+                                onSubmitted: (done) {
+                                  setState(() {
+                                    textAutofocus = false;
+                                  });
+                                },
+                                autofocus: textAutofocus,
+                                keyboardType: TextInputType.text,
+                                controller: _commentController,
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(15.w),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: AppColors.cSecondary),
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius),
+                                    ),
+                                    labelText: AppStrings.addComment,
+                                    border: InputBorder.none)),
                           ),
-                          labelText: AppStrings.addComment,
-                          border: InputBorder.none)),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                BlocProvider(
-                  create: (context) => sl<HomePageCubit>(),
-                  child: BlocConsumer<HomePageCubit, HomePageState>(
-                      listener: (context, state) {
-                    if (state is AddCommentLoadingState) {
-                      showLoading();
-                    } else if (state is AddCommentSuccessState) {
-                      hideLoading();
-                      showSnackBar(context, AppStrings.addSuccess);
-                      widget.addNewComment(1);
-                      Navigator.pop(context);
-                    } else if (state is AddCommentErrorState) {
-                      hideLoading();
-                      showSnackBar(context, state.errorMessage);
-                      Navigator.pop(context);
-                    } else if (state is HomePageNoInternetState) {
-                      hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
-                    }
-                  }, builder: (context, state) {
-                    return Bounceable(
-                        onTap: () {
-                          if (_commentController.text.trim() == "") return;
-                          DateTime now = DateTime.now();
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(now);
-                          String formattedTime =
-                              DateFormat('hh:mm a').format(now);
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          BlocProvider(
+                            create: (context) => sl<HomePageCubit>(),
+                            child: BlocConsumer<HomePageCubit, HomePageState>(
+                                listener: (context, state) {
+                              if (state is AddCommentLoadingState) {
+                                showLoading();
+                              } else if (state is AddCommentSuccessState) {
+                                hideLoading();
+                                showSnackBar(context, AppStrings.addSuccess);
+                                widget.addNewComment(1);
+                                Navigator.pop(context);
+                              } else if (state is AddCommentErrorState) {
+                                hideLoading();
+                                showSnackBar(context, state.errorMessage);
+                                Navigator.pop(context);
+                              } else if (state is HomePageNoInternetState) {
+                                hideLoading();
+                                onError(context, AppStrings.noInternet);
+                              }
+                            }, builder: (context, state) {
+                              return Bounceable(
+                                  onTap: () {
+                                    if (_commentController.text.trim() == "")
+                                      return;
+                                    DateTime now = DateTime.now();
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd').format(now);
+                                    String formattedTime =
+                                        DateFormat('hh:mm a').format(now);
 
-                          AddCommentRequest addCommentRequest =
-                              AddCommentRequest(
-                                  postId: widget.postId,
-                                  commentsModel: CommentsModel(
-                                      postId: widget.postId,
-                                      username: widget.userName,
-                                      userImage: widget.userImage,
-                                      time: '$formattedDate $formattedTime',
-                                      comment: _commentController.text.trim(),
-                                      commentEmojiModel: []),
-                                  lastTimeUpdate:
-                                      '$formattedDate $formattedTime');
-                          HomePageCubit.get(context)
-                              .addComment(addCommentRequest);
-                        },
-                        child: SvgPicture.asset(
-                          AppAssets.send,
-                          width: 30.w,
-                        ));
-                  }),
-                )
-              ],
+                                    AddCommentRequest addCommentRequest =
+                                        AddCommentRequest(
+                                            postId: widget.postId,
+                                            commentsModel: CommentsModel(
+                                                postId: widget.postId,
+                                                username: widget.userName,
+                                                userImage: widget.userImage,
+                                                time:
+                                                    '$formattedDate $formattedTime',
+                                                comment: _commentController.text
+                                                    .trim(),
+                                                commentEmojiModel: []),
+                                            lastTimeUpdate:
+                                                '$formattedDate $formattedTime');
+                                    HomePageCubit.get(context)
+                                        .addComment(addCommentRequest);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppAssets.send,
+                                    width: 30.w,
+                                  ));
+                            }),
+                          )
+                        ],
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  } else if (state is GetUserPermissionsErrorState ||
+                      state is WelcomeNoInternetState) {
+                    return SizedBox.shrink();
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
             ),
             Expanded(
               child: RefreshIndicator(
@@ -287,16 +306,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               Navigator.pop(context);
                             } else if (state is HomePageNoInternetState) {
                               hideLoading();
-                              setState(() {
-                                _isErrorDialogShown = true;
-                              });
-                              if (_isErrorDialogShown) {
-                                onError(context, AppStrings.noInternet, () {
-                                  setState(() {
-                                    _isErrorDialogShown = false;
-                                  });
-                                });
-                              }
+                              onError(context, AppStrings.noInternet);
                             }
                           }, builder: (context, state) {
                             return CommentView(

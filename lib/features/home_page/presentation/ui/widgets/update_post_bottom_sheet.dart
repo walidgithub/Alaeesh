@@ -34,7 +34,7 @@ class UpdatePostBottomSheet extends StatefulWidget {
 
 class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
   final TextEditingController _postController = TextEditingController();
-  bool _isErrorDialogShown = false;
+  
   @override
   void initState() {
     _postController.text = widget.postModel.postAlsha;
@@ -113,16 +113,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                             Navigator.pop(context);
                           } else if (state is HomePageNoInternetState) {
                             hideLoading();
-                            setState(() {
-                              _isErrorDialogShown = true;
-                            });
-                            if (_isErrorDialogShown) {
-                              onError(context, AppStrings.noInternet, () {
-                                setState(() {
-                                  _isErrorDialogShown = false;
-                                });
-                              });
-                            }
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {

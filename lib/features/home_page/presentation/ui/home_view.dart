@@ -40,14 +40,15 @@ class _HomeViewState extends State<HomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
-  bool _isErrorDialogShown = false;
-
   final TextEditingController _searchingController = TextEditingController();
 
   String id = "";
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+  String enableAdd = "";
+
   List<SubscribersModel> subscribersList = [];
   bool showAll = true;
   var userData;
@@ -80,10 +81,10 @@ class _HomeViewState extends State<HomeView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
-    if (_isErrorDialogShown) {
-      getAllPosts(displayName, allPosts: true);
-    }
+    getAllPosts(displayName, allPosts: true);
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -180,16 +181,7 @@ class _HomeViewState extends State<HomeView> {
                             showSnackBar(context, state.errorMessage);
                           } else if (state is HomePageNoInternetState) {
                             hideLoading();
-                            setState(() {
-                              _isErrorDialogShown = true;
-                            });
-                            if (_isErrorDialogShown) {
-                              onError(context, AppStrings.noInternet, () {
-                                setState(() {
-                                  _isErrorDialogShown = false;
-                                });
-                              });
-                            }
+                            onError(context, AppStrings.noInternet);
                           }
                         },
                         builder: (context, state) {
@@ -411,16 +403,7 @@ class _HomeViewState extends State<HomeView> {
                 showSnackBar(context, state.errorMessage);
               } else if (state is HomePageNoInternetState) {
                 hideLoading();
-                setState(() {
-                  _isErrorDialogShown = true;
-                });
-                if (_isErrorDialogShown) {
-                  onError(context, AppStrings.noInternet, () {
-                    setState(() {
-                      _isErrorDialogShown = false;
-                    });
-                  });
-                }
+                onError(context, AppStrings.noInternet);
               }
             },
             builder: (context, state) {

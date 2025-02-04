@@ -86,7 +86,7 @@ class _TopPostViewState extends State<TopPostView> {
   String timeAgoText = "";
 
   bool userReacted = false;
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -130,16 +130,7 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is TrendingNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -291,16 +282,7 @@ showSnackBar(context, state.errorMessage);
                       } else if (state is TrendingNoInternetState) {
                         hideLoading();
                         _removePopup();
-                        setState(() {
-                          _isErrorDialogShown = true;
-                        });
-                        if (_isErrorDialogShown) {
-                          onError(context, AppStrings.noInternet, () {
-                            setState(() {
-                              _isErrorDialogShown = false;
-                            });
-                          });
-                        }
+                        onError(context, AppStrings.noInternet);
                       }
                     },
                     builder: (context, state) {

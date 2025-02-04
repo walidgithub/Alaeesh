@@ -61,7 +61,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
   double reactPosition = 20.0;
   int reactionsCount = 0;
   String timeAgoText = "";
-  bool _isErrorDialogShown = false;
+  
   @override
   void initState() {
     List<int> postTime = splitDateTime(widget.time);
@@ -71,8 +71,6 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
     reactionsCount = widget.commentEmojisModel.length;
     super.initState();
   }
-
-  OverlayEntry? _overlayEntry;
 
   Future<void> _showCommentPopupMenu(
       BuildContext context, Offset position, int index) async {
@@ -106,16 +104,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                       Navigator.pop(context);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {

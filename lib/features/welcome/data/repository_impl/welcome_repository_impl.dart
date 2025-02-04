@@ -81,4 +81,18 @@ class WelcomeRepositoryImpl extends WelcomeRepository {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
     }
   }
+
+  @override
+  Future<Either<FirebaseFailure, void>> updateUserPermissions(UserPermissionsModel userPermissionsModel) async {
+    try {
+      final result = await _welcomeDataSource.updateUserPermission(userPermissionsModel);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
 }

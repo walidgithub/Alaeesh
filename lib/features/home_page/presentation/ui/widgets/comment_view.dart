@@ -20,6 +20,8 @@ import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../welcome/presentation/bloc/welcome_cubit.dart';
+import '../../../../welcome/presentation/bloc/welcome_state.dart';
 import '../../../data/model/comment_emoji_model.dart';
 import '../../../data/model/requests/delete_comment_request.dart';
 import '../../../domain/entities/emoji_entity.dart';
@@ -72,7 +74,6 @@ class _CommentViewState extends State<CommentView> {
   double reactPosition = 20.0;
   int reactionsCount = 0;
   String timeAgoText = "";
-  bool _isErrorDialogShown = false;
 
   @override
   void initState() {
@@ -118,16 +119,7 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -211,16 +203,7 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
                       _removePopup();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
@@ -268,63 +251,88 @@ showSnackBar(context, state.errorMessage);
                           SizedBox(
                             height: 10.h,
                           ),
-                          Bounceable(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context).height -
-                                        widget.statusBarHeight -
-                                        100.h,
-                                    width: MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                      textDirection: ui.TextDirection.rtl,
-                                      child: UpdateCommentBottomSheet(
-                                          statusBarHeight:
-                                              widget.statusBarHeight,
-                                          updateComment: (int status) {
-                                            widget.updateComment(status);
-                                            Navigator.pop(context);
+                          BlocProvider(
+                            create: (context) =>
+                            sl<WelcomeCubit>()..getUserPermissions(widget.loggedInUserName),
+                            child: BlocBuilder<WelcomeCubit, WelcomeState>(
+                              builder: (context, state) {
+                                if (state is GetUserPermissionsLoadingState) {
+                                  return Center(child: CircularProgressIndicator(
+                                    strokeWidth: 2.w,
+
+                                    color: AppColors.cTitle,
+                                  ));
+                                } else if (state is GetUserPermissionsSuccessState) {
+                                  if (state.userPermissionsModel.enableAdd == "yes") {
+                                    return Bounceable(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          constraints: BoxConstraints.expand(
+                                              height: MediaQuery.sizeOf(context).height -
+                                                  widget.statusBarHeight -
+                                                  100.h,
+                                              width: MediaQuery.sizeOf(context).width),
+                                          isScrollControlled: true,
+                                          barrierColor: AppColors.cTransparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(30.r),
+                                            ),
+                                          ),
+                                          builder: (context2) {
+                                            return Directionality(
+                                                textDirection: ui.TextDirection.rtl,
+                                                child: UpdateCommentBottomSheet(
+                                                    statusBarHeight:
+                                                    widget.statusBarHeight,
+                                                    updateComment: (int status) {
+                                                      widget.updateComment(status);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    commentModel: CommentsModel(
+                                                        id: widget.id,
+                                                        postId: widget.postId,
+                                                        username: widget.loggedInUserName,
+                                                        userImage:
+                                                        widget.loggedInUserImage,
+                                                        time: widget.time,
+                                                        comment: widget.comment,
+                                                        commentEmojiModel:
+                                                        widget.commentEmojisModel)));
                                           },
-                                          commentModel: CommentsModel(
-                                              id: widget.id,
-                                              postId: widget.postId,
-                                              username: widget.loggedInUserName,
-                                              userImage:
-                                                  widget.loggedInUserImage,
-                                              time: widget.time,
-                                              comment: widget.comment,
-                                              commentEmojiModel:
-                                                  widget.commentEmojisModel)));
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.edit,
-                                  width: 15.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  AppStrings.edit,
-                                  style: AppTypography.kLight13,
-                                ),
-                              ],
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppAssets.edit,
+                                            width: 15.w,
+                                          ),
+                                          SizedBox(
+                                            width: 10.w,
+                                          ),
+                                          Text(
+                                            AppStrings.edit,
+                                            style: AppTypography.kLight13,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                } else if (state is GetUserPermissionsErrorState ||
+                                    state is WelcomeNoInternetState) {
+                                  return SizedBox.shrink();
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              },
                             ),
-                          )
+                          ),
                         ],
                       ),
                     );

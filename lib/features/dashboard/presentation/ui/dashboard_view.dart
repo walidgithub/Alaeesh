@@ -35,8 +35,10 @@ class _DashboardViewState extends State<DashboardView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  String role = "";
+
   var userData;
-  bool _isErrorDialogShown = false;
+  
 
   @override
   void initState() {
@@ -65,11 +67,11 @@ class _DashboardViewState extends State<DashboardView> {
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
+      role = userData['role'] ?? '';
+      
     });
     getAllPosts(displayName, allPosts: true);
-    if (_isErrorDialogShown) {
-      getUserAdvices();
-    }
+    getUserAdvices();
   }
 
   getAllPosts(String displayName, {bool? allPosts, String? username}) {
@@ -203,75 +205,88 @@ class _DashboardViewState extends State<DashboardView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
-                    return RefreshIndicator(
-                      color: AppColors.cTitle,
-                      backgroundColor: AppColors.cWhite,
-                      onRefresh: refreshLastPosts,
-                      child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return DashboardPostView(
-                              index: index,
-                              id: homePageModel[index].postModel.id!,
-                              time: homePageModel[index].postModel.time!,
-                              postUsername:
-                                  homePageModel[index].postModel.username,
-                              postUserImage:
-                                  homePageModel[index].postModel.userImage,
-                              loggedInUserName: displayName,
-                              loggedInUserImage: photoUrl,
-                              postAlsha:
-                                  homePageModel[index].postModel.postAlsha,
-                              commentsList:
-                                  homePageModel[index].postModel.commentsList,
-                              emojisList:
-                                  homePageModel[index].postModel.emojisList,
-                              statusBarHeight: statusBarHeight,
-                              addNewComment: (int status) {
-                                if (status == -1) {
-                                  DeletePostSubscriberRequest
-                                      deletePostSubscriberRequest =
-                                      DeletePostSubscriberRequest(
-                                          postSubscribersModel:
-                                              PostSubscribersModel(
-                                    username:
+                    return homePageModel.isNotEmpty
+                        ? RefreshIndicator(
+                            color: AppColors.cTitle,
+                            backgroundColor: AppColors.cWhite,
+                            onRefresh: refreshLastPosts,
+                            child: ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return DashboardPostView(
+                                    index: index,
+                                    id: homePageModel[index].postModel.id!,
+                                    time: homePageModel[index].postModel.time!,
+                                    postUsername:
                                         homePageModel[index].postModel.username,
-                                    userImage: photoUrl,
-                                    postId: homePageModel[index].postModel.id!,
-                                  ));
-                                  DashboardCubit.get(context)
-                                      .deletePostSubscriber(
-                                          deletePostSubscriberRequest);
-                                } else if (status == 0) {
-                                  DashboardCubit.get(context).getAllPosts(
-                                      GetPostsRequest(
-                                          currentUser: displayName,
-                                          allPosts: true));
-                                }
-                              },
-                              postUpdated: () {
-                                DashboardCubit.get(context).getAllPosts(
-                                    GetPostsRequest(
-                                        currentUser: displayName,
-                                        allPosts: true));
-                              },
-                            );
-                          },
-                          itemCount: homePageModel.length),
-                    );
+                                    postUserImage: homePageModel[index]
+                                        .postModel
+                                        .userImage,
+                                    loggedInUserName: displayName,
+                                    loggedInUserImage: photoUrl,
+                                    postAlsha: homePageModel[index]
+                                        .postModel
+                                        .postAlsha,
+                                    commentsList: homePageModel[index]
+                                        .postModel
+                                        .commentsList,
+                                    emojisList: homePageModel[index]
+                                        .postModel
+                                        .emojisList,
+                                    statusBarHeight: statusBarHeight,
+                                    addNewComment: (int status) {
+                                      if (status == -1) {
+                                        DeletePostSubscriberRequest
+                                            deletePostSubscriberRequest =
+                                            DeletePostSubscriberRequest(
+                                                postSubscribersModel:
+                                                    PostSubscribersModel(
+                                          username: homePageModel[index]
+                                              .postModel
+                                              .username,
+                                          userImage: photoUrl,
+                                          postId: homePageModel[index]
+                                              .postModel
+                                              .id!,
+                                        ));
+                                        DashboardCubit.get(context)
+                                            .deletePostSubscriber(
+                                                deletePostSubscriberRequest);
+                                      } else if (status == 0) {
+                                        DashboardCubit.get(context).getAllPosts(
+                                            GetPostsRequest(
+                                                currentUser: displayName,
+                                                allPosts: true));
+                                      }
+                                    },
+                                    postUpdated: () {
+                                      DashboardCubit.get(context).getAllPosts(
+                                          GetPostsRequest(
+                                              currentUser: displayName,
+                                              allPosts: true));
+                                    },
+                                  );
+                                },
+                                itemCount: homePageModel.length),
+                          )
+                        : SizedBox(
+                            height: MediaQuery.sizeOf(context).height,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    AppStrings.noPosts,
+                                    style: AppTypography.kBold14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                   },
                 ),
               )
@@ -289,37 +304,43 @@ class _DashboardViewState extends State<DashboardView> {
                       showSnackBar(context, state.errorMessage);
                     } else if (state is DashboardNoInternetState) {
                       hideLoading();
-                      setState(() {
-                        _isErrorDialogShown = true;
-                      });
-                      if (_isErrorDialogShown) {
-                        onError(context, AppStrings.noInternet, () {
-                          setState(() {
-                            _isErrorDialogShown = false;
-                          });
-                        });
-                      }
+                      onError(context, AppStrings.noInternet);
                     }
                   },
                   builder: (context, state) {
-                    return RefreshIndicator(
-                      color: AppColors.cTitle,
-                      backgroundColor: AppColors.cWhite,
-                      onRefresh: refreshAdvices,
-                      child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return AdviceView(
-                                adviceId: adviceModel[index].adviceId!,
-                                adviceText: adviceModel[index].adviceText,
-                                username: adviceModel[index].username,
-                                userImage: adviceModel[index].userImage,
-                                statusBarHeight: statusBarHeight,
-                                time: adviceModel[index].time,
-                                index: index);
-                          },
-                          itemCount: adviceModel.length),
-                    );
+                    return adviceModel.isNotEmpty
+                        ? RefreshIndicator(
+                            color: AppColors.cTitle,
+                            backgroundColor: AppColors.cWhite,
+                            onRefresh: refreshAdvices,
+                            child: ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return AdviceView(
+                                      adviceId: adviceModel[index].adviceId!,
+                                      adviceText: adviceModel[index].adviceText,
+                                      username: adviceModel[index].username,
+                                      userImage: adviceModel[index].userImage,
+                                      statusBarHeight: statusBarHeight,
+                                      time: adviceModel[index].time,
+                                      index: index);
+                                },
+                                itemCount: adviceModel.length),
+                          )
+                        : SizedBox(
+                            height: MediaQuery.sizeOf(context).height,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    AppStrings.noAdvices,
+                                    style: AppTypography.kBold14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                   },
                 ),
               )
