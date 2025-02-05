@@ -104,7 +104,7 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                           } else if (state is AddCommentSuccessState) {
                             hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
-                            widget.addNewComment(1);
+                            widget.addNewComment(1, widget.postId);
                             Navigator.pop(context);
                           } else if (state is AddCommentErrorState) {
                             hideLoading();

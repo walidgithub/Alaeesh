@@ -39,6 +39,7 @@ class TrendingView extends StatefulWidget {
 
 class _TrendingViewState extends State<TrendingView> {
   int selectedPost = 0;
+  String selectedId = "";
   bool showUserSubscriptionsSheet = false;
   bool showCommentBottomSheet = false;
   final SecureStorageLoginHelper _appSecureDataHelper =
@@ -46,7 +47,6 @@ class _TrendingViewState extends State<TrendingView> {
 
   String selectedUserName = "";
   bool userSubscribed = false;
-  
 
   String id = "";
   String email = "";
@@ -114,6 +114,7 @@ class _TrendingViewState extends State<TrendingView> {
           hideLoading();
           trendingModel.clear();
           trendingModel.addAll(state.homePageModel);
+          selectedPost = trendingModel.indexWhere((element) => element.postModel.id == selectedId);
           if (showCommentBottomSheet &&
               trendingModel[selectedPost].postModel.commentsList.isNotEmpty) {
             showModalBottomSheet(
@@ -165,7 +166,11 @@ class _TrendingViewState extends State<TrendingView> {
                         .postId,
                     userName: displayName,
                     userImage: photoUrl,
-                    addNewComment: (int status) {
+                    addNewComment: (int status, String returnedId) {
+                      setState(() {
+                        selectedId = returnedId;
+                        showCommentBottomSheet = true;
+                      });
                       if (status == 1) {
                         AddPostSubscriberRequest addPostSubscriberRequest =
                             AddPostSubscriberRequest(
@@ -191,9 +196,6 @@ class _TrendingViewState extends State<TrendingView> {
                         TrendingCubit.get(context).getTopPosts(
                             GetTopPostsRequest(currentUser: displayName));
                       }
-                      setState(() {
-                        showCommentBottomSheet = true;
-                      });
                     },
                     statusBarHeight: statusBarHeight,
                     commentsList:
@@ -418,7 +420,11 @@ class _TrendingViewState extends State<TrendingView> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return PostView(
-                          addNewComment: (int status) {
+                          addNewComment: (int status, String returnedId) {
+                            setState(() {
+                              selectedId = returnedId;
+                              showCommentBottomSheet = true;
+                            });
                             if (status == 1) {
                               AddPostSubscriberRequest
                                   addPostSubscriberRequest =
@@ -447,11 +453,6 @@ class _TrendingViewState extends State<TrendingView> {
                               TrendingCubit.get(context).getTopPosts(
                                   GetTopPostsRequest(currentUser: displayName));
                             }
-
-                            setState(() {
-                              selectedPost = index;
-                              showCommentBottomSheet = true;
-                            });
                           },
                           addNewEmoji: (int status) {
                             if (status == 1) {
@@ -520,9 +521,6 @@ class _TrendingViewState extends State<TrendingView> {
                               TrendingCubit.get(context)
                                   .addSubscriber(addSubscriberRequest);
                             }
-                            setState(() {
-                              selectedPost = index;
-                            });
                           },
                           index: index,
                           id: trendingModel[index].postModel.id!,

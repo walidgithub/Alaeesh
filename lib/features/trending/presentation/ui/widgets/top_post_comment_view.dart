@@ -59,6 +59,7 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
     return FadeInUp(

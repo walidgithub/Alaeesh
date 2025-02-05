@@ -37,8 +37,6 @@ class _MineViewState extends State<MineView> {
 
   var userData;
 
-  
-
   @override
   void initState() {
     userData = _appSecureDataHelper.loadUserData();
@@ -54,10 +52,8 @@ class _MineViewState extends State<MineView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
       role = userData['role'] ?? '';
-      
     });
     getMine(displayName);
-
   }
 
   Future<void> refresh() async {
@@ -132,7 +128,8 @@ class _MineViewState extends State<MineView> {
                             postAlsha: mineModel[index].postModel.postAlsha,
                             commentsList:
                                 mineModel[index].postModel.commentsList,
-                            emojisList: mineModel[index].postModel.emojisList,
+                            emojisList: mineModel[index].postModel.emojisList.where((item) => item.username == displayName)
+                                .toList(),
                             addNewEmoji: (int status) {
                               if (status == -1) {
                                 DeletePostSubscriberRequest

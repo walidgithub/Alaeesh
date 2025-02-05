@@ -105,7 +105,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                           } else if (state is UpdateCommentSuccessState) {
                             hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
-                            widget.updateComment(0);
+                            widget.updateComment(0 ,widget.commentModel.postId);
                             Navigator.pop(context);
                           } else if (state is UpdateCommentErrorState) {
                             hideLoading();

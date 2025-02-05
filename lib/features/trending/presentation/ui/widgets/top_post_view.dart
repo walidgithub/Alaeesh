@@ -44,6 +44,7 @@ class TopPostView extends StatefulWidget {
   final String loggedInUserName;
   final String loggedInUserImage;
   final String time;
+  final String lastUpdateTime;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
   final List<PostSubscribersModel> postSubscribersList;
@@ -70,6 +71,7 @@ class TopPostView extends StatefulWidget {
     required this.addNewComment,
     required this.addNewEmoji,
     required this.time,
+    required this.lastUpdateTime,
     required this.index,
     required this.postUpdated,
     required this.userSubscribed,
@@ -95,6 +97,7 @@ class _TopPostViewState extends State<TopPostView> {
         postTime[0], postTime[1], postTime[2], postTime[3], postTime[4]));
     super.initState();
   }
+
 
   Future<void> _showPostPopupMenu(
       BuildContext context, Offset position, int index) async {

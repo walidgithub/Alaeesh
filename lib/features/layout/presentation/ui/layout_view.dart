@@ -376,8 +376,7 @@ class _LayoutViewState extends State<LayoutView> {
   }
 
   void getUserPermissions() {
-    WelcomeCubit.get(context)
-        .getUserPermissions(displayName);
+    WelcomeCubit.get(context).getUserPermissions(displayName);
   }
 
   Future<void> _loadSavedUserData() async {
@@ -451,91 +450,90 @@ class _LayoutViewState extends State<LayoutView> {
                             width: 10.w,
                           ),
                           addPost
-                              ? BlocBuilder<WelcomeCubit, WelcomeState>(
-                                builder: (context, state) {
-                                  if (state is GetUserPermissionsLoadingState) {
-                                    return Center(child: CircularProgressIndicator(
-                                      strokeWidth: 2.w,
-                                      color: AppColors.cTitle,
-                                    ));
-                                  } else if (state is GetUserPermissionsSuccessState) {
-                                    if (state.userPermissionsModel.enableAdd == "yes") {
-                                      return Bounceable(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            constraints: BoxConstraints.expand(
-                                                height:
-                                                MediaQuery.sizeOf(context)
-                                                    .height -
-                                                    statusBarHeight -
-                                                    100.h,
-                                                width:
-                                                MediaQuery.sizeOf(context)
-                                                    .width),
-                                            isScrollControlled: true,
-                                            barrierColor:
-                                            AppColors.cTransparent,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.vertical(
-                                                top: Radius.circular(30.r),
-                                              ),
+                              ? BlocProvider(
+                                  create: (context) => sl<WelcomeCubit>(),
+                                  child:
+                                      BlocConsumer<WelcomeCubit, WelcomeState>(
+                                          listener: (context, state) {
+                                    if (state
+                                        is GetUserPermissionsLoadingState) {
+                                      showLoading();
+                                    } else if (state
+                                        is GetUserPermissionsSuccessState) {
+                                      hideLoading();
+                                      if (state
+                                              .userPermissionsModel.enableAdd ==
+                                          "yes") {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          constraints: BoxConstraints.expand(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height -
+                                                  statusBarHeight -
+                                                  100.h,
+                                              width: MediaQuery.sizeOf(context)
+                                                  .width),
+                                          isScrollControlled: true,
+                                          barrierColor: AppColors.cTransparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(30.r),
                                             ),
-                                            builder: (context2) {
-                                              return Directionality(
-                                                  textDirection:
-                                                  TextDirection.rtl,
-                                                  child: AddPostBottomSheet(
-                                                    username: displayName,
-                                                    userImage: photoUrl,
-                                                    statusBarHeight:
-                                                    statusBarHeight,
-                                                    postAdded: (String postId) {
-                                                      AddPostSubscriberRequest
-                                                      addPostSubscriberRequest =
-                                                      AddPostSubscriberRequest(
-                                                          postSubscribersModel:
-                                                          PostSubscribersModel(
-                                                            username: displayName,
-                                                            userImage: photoUrl,
-                                                            postId: postId,
-                                                          ));
-                                                      HomePageCubit.get(context)
-                                                          .addPostSubscriber(
-                                                          addPostSubscriberRequest);
+                                          ),
+                                          builder: (context2) {
+                                            return Directionality(
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                child: AddPostBottomSheet(
+                                                  username: displayName,
+                                                  userImage: photoUrl,
+                                                  statusBarHeight:
+                                                      statusBarHeight,
+                                                  postAdded: (String postId) {
+                                                    AddPostSubscriberRequest
+                                                        addPostSubscriberRequest =
+                                                        AddPostSubscriberRequest(
+                                                            postSubscribersModel:
+                                                                PostSubscribersModel(
+                                                      username: displayName,
+                                                      userImage: photoUrl,
+                                                      postId: postId,
+                                                    ));
+                                                    HomePageCubit.get(context)
+                                                        .addPostSubscriber(
+                                                            addPostSubscriberRequest);
 
-                                                      getAllPosts(displayName,
-                                                          allPosts: true);
-                                                    },
-                                                  ));
-                                            },
-                                          );
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppAssets.addPost,
-                                          width: 30.w,
-                                        ),
-                                      );
-                                    } else {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          onError(context, AppStrings.addError);
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppAssets.preventAdd,
-                                          width: 30.w,
-                                        ),
-                                      );
+                                                    getAllPosts(displayName,
+                                                        allPosts: true);
+                                                  },
+                                                ));
+                                          },
+                                        );
+                                      } else {
+                                        onError(
+                                            context, AppStrings.preventMessage);
+                                      }
+                                    } else if (state
+                                        is GetUserPermissionsErrorState) {
+                                      hideLoading();
+                                    } else if (state
+                                        is WelcomeNoInternetState) {
+                                      hideLoading();
+                                      onError(context, AppStrings.noInternet);
                                     }
-                                  } else if (state is GetUserPermissionsErrorState ||
-                                      state is WelcomeNoInternetState) {
-                                    return SizedBox.shrink();
-                                  } else {
-                                    return SizedBox.shrink();
-                                  }
-                                },
-                              )
+                                  }, builder: (context, state) {
+                                    return Bounceable(
+                                      onTap: () {
+                                        WelcomeCubit.get(context)
+                                            .getUserPermissions(displayName);
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppAssets.addPost,
+                                        width: 30.w,
+                                      ),
+                                    );
+                                  }),
+                                )
                               : Container(),
                         ],
                       ),

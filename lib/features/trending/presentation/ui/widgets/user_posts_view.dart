@@ -36,9 +36,10 @@ class UserPostsView extends StatefulWidget {
 
 class _UserPostsViewState extends State<UserPostsView> {
   int selectedPost = 0;
+  String selectedId = "";
   bool showCommentBottomSheet = false;
   final SecureStorageLoginHelper _appSecureDataHelper =
-      sl<SecureStorageLoginHelper>();
+  sl<SecureStorageLoginHelper>();
 
   final TextEditingController _searchingController = TextEditingController();
 
@@ -51,7 +52,7 @@ class _UserPostsViewState extends State<UserPostsView> {
 
   List<SubscribersModel> subscribersList = [];
   var userData;
-  
+
 
   @override
   void initState() {
@@ -68,7 +69,7 @@ class _UserPostsViewState extends State<UserPostsView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
       role = userData['role'] ?? '';
-      
+
     });
     getUserPosts(displayName, allPosts: true);
   }
@@ -95,8 +96,8 @@ class _UserPostsViewState extends State<UserPostsView> {
       },
       child: SafeArea(
           child: Scaffold(
-        body: bodyContent(context, statusBarHeight),
-      )),
+            body: bodyContent(context, statusBarHeight),
+          )),
     );
   }
 
@@ -141,6 +142,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                   hideLoading();
                   homePageModel.clear();
                   homePageModel.addAll(state.homePageModel);
+                  selectedPost = homePageModel.indexWhere((element) => element.postModel.id == selectedId);
                   if (showCommentBottomSheet &&
                       homePageModel[selectedPost]
                           .postModel
@@ -174,21 +176,21 @@ class _UserPostsViewState extends State<UserPostsView> {
                             addOrRemoveSubscriber: (int status) {
                               if (status == -1) {
                                 DeleteSubscriberRequest
-                                    deleteSubscriberRequest =
-                                    DeleteSubscriberRequest(
-                                        username: displayName,
-                                        postAuther: homePageModel[selectedPost]
-                                            .postModel
-                                            .username);
+                                deleteSubscriberRequest =
+                                DeleteSubscriberRequest(
+                                    username: displayName,
+                                    postAuther: homePageModel[selectedPost]
+                                        .postModel
+                                        .username);
                                 HomePageCubit.get(context)
                                     .deleteSubscriber(deleteSubscriberRequest);
                               } else if (status == 1) {
                                 AddSubscriberRequest addSubscriberRequest =
-                                    AddSubscriberRequest(
-                                        username: displayName,
-                                        postAuther: homePageModel[selectedPost]
-                                            .postModel
-                                            .username);
+                                AddSubscriberRequest(
+                                    username: displayName,
+                                    postAuther: homePageModel[selectedPost]
+                                        .postModel
+                                        .username);
                                 HomePageCubit.get(context)
                                     .addSubscriber(addSubscriberRequest);
                               }
@@ -199,31 +201,35 @@ class _UserPostsViewState extends State<UserPostsView> {
                                 .postId,
                             userName: displayName,
                             userImage: photoUrl,
-                            addNewComment: (int status) {
+                            addNewComment: (int status, String returnedId) {
+                              setState(() {
+                                selectedId = returnedId;
+                                showCommentBottomSheet = true;
+                              });
                               if (status == 1) {
                                 AddPostSubscriberRequest
-                                    addPostSubscriberRequest =
-                                    AddPostSubscriberRequest(
-                                        postSubscribersModel:
-                                            PostSubscribersModel(
-                                  username: displayName,
-                                  userImage: photoUrl,
-                                  postId:
+                                addPostSubscriberRequest =
+                                AddPostSubscriberRequest(
+                                    postSubscribersModel:
+                                    PostSubscribersModel(
+                                      username: displayName,
+                                      userImage: photoUrl,
+                                      postId:
                                       homePageModel[selectedPost].postModel.id!,
-                                ));
+                                    ));
                                 HomePageCubit.get(context).addPostSubscriber(
                                     addPostSubscriberRequest);
                               } else if (status == -1) {
                                 DeletePostSubscriberRequest
-                                    deletePostSubscriberRequest =
-                                    DeletePostSubscriberRequest(
-                                        postSubscribersModel:
-                                            PostSubscribersModel(
-                                  username: displayName,
-                                  userImage: photoUrl,
-                                  postId:
+                                deletePostSubscriberRequest =
+                                DeletePostSubscriberRequest(
+                                    postSubscribersModel:
+                                    PostSubscribersModel(
+                                      username: displayName,
+                                      userImage: photoUrl,
+                                      postId:
                                       homePageModel[selectedPost].postModel.id!,
-                                ));
+                                    ));
                                 HomePageCubit.get(context).deletePostSubscriber(
                                     deletePostSubscriberRequest);
                               } else if (status == 0) {
@@ -233,16 +239,13 @@ class _UserPostsViewState extends State<UserPostsView> {
                                         allPosts: false,
                                         username: widget.arguments.username));
                               }
-                              setState(() {
-                                showCommentBottomSheet = true;
-                              });
                             },
                             statusBarHeight: statusBarHeight,
                             commentsList: homePageModel[selectedPost]
                                 .postModel
                                 .commentsList,
                             postAlsha:
-                                homePageModel[selectedPost].postModel.postAlsha,
+                            homePageModel[selectedPost].postModel.postAlsha,
                           ),
                         );
                       },
@@ -300,169 +303,169 @@ class _UserPostsViewState extends State<UserPostsView> {
               builder: (context, state) {
                 return homePageModel.isNotEmpty
                     ? RefreshIndicator(
-                        color: AppColors.cTitle,
-                        backgroundColor: AppColors.cWhite,
-                        onRefresh: refresh,
-                        child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return PostView(
-                                getUserPosts: () {
-                                  HomePageCubit.get(context).getAllPosts(
-                                      GetPostsRequest(
-                                          currentUser: displayName,
-                                          allPosts: false,
-                                          username: widget.arguments.username));
-                                },
-                                addOrRemoveSubscriber: (int status) {
-                                  if (status == -1) {
-                                    DeleteSubscriberRequest
-                                        deleteSubscriberRequest =
-                                        DeleteSubscriberRequest(
-                                            username: displayName,
-                                            postAuther: homePageModel[index]
-                                                .postModel
-                                                .username);
-                                    HomePageCubit.get(context).deleteSubscriber(
-                                        deleteSubscriberRequest);
-                                  } else if (status == 1) {
-                                    AddSubscriberRequest addSubscriberRequest =
-                                        AddSubscriberRequest(
-                                            username: displayName,
-                                            postAuther: homePageModel[index]
-                                                .postModel
-                                                .username);
-                                    HomePageCubit.get(context)
-                                        .addSubscriber(addSubscriberRequest);
-                                  }
-                                },
-                                index: index,
-                                id: homePageModel[index].postModel.id!,
-                                time: homePageModel[index].postModel.time!,
-                                postUsername:
-                                    homePageModel[index].postModel.username,
-                                postUserImage:
-                                    homePageModel[index].postModel.userImage,
-                                loggedInUserName: displayName,
-                                loggedInUserImage: photoUrl,
-                                postAlsha:
-                                    homePageModel[index].postModel.postAlsha,
-                                commentsList:
-                                    homePageModel[index].postModel.commentsList,
-                                emojisList:
-                                    homePageModel[index].postModel.emojisList,
-                                addNewComment: (int status) {
-                                  if (status == 1) {
-                                    AddPostSubscriberRequest
-                                        addPostSubscriberRequest =
-                                        AddPostSubscriberRequest(
-                                            postSubscribersModel:
-                                                PostSubscribersModel(
-                                      username: displayName,
-                                      userImage: photoUrl,
-                                      postId:
-                                          homePageModel[index].postModel.id!,
-                                    ));
-                                    HomePageCubit.get(context)
-                                        .addPostSubscriber(
-                                            addPostSubscriberRequest);
-                                  } else if (status == -1) {
-                                    DeletePostSubscriberRequest
-                                        deletePostSubscriberRequest =
-                                        DeletePostSubscriberRequest(
-                                            postSubscribersModel:
-                                                PostSubscribersModel(
-                                      username: displayName,
-                                      userImage: photoUrl,
-                                      postId:
-                                          homePageModel[index].postModel.id!,
-                                    ));
-                                    HomePageCubit.get(context)
-                                        .deletePostSubscriber(
-                                            deletePostSubscriberRequest);
-                                  } else if (status == 0) {
-                                    HomePageCubit.get(context).getAllPosts(
-                                        GetPostsRequest(
-                                            currentUser: displayName,
-                                            allPosts: false,
-                                            username:
-                                                widget.arguments.username));
-                                  }
-
-                                  setState(() {
-                                    selectedPost = index;
-                                    showCommentBottomSheet = true;
-                                  });
-                                },
-                                addNewEmoji: (int status) {
-                                  if (status == 1) {
-                                    AddPostSubscriberRequest
-                                        addPostSubscriberRequest =
-                                        AddPostSubscriberRequest(
-                                            postSubscribersModel:
-                                                PostSubscribersModel(
-                                      username: displayName,
-                                      userImage: photoUrl,
-                                      postId:
-                                          homePageModel[index].postModel.id!,
-                                    ));
-                                    HomePageCubit.get(context)
-                                        .addPostSubscriber(
-                                            addPostSubscriberRequest);
-                                  } else if (status == -1) {
-                                    DeletePostSubscriberRequest
-                                        deletePostSubscriberRequest =
-                                        DeletePostSubscriberRequest(
-                                            postSubscribersModel:
-                                                PostSubscribersModel(
-                                      username: displayName,
-                                      userImage: photoUrl,
-                                      postId:
-                                          homePageModel[index].postModel.id!,
-                                    ));
-                                    HomePageCubit.get(context)
-                                        .deletePostSubscriber(
-                                            deletePostSubscriberRequest);
-                                  } else if (status == 0) {
-                                    HomePageCubit.get(context).getAllPosts(
-                                        GetPostsRequest(
-                                            currentUser: displayName,
-                                            allPosts: false,
-                                            username:
-                                                widget.arguments.username));
-                                  }
-                                },
-                                statusBarHeight: statusBarHeight,
-                                postUpdated: () {
-                                  HomePageCubit.get(context).getAllPosts(
-                                      GetPostsRequest(
-                                          currentUser: displayName,
-                                          allPosts: false,
-                                          username: widget.arguments.username));
-                                },
-                                userSubscribed:
-                                    homePageModel[index].userSubscribed,
-                                postSubscribersList: homePageModel[index]
-                                    .postModel
-                                    .postSubscribersList,
-                              );
-                            },
-                            itemCount: homePageModel.length),
-                      )
+                  color: AppColors.cTitle,
+                  backgroundColor: AppColors.cWhite,
+                  onRefresh: refresh,
+                  child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return PostView(
+                          getUserPosts: () {
+                            HomePageCubit.get(context).getAllPosts(
+                                GetPostsRequest(
+                                    currentUser: displayName,
+                                    allPosts: false,
+                                    username: widget.arguments.username));
+                          },
+                          // lastUpdateTime: homePageModel[index].postModel.lastUpdateTime,
+                          addOrRemoveSubscriber: (int status) {
+                            if (status == -1) {
+                              DeleteSubscriberRequest
+                              deleteSubscriberRequest =
+                              DeleteSubscriberRequest(
+                                  username: displayName,
+                                  postAuther: homePageModel[index]
+                                      .postModel
+                                      .username);
+                              HomePageCubit.get(context).deleteSubscriber(
+                                  deleteSubscriberRequest);
+                            } else if (status == 1) {
+                              AddSubscriberRequest addSubscriberRequest =
+                              AddSubscriberRequest(
+                                  username: displayName,
+                                  postAuther: homePageModel[index]
+                                      .postModel
+                                      .username);
+                              HomePageCubit.get(context)
+                                  .addSubscriber(addSubscriberRequest);
+                            }
+                          },
+                          index: index,
+                          id: homePageModel[index].postModel.id!,
+                          time: homePageModel[index].postModel.time!,
+                          postUsername:
+                          homePageModel[index].postModel.username,
+                          postUserImage:
+                          homePageModel[index].postModel.userImage,
+                          loggedInUserName: displayName,
+                          loggedInUserImage: photoUrl,
+                          postAlsha:
+                          homePageModel[index].postModel.postAlsha,
+                          commentsList:
+                          homePageModel[index].postModel.commentsList,
+                          emojisList:
+                          homePageModel[index].postModel.emojisList,
+                          addNewComment: (int status, String returnedId) {
+                            setState(() {
+                              selectedId = returnedId;
+                              showCommentBottomSheet = true;
+                            });
+                            if (status == 1) {
+                              AddPostSubscriberRequest
+                              addPostSubscriberRequest =
+                              AddPostSubscriberRequest(
+                                  postSubscribersModel:
+                                  PostSubscribersModel(
+                                    username: displayName,
+                                    userImage: photoUrl,
+                                    postId:
+                                    homePageModel[index].postModel.id!,
+                                  ));
+                              HomePageCubit.get(context)
+                                  .addPostSubscriber(
+                                  addPostSubscriberRequest);
+                            } else if (status == -1) {
+                              DeletePostSubscriberRequest
+                              deletePostSubscriberRequest =
+                              DeletePostSubscriberRequest(
+                                  postSubscribersModel:
+                                  PostSubscribersModel(
+                                    username: displayName,
+                                    userImage: photoUrl,
+                                    postId:
+                                    homePageModel[index].postModel.id!,
+                                  ));
+                              HomePageCubit.get(context)
+                                  .deletePostSubscriber(
+                                  deletePostSubscriberRequest);
+                            } else if (status == 0) {
+                              HomePageCubit.get(context).getAllPosts(
+                                  GetPostsRequest(
+                                      currentUser: displayName,
+                                      allPosts: false,
+                                      username:
+                                      widget.arguments.username));
+                            }
+                          },
+                          addNewEmoji: (int status) {
+                            if (status == 1) {
+                              AddPostSubscriberRequest
+                              addPostSubscriberRequest =
+                              AddPostSubscriberRequest(
+                                  postSubscribersModel:
+                                  PostSubscribersModel(
+                                    username: displayName,
+                                    userImage: photoUrl,
+                                    postId:
+                                    homePageModel[index].postModel.id!,
+                                  ));
+                              HomePageCubit.get(context)
+                                  .addPostSubscriber(
+                                  addPostSubscriberRequest);
+                            } else if (status == -1) {
+                              DeletePostSubscriberRequest
+                              deletePostSubscriberRequest =
+                              DeletePostSubscriberRequest(
+                                  postSubscribersModel:
+                                  PostSubscribersModel(
+                                    username: displayName,
+                                    userImage: photoUrl,
+                                    postId:
+                                    homePageModel[index].postModel.id!,
+                                  ));
+                              HomePageCubit.get(context)
+                                  .deletePostSubscriber(
+                                  deletePostSubscriberRequest);
+                            } else if (status == 0) {
+                              HomePageCubit.get(context).getAllPosts(
+                                  GetPostsRequest(
+                                      currentUser: displayName,
+                                      allPosts: false,
+                                      username:
+                                      widget.arguments.username));
+                            }
+                          },
+                          statusBarHeight: statusBarHeight,
+                          postUpdated: () {
+                            HomePageCubit.get(context).getAllPosts(
+                                GetPostsRequest(
+                                    currentUser: displayName,
+                                    allPosts: false,
+                                    username: widget.arguments.username));
+                          },
+                          userSubscribed:
+                          homePageModel[index].userSubscribed,
+                          postSubscribersList: homePageModel[index]
+                              .postModel
+                              .postSubscribersList,
+                        );
+                      },
+                      itemCount: homePageModel.length),
+                )
                     : SizedBox(
-                        height: MediaQuery.sizeOf(context).height,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                AppStrings.noPosts,
-                                style: AppTypography.kBold14,
-                              ),
-                            ),
-                          ],
+                  height: MediaQuery.sizeOf(context).height,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          AppStrings.noPosts,
+                          style: AppTypography.kBold14,
                         ),
-                      );
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),

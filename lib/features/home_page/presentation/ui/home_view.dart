@@ -36,6 +36,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int selectedPost = 0;
+  String selectedId = "";
   bool showCommentBottomSheet = false;
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
@@ -213,6 +214,12 @@ class _HomeViewState extends State<HomeView> {
                 hideLoading();
                 homePageModel.clear();
                 homePageModel.addAll(state.homePageModel);
+                print("homePageModel");
+                for(var v in homePageModel) {
+                  print(v.postModel.postAlsha);
+                  print(v.postModel.time);
+                }
+                selectedPost = homePageModel.indexWhere((element) => element.postModel.id == selectedId);
                 if (showCommentBottomSheet &&
                     homePageModel[selectedPost]
                         .postModel
@@ -275,7 +282,11 @@ class _HomeViewState extends State<HomeView> {
                               .postId,
                           userName: displayName,
                           userImage: photoUrl,
-                          addNewComment: (int status) {
+                          addNewComment: (int status, String returnedId) {
+                            setState(() {
+                              selectedId = returnedId;
+                              showCommentBottomSheet = true;
+                            });
                             if (status == 1) {
                               AddPostSubscriberRequest
                                   addPostSubscriberRequest =
@@ -318,9 +329,6 @@ class _HomeViewState extends State<HomeView> {
                                         allPosts: true));
                               }
                             }
-                            setState(() {
-                              showCommentBottomSheet = true;
-                            });
                           },
                           statusBarHeight: statusBarHeight,
                           commentsList: homePageModel[selectedPost]
@@ -449,9 +457,6 @@ class _HomeViewState extends State<HomeView> {
                                   HomePageCubit.get(context)
                                       .addSubscriber(addSubscriberRequest);
                                 }
-                                setState(() {
-                                  selectedPost = index;
-                                });
                               },
                               index: index,
                               id: homePageModel[index].postModel.id!,
@@ -468,7 +473,11 @@ class _HomeViewState extends State<HomeView> {
                                   homePageModel[index].postModel.commentsList,
                               emojisList:
                                   homePageModel[index].postModel.emojisList,
-                              addNewComment: (int status) {
+                              addNewComment: (int status, String returnedId) {
+                                setState(() {
+                                  selectedId = returnedId;
+                                  showCommentBottomSheet = true;
+                                });
                                 if (status == 1) {
                                   AddPostSubscriberRequest
                                       addPostSubscriberRequest =
@@ -510,11 +519,6 @@ class _HomeViewState extends State<HomeView> {
                                             allPosts: true));
                                   }
                                 }
-
-                                setState(() {
-                                  selectedPost = index;
-                                  showCommentBottomSheet = true;
-                                });
                               },
                               addNewEmoji: (int status) {
                                 if (status == 1) {

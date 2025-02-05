@@ -56,6 +56,7 @@ class _MessageViewState extends State<MessageView> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MessagesCubit, MessagesState>(

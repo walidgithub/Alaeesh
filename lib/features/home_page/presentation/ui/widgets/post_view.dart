@@ -91,6 +91,7 @@ class _PostViewState extends State<PostView> {
     List<int> postTime = splitDateTime(widget.time);
     timeAgoText = timeAgo(DateTime(
         postTime[0], postTime[1], postTime[2], postTime[3], postTime[4]));
+
     super.initState();
   }
 
@@ -163,62 +164,123 @@ class _PostViewState extends State<PostView> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Bounceable(
-                            onTap: () {
-                              Navigator.pop(context);
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context).height -
-                                        widget.statusBarHeight -
-                                        100.h,
-                                    width: MediaQuery.sizeOf(context).width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                      textDirection: ui.TextDirection.rtl,
-                                      child: UpdatePostBottomSheet(
-                                        postModel: PostModel(
-                                            id: widget.id,
-                                            postAlsha: widget.postAlsha,
-                                            username: widget.postUsername,
-                                            userImage: widget.postUserImage,
-                                            emojisList: widget.emojisList,
-                                            commentsList: widget.commentsList,
-                                            lastUpdateTime: widget.time,
-                                            postSubscribersList:
-                                                widget.postSubscribersList),
-                                        statusBarHeight: widget.statusBarHeight,
-                                        postUpdated: () {
-                                          widget.postUpdated();
-                                        },
-                                      ));
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.edit,
-                                  width: 15.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  AppStrings.edit,
-                                  style: AppTypography.kLight13,
-                                ),
-                              ],
+                          BlocProvider(
+                            create: (context) => sl<WelcomeCubit>()
+                              ..getUserPermissions(widget.loggedInUserName),
+                            child: BlocBuilder<WelcomeCubit, WelcomeState>(
+                              builder: (context, state) {
+                                if (state is GetUserPermissionsLoadingState) {
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                    strokeWidth: 2.w,
+                                    color: AppColors.cTitle,
+                                  ));
+                                } else if (state
+                                    is GetUserPermissionsSuccessState) {
+                                  if (state.userPermissionsModel.enableAdd ==
+                                      "yes") {
+                                    return Bounceable(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          constraints: BoxConstraints.expand(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height -
+                                                  widget.statusBarHeight -
+                                                  100.h,
+                                              width: MediaQuery.sizeOf(context)
+                                                  .width),
+                                          isScrollControlled: true,
+                                          barrierColor: AppColors.cTransparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(30.r),
+                                            ),
+                                          ),
+                                          builder: (context2) {
+                                            return Directionality(
+                                                textDirection:
+                                                    ui.TextDirection.rtl,
+                                                child: UpdatePostBottomSheet(
+                                                  postModel: PostModel(
+                                                      id: widget.id,
+                                                      postAlsha:
+                                                          widget.postAlsha,
+                                                      username:
+                                                          widget.postUsername,
+                                                      userImage:
+                                                          widget.postUserImage,
+                                                      emojisList:
+                                                          widget.emojisList,
+                                                      commentsList:
+                                                          widget.commentsList,
+                                                      lastUpdateTime:
+                                                          widget.time,
+                                                      postSubscribersList: widget
+                                                          .postSubscribersList),
+                                                  statusBarHeight:
+                                                      widget.statusBarHeight,
+                                                  postUpdated: () {
+                                                    widget.postUpdated();
+                                                    Navigator.pop(context);
+                                                  },
+                                                ));
+                                          },
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppAssets.edit,
+                                            width: 15.w,
+                                          ),
+                                          SizedBox(
+                                            width: 10.w,
+                                          ),
+                                          Text(
+                                            AppStrings.edit,
+                                            style: AppTypography.kLight13,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                } else if (state
+                                        is GetUserPermissionsErrorState ||
+                                    state is WelcomeNoInternetState) {
+                                  return SizedBox.shrink();
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              },
                             ),
-                          )
+                          ),
+                          // Bounceable(
+                          //   onTap: () {
+                          //     Navigator.pop(context);
+                          //
+                          //   },
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       SvgPicture.asset(
+                          //         AppAssets.edit,
+                          //         width: 15.w,
+                          //       ),
+                          //       SizedBox(
+                          //         width: 10.w,
+                          //       ),
+                          //       Text(
+                          //         AppStrings.edit,
+                          //         style: AppTypography.kLight13,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // )
                         ],
                       ),
                     );
@@ -533,8 +595,8 @@ class _PostViewState extends State<PostView> {
                                         userImage: widget.loggedInUserImage,
                                         userName: widget.loggedInUserName,
                                         postId: widget.id,
-                                        addNewComment: (int status) {
-                                          widget.addNewComment(status);
+                                        addNewComment: (int status, String id) {
+                                          widget.addNewComment(status, id);
                                         },
                                         statusBarHeight: widget.statusBarHeight,
                                         commentsList: widget.commentsList,
@@ -556,7 +618,10 @@ class _PostViewState extends State<PostView> {
                                     width: 5.w,
                                   ),
                                   Text(
-                                    widget.commentsList.length > 1 && widget.commentsList.length < 11 ? AppStrings.comments : AppStrings.comment,
+                                    widget.commentsList.length > 1 &&
+                                            widget.commentsList.length < 11
+                                        ? AppStrings.comments
+                                        : AppStrings.comment,
                                     style: AppTypography.kBold14
                                         .copyWith(color: AppColors.cTitle),
                                   ),
@@ -703,72 +768,68 @@ class _PostViewState extends State<PostView> {
                           width: 30.w,
                         ),
                         BlocProvider(
-                          create: (context) =>
-                          sl<WelcomeCubit>()..getUserPermissions(widget.loggedInUserName),
-                          child: BlocBuilder<WelcomeCubit, WelcomeState>(
-                            builder: (context, state) {
-                              if (state is GetUserPermissionsLoadingState) {
-                                return Center(child: CircularProgressIndicator(
-                                  strokeWidth: 2.w,
-                                  color: AppColors.cTitle,
-                                ));
-                              } else if (state is GetUserPermissionsSuccessState) {
-                                if (state.userPermissionsModel.enableAdd == "yes") {
-                                  return Bounceable(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        constraints: BoxConstraints.expand(
-                                            height: MediaQuery.sizeOf(context).height -
-                                                widget.statusBarHeight -
-                                                100.h,
-                                            width: MediaQuery.sizeOf(context).width),
-                                        isScrollControlled: true,
-                                        barrierColor: AppColors.cTransparent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(30.r),
-                                          ),
-                                        ),
-                                        builder: (context2) {
-                                          return Directionality(
-                                              textDirection: ui.TextDirection.rtl,
-                                              child: AddCommentBottomSheet(
-                                                  postId: widget.id,
-                                                  statusBarHeight: widget.statusBarHeight,
-                                                  username: widget.loggedInUserName,
-                                                  userImage: widget.loggedInUserImage,
-                                                  addNewComment: (int status) {
-                                                    widget.addNewComment(status);
-                                                  },
-                                                  id: widget.id));
-                                        },
-                                      );
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppAssets.comments,
-                                      width: 30.w,
+                          create: (context) => sl<WelcomeCubit>(),
+                          child: BlocConsumer<WelcomeCubit, WelcomeState>(
+                              listener: (context, state) {
+                            if (state is GetUserPermissionsLoadingState) {
+                              showLoading();
+                            } else if (state
+                                is GetUserPermissionsSuccessState) {
+                              hideLoading();
+                              if (state.userPermissionsModel.enableAdd ==
+                                  "yes") {
+                                showModalBottomSheet(
+                                  context: context,
+                                  constraints: BoxConstraints.expand(
+                                      height:
+                                          MediaQuery.sizeOf(context).height -
+                                              widget.statusBarHeight -
+                                              100.h,
+                                      width: MediaQuery.sizeOf(context).width),
+                                  isScrollControlled: true,
+                                  barrierColor: AppColors.cTransparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(30.r),
                                     ),
-                                  );
-                                } else {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      onError(context, AppStrings.addError);
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppAssets.preventAdd,
-                                      width: 25.w,
-                                    ),
-                                  );;
-                                }
-                              } else if (state is GetUserPermissionsErrorState ||
-                                  state is WelcomeNoInternetState) {
-                                return SizedBox.shrink();
+                                  ),
+                                  builder: (context2) {
+                                    return Directionality(
+                                        textDirection: ui.TextDirection.rtl,
+                                        child: AddCommentBottomSheet(
+                                            postId: widget.id,
+                                            statusBarHeight:
+                                                widget.statusBarHeight,
+                                            username: widget.loggedInUserName,
+                                            userImage: widget.loggedInUserImage,
+                                            addNewComment:
+                                                (int status, String id) {
+                                              widget.addNewComment(status, id);
+                                            },
+                                            id: widget.id));
+                                  },
+                                );
                               } else {
-                                return SizedBox.shrink();
+                                onError(context, AppStrings.preventMessage);
                               }
-                            },
-                          ),
+                            } else if (state is GetUserPermissionsErrorState) {
+                              hideLoading();
+                            } else if (state is WelcomeNoInternetState) {
+                              hideLoading();
+                              onError(context, AppStrings.noInternet);
+                            }
+                          }, builder: (context, state) {
+                            return Bounceable(
+                              onTap: () {
+                                WelcomeCubit.get(context).getUserPermissions(
+                                    widget.loggedInUserName);
+                              },
+                              child: SvgPicture.asset(
+                                AppAssets.comments,
+                                width: 30.w,
+                              ),
+                            );
+                          }),
                         ),
                         SizedBox(
                           width: 30.w,

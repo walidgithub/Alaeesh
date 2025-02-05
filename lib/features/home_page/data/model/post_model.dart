@@ -15,14 +15,14 @@ class PostModel {
   final List<PostSubscribersModel> postSubscribersList;
   PostModel(
       {this.id,
-      required this.postAlsha,
-      required this.username,
-      required this.userImage,
-      required this.emojisList,
-      required this.commentsList,
-      required this.postSubscribersList,
-      required this.lastUpdateTime,
-      this.time});
+        required this.postAlsha,
+        required this.username,
+        required this.userImage,
+        required this.emojisList,
+        required this.commentsList,
+        required this.postSubscribersList,
+        required this.lastUpdateTime,
+        this.time});
 
   static PostModel fromMap(Map<String, dynamic> map) {
     PostModel postModel = PostModel(

@@ -100,7 +100,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
 
   Future<void> refresh() async {
     setState(() {
-      widget.addNewComment(0);
+      widget.addNewComment(0, widget.postId);
       Navigator.pop(context);
     });
   }
@@ -209,7 +209,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               } else if (state is AddCommentSuccessState) {
                                 hideLoading();
                                 showSnackBar(context, AppStrings.addSuccess);
-                                widget.addNewComment(1);
+                                widget.addNewComment(1, widget.postId);
                                 Navigator.pop(context);
                               } else if (state is AddCommentErrorState) {
                                 hideLoading();
@@ -256,7 +256,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         ],
                       );
                     } else {
-                      return SizedBox.shrink();
+                      return Column(
+                        children: [
+                          Divider(),
+                          Text(AppStrings.preventMessage,style: AppTypography.kLight16.copyWith(color: AppColors.cPrimaryLight),),
+                          Divider()
+                        ],
+                      );
                     }
                   } else if (state is GetUserPermissionsErrorState ||
                       state is WelcomeNoInternetState) {
@@ -285,9 +291,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             } else if (state is AddCommentEmojiSuccessState) {
                               hideLoading();
                               if (userReacted) {
-                                widget.addNewComment(0);
+                                widget.addNewComment(0, widget.postId);
                               } else {
-                                widget.addNewComment(1);
+                                widget.addNewComment(1, widget.postId);
                               }
                               Navigator.pop(context);
                             } else if (state is AddCommentEmojiErrorState) {
@@ -359,8 +365,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 HomePageCubit.get(context)
                                     .addCommentEmoji(addCommentEmojiRequest);
                               },
-                              updateComment: (int status) {
-                                widget.addNewComment(status);
+                              updateComment: (int status, String id) {
+                                widget.addNewComment(status, widget.postId);
                                 Navigator.pop(context);
                               },
                             );

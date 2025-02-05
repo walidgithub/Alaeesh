@@ -85,6 +85,7 @@ class _CommentViewState extends State<CommentView> {
     super.initState();
   }
 
+
   OverlayEntry? _overlayEntry;
 
   void _showPopup(BuildContext context, Offset position) {
@@ -109,7 +110,7 @@ class _CommentViewState extends State<CommentView> {
                       showLoading();
                     } else if (state is DeleteCommentEmojiSuccessState) {
                       hideLoading();
-                      widget.updateComment(-1);
+                      widget.updateComment(-1, widget.postId);
                       _removePopup();
                     } else if (state is DeleteCommentEmojiErrorState) {
                       hideLoading();
@@ -139,7 +140,7 @@ showSnackBar(context, state.errorMessage);
                                     element.username ==
                                         widget.loggedInUserName);
                             if (emojiIndex < 0) {
-                              widget.updateComment(0);
+                              widget.updateComment(0, widget.postId);
                               _removePopup();
                               return;
                             }
@@ -193,7 +194,7 @@ showSnackBar(context, state.errorMessage);
                       showLoading();
                     } else if (state is DeleteCommentSuccessState) {
                       hideLoading();
-                      widget.updateComment(-1);
+                      widget.updateComment(-1, widget.postId);
                       Navigator.pop(context);
                     } else if (state is DeleteCommentErrorState) {
                       hideLoading();
@@ -286,8 +287,8 @@ showSnackBar(context, state.errorMessage);
                                                 child: UpdateCommentBottomSheet(
                                                     statusBarHeight:
                                                     widget.statusBarHeight,
-                                                    updateComment: (int status) {
-                                                      widget.updateComment(status);
+                                                    updateComment: (int status, String returnedId) {
+                                                      widget.updateComment(status, returnedId);
                                                       Navigator.pop(context);
                                                     },
                                                     commentModel: CommentsModel(

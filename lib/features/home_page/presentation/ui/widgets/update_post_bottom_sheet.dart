@@ -138,6 +138,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                                               widget.postModel.commentsList,
                                           emojisList:
                                               widget.postModel.emojisList,
+                                          time: widget.postModel.time,
                                           postSubscribersList: widget
                                               .postModel.postSubscribersList,
                                           lastUpdateTime:

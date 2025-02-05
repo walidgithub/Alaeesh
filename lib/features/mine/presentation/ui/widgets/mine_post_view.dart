@@ -67,7 +67,6 @@ class MinePostView extends StatefulWidget {
 class _MinePostViewState extends State<MinePostView> {
   double reactPosition = 20.0;
   String timeAgoText = "";
-  List<EmojiModel> mineEmojisList = [];
   
 
   bool userReacted = false;
@@ -77,9 +76,6 @@ class _MinePostViewState extends State<MinePostView> {
     List<int> postTime = splitDateTime(widget.time);
     timeAgoText = timeAgo(DateTime(
         postTime[0], postTime[1], postTime[2], postTime[3], postTime[4]));
-    mineEmojisList = widget.emojisList
-        .where((item) => item.username == widget.postUsername)
-        .toList();
     super.initState();
   }
 
@@ -283,14 +279,14 @@ class _MinePostViewState extends State<MinePostView> {
                     )),
                   ],
                 ),
-                widget.commentsList.isNotEmpty || mineEmojisList.isNotEmpty
+                widget.commentsList.isNotEmpty || widget.emojisList.isNotEmpty
                     ? const Divider(
                         color: AppColors.grey,
                       )
                     : Container(),
                 SizedBox(
                   height: widget.commentsList.isNotEmpty ||
-                          mineEmojisList.isNotEmpty
+                          widget.emojisList.isNotEmpty
                       ? 40.h
                       : 0,
                   child: Row(
@@ -350,7 +346,7 @@ class _MinePostViewState extends State<MinePostView> {
                               ),
                             )
                           : Container(),
-                      mineEmojisList.isNotEmpty
+                      widget.emojisList.isNotEmpty
                           ? Row(
                               children: [
                                 BlocProvider(
@@ -381,7 +377,7 @@ class _MinePostViewState extends State<MinePostView> {
                                               DeleteEmojiRequest(
                                                   postId: widget.id,
                                                   emojiId:
-                                                      mineEmojisList[0].id!);
+                                                  widget.emojisList[0].id!);
                                           MineCubit.get(context)
                                               .deleteEmoji(deleteEmojiRequest);
                                         },
@@ -399,7 +395,7 @@ class _MinePostViewState extends State<MinePostView> {
                                   width: 30.w,
                                   height: 30.h,
                                   child: Stack(
-                                    children: mineEmojisList
+                                    children: widget.emojisList
                                         .asMap()
                                         .entries
                                         .toList()

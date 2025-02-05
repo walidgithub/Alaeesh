@@ -61,6 +61,7 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return FadeInUp(
