@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:last/core/preferences/app_pref.dart';
 
 import 'core/di/di.dart';
 import 'core/router/app_router.dart';
@@ -21,12 +22,21 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  final isLoggedIn = await checkUserLoginStatus();
+
   // runApp(DevicePreview(builder: (context) => const MyApp()));
-  runApp(const MyApp());
+  runApp(MyApp(isLoggedIn: isLoggedIn));
+}
+
+Future<bool> checkUserLoginStatus() async {
+  final AppPreferences appPreferences = sl<AppPreferences>();
+  return appPreferences.isUserLoggedIn();
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.isLoggedIn});
+
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +50,7 @@ class MyApp extends StatelessWidget {
               title: AppStrings.appName,
               builder: EasyLoading.init(),
               onGenerateRoute: RouteGenerator.getRoute,
-              initialRoute: Routes.layoutRoute,
+              initialRoute: isLoggedIn ? Routes.layoutRoute : Routes.welcomeRoute,
               theme: AppTheme.lightTheme);
         });
   }
