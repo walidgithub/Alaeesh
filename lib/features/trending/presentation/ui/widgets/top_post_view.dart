@@ -41,8 +41,10 @@ class TopPostView extends StatefulWidget {
   final String postAlsha;
   final String postUsername;
   final String postUserImage;
+  final String postUserEmail;
   final String loggedInUserName;
   final String loggedInUserImage;
+  final String loggedInUserEmail;
   final String time;
   final String lastUpdateTime;
   final List<EmojiModel> emojisList;
@@ -62,8 +64,10 @@ class TopPostView extends StatefulWidget {
     required this.postAlsha,
     required this.postUsername,
     required this.postUserImage,
+    required this.postUserEmail,
     required this.loggedInUserName,
     required this.loggedInUserImage,
+    required this.loggedInUserEmail,
     required this.emojisList,
     required this.commentsList,
     required this.postSubscribersList,
@@ -198,6 +202,7 @@ showSnackBar(context, state.errorMessage);
                                             emojisList: widget.emojisList,
                                             commentsList: widget.commentsList,
                                             lastUpdateTime: widget.time,
+                                            userEmail: widget.postUserEmail,
                                             postSubscribersList:
                                             widget.postSubscribersList),
                                         statusBarHeight: widget.statusBarHeight,
@@ -308,6 +313,7 @@ showSnackBar(context, state.errorMessage);
                                   postId: widget.id,
                                   emojiData: returnedEmojiData.emojiData,
                                   username: widget.loggedInUserName,
+                                  userEmail: widget.loggedInUserEmail,
                                   userImage: widget.loggedInUserImage),
                             lastTimeUpdate: '$formattedDate $formattedTime'
                           );
@@ -729,6 +735,7 @@ showSnackBar(context, state.errorMessage);
                                         statusBarHeight:
                                         widget.statusBarHeight,
                                         username: widget.loggedInUserName,
+                                        userEmail: widget.loggedInUserEmail,
                                         userImage:
                                         widget.loggedInUserImage,
                                         addNewComment: (int status) {

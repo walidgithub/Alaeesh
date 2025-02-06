@@ -36,6 +36,7 @@ class CommentView extends StatefulWidget {
   final String comment;
   final String username;
   final String userImage;
+  final String userEmail;
   final String time;
   final String postId;
   final List<CommentEmojiModel> commentEmojisModel;
@@ -44,6 +45,7 @@ class CommentView extends StatefulWidget {
   Function updateComment;
   final String loggedInUserName;
   final String loggedInUserImage;
+  final String loggedInUserEmail;
   Function addOrRemoveSubscriber;
   Function getUserPosts;
   int index;
@@ -53,6 +55,7 @@ class CommentView extends StatefulWidget {
     required this.comment,
     required this.username,
     required this.userImage,
+    required this.userEmail,
     required this.time,
     required this.commentEmojisModel,
     required this.statusBarHeight,
@@ -62,6 +65,7 @@ class CommentView extends StatefulWidget {
     required this.updateComment,
     required this.loggedInUserName,
     required this.loggedInUserImage,
+    required this.loggedInUserEmail,
     required this.getUserPosts,
     required this.addOrRemoveSubscriber
   });
@@ -299,6 +303,7 @@ showSnackBar(context, state.errorMessage);
                                                         widget.loggedInUserImage,
                                                         time: widget.time,
                                                         comment: widget.comment,
+                                                        userEmail: widget.loggedInUserEmail,
                                                         commentEmojiModel:
                                                         widget.commentEmojisModel)));
                                           },

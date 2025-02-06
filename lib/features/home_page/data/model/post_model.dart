@@ -8,6 +8,7 @@ class PostModel {
   final String postAlsha;
   final String username;
   final String userImage;
+  final String userEmail;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
   String? time;
@@ -18,6 +19,7 @@ class PostModel {
         required this.postAlsha,
         required this.username,
         required this.userImage,
+        required this.userEmail,
         required this.emojisList,
         required this.commentsList,
         required this.postSubscribersList,
@@ -30,6 +32,7 @@ class PostModel {
         postAlsha: map['postAlsha'],
         username: map['username'],
         userImage: map['userImage'],
+        userEmail: map['userEmail'],
         lastUpdateTime: map['lastUpdateTime'],
         emojisList: List.from(map['emojisList']).map((e)=>EmojiModel.fromMap(e)).toList(),
         commentsList: List.from(map['commentsList']).map((e)=>CommentsModel.fromMap(e)).toList(),
@@ -44,6 +47,7 @@ class PostModel {
       'postAlsha': postAlsha,
       'username': username,
       'userImage': userImage,
+      'userEmail': userEmail,
       'lastUpdateTime': lastUpdateTime,
       'emojisList': emojisList.map((e)=>e.toMap()).toList(),
       'commentsList': commentsList.map((e)=>e.toMap()).toList(),

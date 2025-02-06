@@ -21,6 +21,7 @@ class AddCommentBottomSheet extends StatefulWidget {
   double statusBarHeight;
   String username;
   String userImage;
+  String userEmail;
   String id;
   String postId;
   Function addNewComment;
@@ -29,6 +30,7 @@ class AddCommentBottomSheet extends StatefulWidget {
     required this.statusBarHeight,
     required this.username,
     required this.userImage,
+    required this.userEmail,
     required this.id,
     required this.postId,
     required this.addNewComment,
@@ -132,6 +134,7 @@ class _AddCommentBottomSheetState extends State<AddCommentBottomSheet> {
                                           username: widget.username,
                                           userImage: widget.userImage,
                                           time: '$formattedDate $formattedTime',
+                                          userEmail: widget.userEmail,
                                           comment:
                                               _commentController.text.trim(),
                                           commentEmojiModel: []),

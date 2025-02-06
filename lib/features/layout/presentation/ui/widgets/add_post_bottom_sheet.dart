@@ -21,12 +21,14 @@ class AddPostBottomSheet extends StatefulWidget {
   double statusBarHeight;
   String username;
   String userImage;
+  String userEmail;
   Function postAdded;
   AddPostBottomSheet(
       {super.key,
       required this.statusBarHeight,
       required this.username,
       required this.userImage,
+      required this.userEmail,
       required this.postAdded});
 
   @override
@@ -125,6 +127,7 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                                   postAlsha: _postController.text.trim(),
                                   commentsList: [],
                                   emojisList: [],
+                                  userEmail: widget.userEmail,
                                   postSubscribersList: [],
                                   time: '$formattedDate $formattedTime',
                                   lastUpdateTime:

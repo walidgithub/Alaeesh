@@ -31,6 +31,7 @@ class CommentsBottomSheet extends StatefulWidget {
   String postId;
   String userName;
   String userImage;
+  String userEmail;
   String postAlsha;
   double statusBarHeight;
   List<CommentsModel> commentsList;
@@ -44,6 +45,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.postId,
       required this.userName,
       required this.userImage,
+      required this.userEmail,
       required this.postAlsha,
       required this.addOrRemoveSubscriber,
       required this.getUserPosts,
@@ -237,6 +239,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                 postId: widget.postId,
                                                 username: widget.userName,
                                                 userImage: widget.userImage,
+                                                userEmail: widget.userEmail,
                                                 time:
                                                     '$formattedDate $formattedTime',
                                                 comment: _commentController.text
@@ -319,9 +322,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               getUserPosts: () {
                                 widget.getUserPosts();
                               },
+                              userEmail: widget.userEmail,
                               addOrRemoveSubscriber: (int status) {
                                 widget.addOrRemoveSubscriber(status);
                               },
+                              loggedInUserEmail: widget.commentsList[index].userEmail,
                               index: index,
                               id: widget.commentsList[index].id!,
                               username: widget.commentsList[index].username,
@@ -356,6 +361,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                 widget.commentsList[index].id!,
                                             postId:
                                                 widget.commentsList[0].postId,
+                                            userEmail: widget.userEmail,
                                             emojiData:
                                                 returnedEmojiData.emojiData,
                                             username: widget.userName,

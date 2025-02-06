@@ -132,6 +132,7 @@ class _UpdatePostBottomSheetState extends State<UpdatePostBottomSheet> {
                                           id: widget.postModel.id,
                                           userImage: widget.postModel.userImage,
                                           username: widget.postModel.username,
+                                          userEmail: widget.postModel.userEmail,
                                           postAlsha:
                                               _postController.text.trim(),
                                           commentsList:

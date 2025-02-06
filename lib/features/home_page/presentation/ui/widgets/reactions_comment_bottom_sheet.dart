@@ -27,7 +27,7 @@ class _ReactionsCommentBottomSheetState extends State<ReactionsCommentBottomShee
 
   @override
   void initState() {
-    tabsList.add(EmojiModel(postId: "0",id: "0",emojiData: "الـكـل",username: "",userImage: ""));
+    tabsList.add(EmojiModel(postId: "0",id: "0",emojiData: "الـكـل",username: "",userImage: "", userEmail: ""));
     tabsList.addAll(widget.commentEmojiModel);
     selectedList.addAll(widget.commentEmojiModel);
     for (var n in tabsList) {

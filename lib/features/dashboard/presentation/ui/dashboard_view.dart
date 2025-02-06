@@ -248,6 +248,9 @@ class _DashboardViewState extends State<DashboardView> {
                                           username: homePageModel[index]
                                               .postModel
                                               .username,
+                                          userEmail: homePageModel[index]
+                                              .postModel
+                                              .userEmail,
                                           userImage: photoUrl,
                                           postId: homePageModel[index]
                                               .postModel

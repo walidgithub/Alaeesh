@@ -140,6 +140,7 @@ class _MineViewState extends State<MineView> {
                                             PostSubscribersModel(
                                   username: displayName,
                                   userImage: photoUrl,
+                                  userEmail: email,
                                   postId: mineModel[index].postModel.id!,
                                 ));
                                 MineCubit.get(context).deletePostSubscriber(
@@ -165,6 +166,7 @@ class _MineViewState extends State<MineView> {
                                             PostSubscribersModel(
                                   username: displayName,
                                   userImage: photoUrl,
+                                  userEmail: email,
                                   postId: mineModel[index].postModel.id!,
                                 ));
                                 MineCubit.get(context).deletePostSubscriber(

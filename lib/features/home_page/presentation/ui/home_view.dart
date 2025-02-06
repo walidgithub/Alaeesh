@@ -251,6 +251,7 @@ class _HomeViewState extends State<HomeView> {
                                         .postModel
                                         .username));
                           },
+                          userEmail: email,
                           addOrRemoveSubscriber: (int status) {
                             if (status == -1) {
                               DeleteSubscriberRequest deleteSubscriberRequest =
@@ -291,6 +292,7 @@ class _HomeViewState extends State<HomeView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId:
                                     homePageModel[selectedPost].postModel.id!,
                               ));
@@ -304,6 +306,7 @@ class _HomeViewState extends State<HomeView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId:
                                     homePageModel[selectedPost].postModel.id!,
                               ));
@@ -432,6 +435,8 @@ class _HomeViewState extends State<HomeView> {
                                             .postModel
                                             .username));
                               },
+                              loggedInUserEmail: email,
+                              postUserEmail: homePageModel[index].postModel.userEmail,
                               addOrRemoveSubscriber: (int status) {
                                 if (status == -1) {
                                   DeleteSubscriberRequest
@@ -482,6 +487,7 @@ class _HomeViewState extends State<HomeView> {
                                               PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId: homePageModel[index].postModel.id!,
                                   ));
                                   HomePageCubit.get(context).addPostSubscriber(
@@ -494,6 +500,7 @@ class _HomeViewState extends State<HomeView> {
                                               PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId: homePageModel[index].postModel.id!,
                                   ));
                                   HomePageCubit.get(context)
@@ -525,6 +532,7 @@ class _HomeViewState extends State<HomeView> {
                                               PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId: homePageModel[index].postModel.id!,
                                   ));
                                   HomePageCubit.get(context).addPostSubscriber(
@@ -537,6 +545,7 @@ class _HomeViewState extends State<HomeView> {
                                               PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId: homePageModel[index].postModel.id!,
                                   ));
                                   HomePageCubit.get(context)

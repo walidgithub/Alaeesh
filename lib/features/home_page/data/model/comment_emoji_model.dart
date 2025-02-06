@@ -5,6 +5,7 @@ class CommentEmojiModel {
   final String emojiData;
   final String username;
   final String userImage;
+  final String userEmail;
 
   CommentEmojiModel(
       {this.id,
@@ -12,6 +13,7 @@ class CommentEmojiModel {
         required this.commentId,
         required this.emojiData,
         required this.username,
+        required this.userEmail,
         required this.userImage});
 
   static CommentEmojiModel fromMap(Map<String, dynamic> map) {
@@ -21,6 +23,7 @@ class CommentEmojiModel {
         postId: map['postId'],
         emojiData: map['emojiData'],
         username: map['username'],
+        userEmail: map['userEmail'],
         userImage: map['userImage']);
     return emojiModel;
   }
@@ -33,6 +36,7 @@ class CommentEmojiModel {
       'emojiData': emojiData,
       'username': username,
       'userImage': userImage,
+      'userEmail': userEmail,
     };
   }
 }

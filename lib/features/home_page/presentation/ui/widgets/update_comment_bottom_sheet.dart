@@ -137,6 +137,7 @@ class _UpdateCommentBottomSheetState extends State<UpdateCommentBottomSheet> {
                                               widget.commentModel.userImage,
                                           comment:
                                               _commentController.text.trim(),
+                                          userEmail: widget.commentModel.userEmail,
                                           commentEmojiModel: widget
                                               .commentModel.commentEmojiModel),
                                       lastTimeUpdate:

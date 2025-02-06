@@ -87,6 +87,7 @@ class TrendingDataSource extends BaseDataSource {
         for (var subscriber in post.postSubscribersList) {
           final userName = subscriber.username;
           final userImage = subscriber.userImage;
+          final userEmail = subscriber.userEmail;
 
           if (userMap.containsKey(userName)) {
             userMap[userName]!.subscriptionsCount++;
@@ -94,6 +95,7 @@ class TrendingDataSource extends BaseDataSource {
             userMap[userName] = SuggestedUserModel(
               userName: userName,
               userImage: userImage,
+              userEmail: userEmail,
               subscriptionsCount: 1,
             );
           }

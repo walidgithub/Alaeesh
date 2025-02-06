@@ -42,8 +42,10 @@ class PostView extends StatefulWidget {
   final String postAlsha;
   final String postUsername;
   final String postUserImage;
+  final String postUserEmail;
   final String loggedInUserName;
   final String loggedInUserImage;
+  final String loggedInUserEmail;
   final String time;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
@@ -62,8 +64,10 @@ class PostView extends StatefulWidget {
     required this.postAlsha,
     required this.postUsername,
     required this.postUserImage,
+    required this.postUserEmail,
     required this.loggedInUserName,
     required this.loggedInUserImage,
+    required this.loggedInUserEmail,
     required this.emojisList,
     required this.commentsList,
     required this.postSubscribersList,
@@ -216,6 +220,7 @@ class _PostViewState extends State<PostView> {
                                                           widget.commentsList,
                                                       lastUpdateTime:
                                                           widget.time,
+                                                      userEmail: widget.postUserEmail,
                                                       postSubscribersList: widget
                                                           .postSubscribersList),
                                                   statusBarHeight:
@@ -363,6 +368,7 @@ class _PostViewState extends State<PostView> {
                                   postId: widget.id,
                                   emojiData: returnedEmojiData.emojiData,
                                   username: widget.loggedInUserName,
+                                  userEmail: widget.loggedInUserEmail,
                                   userImage: widget.loggedInUserImage),
                               lastTimeUpdate: '$formattedDate $formattedTime');
                           HomePageCubit.get(context).addEmoji(addEmojiRequest);
@@ -594,6 +600,7 @@ class _PostViewState extends State<PostView> {
                                         postAlsha: widget.postAlsha,
                                         userImage: widget.loggedInUserImage,
                                         userName: widget.loggedInUserName,
+                                        userEmail: widget.loggedInUserEmail,
                                         postId: widget.id,
                                         addNewComment: (int status, String id) {
                                           widget.addNewComment(status, id);
@@ -802,6 +809,7 @@ class _PostViewState extends State<PostView> {
                                                 widget.statusBarHeight,
                                             username: widget.loggedInUserName,
                                             userImage: widget.loggedInUserImage,
+                                            userEmail: widget.loggedInUserEmail,
                                             addNewComment:
                                                 (int status, String id) {
                                               widget.addNewComment(status, id);

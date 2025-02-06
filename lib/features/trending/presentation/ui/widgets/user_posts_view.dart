@@ -173,6 +173,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                       allPosts: false,
                                       username: widget.arguments.username));
                             },
+                            userEmail: email,
                             addOrRemoveSubscriber: (int status) {
                               if (status == -1) {
                                 DeleteSubscriberRequest
@@ -214,6 +215,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                     PostSubscribersModel(
                                       username: displayName,
                                       userImage: photoUrl,
+                                      userEmail: email,
                                       postId:
                                       homePageModel[selectedPost].postModel.id!,
                                     ));
@@ -227,6 +229,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                     PostSubscribersModel(
                                       username: displayName,
                                       userImage: photoUrl,
+                                      userEmail: email,
                                       postId:
                                       homePageModel[selectedPost].postModel.id!,
                                     ));
@@ -317,7 +320,6 @@ class _UserPostsViewState extends State<UserPostsView> {
                                     allPosts: false,
                                     username: widget.arguments.username));
                           },
-                          // lastUpdateTime: homePageModel[index].postModel.lastUpdateTime,
                           addOrRemoveSubscriber: (int status) {
                             if (status == -1) {
                               DeleteSubscriberRequest
@@ -347,8 +349,10 @@ class _UserPostsViewState extends State<UserPostsView> {
                           homePageModel[index].postModel.username,
                           postUserImage:
                           homePageModel[index].postModel.userImage,
+                          postUserEmail: homePageModel[index].postModel.userEmail,
                           loggedInUserName: displayName,
                           loggedInUserImage: photoUrl,
+                          loggedInUserEmail: email,
                           postAlsha:
                           homePageModel[index].postModel.postAlsha,
                           commentsList:
@@ -368,6 +372,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                   PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId:
                                     homePageModel[index].postModel.id!,
                                   ));
@@ -382,6 +387,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                   PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId:
                                     homePageModel[index].postModel.id!,
                                   ));
@@ -406,6 +412,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                   PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId:
                                     homePageModel[index].postModel.id!,
                                   ));
@@ -420,6 +427,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                                   PostSubscribersModel(
                                     username: displayName,
                                     userImage: photoUrl,
+                                    userEmail: email,
                                     postId:
                                     homePageModel[index].postModel.id!,
                                   ));

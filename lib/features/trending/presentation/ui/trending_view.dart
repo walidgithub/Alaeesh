@@ -166,6 +166,7 @@ class _TrendingViewState extends State<TrendingView> {
                         .postId,
                     userName: displayName,
                     userImage: photoUrl,
+                    userEmail: email,
                     addNewComment: (int status, String returnedId) {
                       setState(() {
                         selectedId = returnedId;
@@ -177,6 +178,7 @@ class _TrendingViewState extends State<TrendingView> {
                                 postSubscribersModel: PostSubscribersModel(
                           username: displayName,
                           userImage: photoUrl,
+                          userEmail: email,
                           postId: trendingModel[selectedPost].postModel.id!,
                         ));
                         TrendingCubit.get(context)
@@ -188,6 +190,7 @@ class _TrendingViewState extends State<TrendingView> {
                                 postSubscribersModel: PostSubscribersModel(
                           username: displayName,
                           userImage: photoUrl,
+                          userEmail: email,
                           postId: trendingModel[selectedPost].postModel.id!,
                         ));
                         TrendingCubit.get(context)
@@ -433,6 +436,7 @@ class _TrendingViewState extends State<TrendingView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId: trendingModel[index].postModel.id!,
                               ));
                               TrendingCubit.get(context)
@@ -445,6 +449,7 @@ class _TrendingViewState extends State<TrendingView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId: trendingModel[index].postModel.id!,
                               ));
                               TrendingCubit.get(context).deletePostSubscriber(
@@ -463,6 +468,7 @@ class _TrendingViewState extends State<TrendingView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId: trendingModel[index].postModel.id!,
                               ));
                               TrendingCubit.get(context)
@@ -475,6 +481,7 @@ class _TrendingViewState extends State<TrendingView> {
                                           PostSubscribersModel(
                                 username: displayName,
                                 userImage: photoUrl,
+                                userEmail: email,
                                 postId: trendingModel[index].postModel.id!,
                               ));
                               TrendingCubit.get(context).deletePostSubscriber(
@@ -488,6 +495,10 @@ class _TrendingViewState extends State<TrendingView> {
                             TrendingCubit.get(context).getTopPosts(
                                 GetTopPostsRequest(currentUser: displayName));
                           },
+                          loggedInUserEmail: email,
+                          postUserEmail: trendingModel[index]
+                              .postModel
+                              .userEmail,
                           postSubscribersList: trendingModel[index]
                               .postModel
                               .postSubscribersList,

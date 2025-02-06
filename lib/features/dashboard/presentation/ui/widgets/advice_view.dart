@@ -10,6 +10,7 @@ import 'package:last/core/utils/ui_components/loading_dialog.dart';
 import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../../core/di/di.dart';
+import '../../../../../core/functions/get_google_profile_image.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
@@ -56,6 +57,14 @@ class _AdviceViewState extends State<AdviceView> {
     timeAgoText = timeAgo(DateTime(
         postTime[0], postTime[1], postTime[2], postTime[3], postTime[4]));
     super.initState();
+  }
+
+  String photoUrl = "";
+  Future<void> _loadUserPhoto(String email) async {
+    String? updatedPhotoURL = await getUpdatedPhotoURL(email);
+    setState(() {
+      photoUrl = updatedPhotoURL!;
+    });
   }
 
 
