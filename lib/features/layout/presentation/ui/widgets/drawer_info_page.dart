@@ -130,6 +130,7 @@ class _DrawerInfoState extends State<DrawerInfo> {
                             adviceText: _adviseUsController.text,
                             username: displayName,
                             userImage: photoUrl,
+                            userEmail: email,
                             time: '$formattedDate $formattedTime',
                           );
                           LayoutCubit.get(context)

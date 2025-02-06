@@ -17,7 +17,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/utils/dialogs/back_dialog.dart';
 import '../../../../../core/utils/ui_components/tab_icon.dart';
 import '../../../../core/di/di.dart';
-import '../../../../core/functions/get_google_profile_image.dart';
 import '../../../../core/preferences/app_pref.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../../core/router/app_router.dart';
@@ -387,11 +386,8 @@ class _LayoutViewState extends State<LayoutView> {
       id = userData['id'] ?? '';
       email = userData['email'] ?? '';
       displayName = userData['displayName'] ?? '';
+      photoUrl = userData['photoUrl'] ?? '';
       role = userData['role'] ?? '';
-    });
-    String? updatedPhotoURL = await getUpdatedPhotoURL(email);
-    setState(() {
-      photoUrl = updatedPhotoURL!;
     });
     getUnSeenMessagesCount();
     getUserPermissions();

@@ -3,8 +3,9 @@ class SendAdviceRequest {
   String adviceText;
   String username;
   String userImage;
+  String userEmail;
   String time;
-  SendAdviceRequest({this.adviceId, required this.adviceText, required this.username, required this.userImage, required this.time});
+  SendAdviceRequest({this.adviceId, required this.adviceText, required this.username, required this.userEmail, required this.userImage, required this.time});
 
   static SendAdviceRequest fromMap(Map<String, dynamic> map) {
     SendAdviceRequest sendAdviceRequest = SendAdviceRequest(
@@ -12,6 +13,7 @@ class SendAdviceRequest {
       adviceText: map['adviceText'],
       username: map['username'],
       userImage: map['userImage'],
+      userEmail: map['userEmail'],
       time: map['time'],
     );
     return sendAdviceRequest;
@@ -23,6 +25,7 @@ class SendAdviceRequest {
       'adviceText': adviceText,
       'username': username,
       'userImage': userImage,
+      'userEmail': userEmail,
       'time': time,
     };
   }

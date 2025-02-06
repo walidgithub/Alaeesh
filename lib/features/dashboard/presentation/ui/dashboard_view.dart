@@ -324,6 +324,7 @@ class _DashboardViewState extends State<DashboardView> {
                                       adviceText: adviceModel[index].adviceText,
                                       username: adviceModel[index].username,
                                       userImage: adviceModel[index].userImage,
+                                      userEmail: adviceModel[index].userEmail,
                                       statusBarHeight: statusBarHeight,
                                       time: adviceModel[index].time,
                                       index: index);
