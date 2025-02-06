@@ -127,7 +127,8 @@ class _MineViewState extends State<MineView> {
                             loggedInUserImage: photoUrl,
                             postAlsha: mineModel[index].postModel.postAlsha,
                             commentsList:
-                                mineModel[index].postModel.commentsList,
+                                mineModel[index].postModel.commentsList.where((item) => item.username == displayName)
+                                    .toList(),
                             emojisList: mineModel[index].postModel.emojisList.where((item) => item.username == displayName)
                                 .toList(),
                             addNewEmoji: (int status) {

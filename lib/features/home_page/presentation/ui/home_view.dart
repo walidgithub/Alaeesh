@@ -214,11 +214,7 @@ class _HomeViewState extends State<HomeView> {
                 hideLoading();
                 homePageModel.clear();
                 homePageModel.addAll(state.homePageModel);
-                print("homePageModel");
-                for(var v in homePageModel) {
-                  print(v.postModel.postAlsha);
-                  print(v.postModel.time);
-                }
+
                 selectedPost = homePageModel.indexWhere((element) => element.postModel.id == selectedId);
                 if (showCommentBottomSheet &&
                     homePageModel[selectedPost]

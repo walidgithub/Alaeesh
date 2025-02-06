@@ -151,7 +151,10 @@ class TrendingDataSource extends BaseDataSource {
       ];
 
       // Remove duplicates
-      final distinctPosts = combinedPosts.toSet().toList();
+      final distinctPosts = combinedPosts.fold<Map<String, PostModel>>({}, (map, post) {
+        map[post.id!] = post;
+        return map;
+      }).values.toList();
 
       // Convert to HomePageModel
       final homePageModels = distinctPosts.map((post) {

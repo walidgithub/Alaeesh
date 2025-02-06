@@ -122,7 +122,7 @@ class _UserPostsViewState extends State<UserPostsView> {
           ),
         ),
         Center(
-          child: Flexible(
+          child: FittedBox(
             child: Text(
               widget.arguments.username!,
               style: AppTypography.kBold18.copyWith(color: AppColors.cTitle),

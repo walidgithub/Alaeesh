@@ -70,11 +70,10 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                   ),
                 ),
                 Center(
-                  child: Flexible(
+                  child: FittedBox(
                     child: Text(
-                      widget.username,
-                      style: AppTypography.kBold18
-                          .copyWith(color: AppColors.cTitle),
+                      widget.username!,
+                      style: AppTypography.kBold18.copyWith(color: AppColors.cTitle),
                       overflow: TextOverflow.ellipsis,
                       textDirection: TextDirection.ltr,
                     ),
@@ -115,18 +114,20 @@ class _UserSubscriptionsBottomSheetState extends State<UserSubscriptionsBottomSh
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
                               return UserSubscriptionsPostView(
-                                  id: widget.homePageModel[index].postModel.id.toString(),
-                                  postAlsha: widget.homePageModel[index].postModel.postAlsha,
-                                  postUsername: widget.homePageModel[index].postModel.username,
-                                  postUserImage: widget.homePageModel[index].postModel.userImage,
-                                  loggedInUserName: widget.loggedInUserName,
-                                  loggedInUserImage: widget.loggedInUserImage,
-                                  emojisList: widget.homePageModel[index].postModel.emojisList,
-                                  commentsList: widget.homePageModel[index].postModel.commentsList,
-                                  statusBarHeight: widget.statusBarHeight,
-                                  time: widget.homePageModel[index].postModel.time!,
-                                  index: 0,
-                                  );
+                                id: widget.homePageModel[index].postModel.id.toString(),
+                                postAlsha: widget.homePageModel[index].postModel.postAlsha,
+                                postUsername: widget.homePageModel[index].postModel.username,
+                                postUserImage: widget.homePageModel[index].postModel.userImage,
+                                loggedInUserName: widget.loggedInUserName,
+                                loggedInUserImage: widget.loggedInUserImage,
+                                emojisList: widget.homePageModel[index].postModel.emojisList.where((item) => item.username == widget.username)
+                                    .toList(),
+                                commentsList: widget.homePageModel[index].postModel.commentsList.where((item) => item.username == widget.username)
+                                    .toList(),
+                                statusBarHeight: widget.statusBarHeight,
+                                time: widget.homePageModel[index].postModel.time!,
+                                index: 0,
+                              );
                             },
                             itemCount: widget.homePageModel.length),
                       ],

@@ -383,9 +383,9 @@ class _MinePostViewState extends State<MinePostView> {
                                         },
                                         child: Text(
                                           AppStrings.skip,
-                                          style: AppTypography.kLight16
+                                          style: AppTypography.kBold14
                                               .copyWith(
-                                                  color: AppColors.cTitle),
+                                                  color: AppColors.cSecondary),
                                         ),
                                       );
                                     },

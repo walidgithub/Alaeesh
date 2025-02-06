@@ -22,32 +22,26 @@ class MineDataSource extends BaseDataSource {
       final usernameQuerySnapshot = await collection
           .where('username', isEqualTo: getMineRequest.userName)
           .get();
-      final postsByUsername = usernameQuerySnapshot.docs
-          .map((doc) => PostModel.fromMap(doc.data()))
-          .toList();
+      final postsByUsername = usernameQuerySnapshot.docs.map((doc) => PostModel.fromMap(doc.data())).toList();
 
       // Fetch all posts (for filtering in array fields)
       final allPostsSnapshot = await collection.get();
-      final allPosts = allPostsSnapshot.docs
-          .map((doc) => PostModel.fromMap(doc.data()))
-          .toList();
+      final allPosts = allPostsSnapshot.docs.map((doc) => PostModel.fromMap(doc.data())).toList();
 
       // Search in commentsList
       final postsByComments = allPosts.where((post) {
-        return post.commentsList
-            .any((comment) => comment.username == getMineRequest.userName);
+        return post.commentsList.any((comment) => comment.username == getMineRequest.userName);
       }).toList();
 
       // Search in emojisList
       final postsByEmojis = allPosts.where((post) {
-        return post.emojisList
-            .any((emoji) => emoji.username == getMineRequest.userName);
+        return post.emojisList.any((emoji) => emoji.username == getMineRequest.userName);
       }).toList();
 
       // Search in commentsList within emojisList
       final postsByNestedComments = allPosts.where((post) {
         return post.emojisList.any((emoji) =>
-            emoji is CommentsModel &&
+        emoji is CommentsModel &&
             (emoji as CommentsModel).username == getMineRequest.userName);
       }).toList();
 
@@ -59,20 +53,16 @@ class MineDataSource extends BaseDataSource {
         ...postsByNestedComments,
       ];
 
-      // Deduplicate posts
-      final distinctPosts = combinedPosts
-          .fold<Map<String, PostModel>>({}, (map, post) {
-            map[post.id!] = post; // Use the post's unique ID as the key
-            return map;
-          })
-          .values
-          .toList();
+      // Remove duplicates
+      // final distinctPosts = combinedPosts.toSet().toList();
+      final distinctPosts = combinedPosts.fold<Map<String, PostModel>>({}, (map, post) {
+        map[post.id!] = post;
+        return map;
+      }).values.toList();
 
       // Convert to HomePageModel
       final homePageModels = distinctPosts.map((post) {
-        final userSubscribed = post.postSubscribersList.any(
-          (subscriber) => subscriber.username == getMineRequest.userName,
-        );
+        final userSubscribed = post.postSubscribersList.any((subscriber) => subscriber.username == getMineRequest.userName);
         return HomePageModel(
           postModel: post,
           userSubscribed: userSubscribed,
@@ -83,7 +73,6 @@ class MineDataSource extends BaseDataSource {
       homePageModels.sort((a, b) {
         return b.postModel.lastUpdateTime.compareTo(a.postModel.lastUpdateTime);
       });
-
 
       return homePageModels;
     } catch (e) {
