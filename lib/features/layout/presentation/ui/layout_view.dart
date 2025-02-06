@@ -677,7 +677,7 @@ class _LayoutViewState extends State<LayoutView> {
                                 padding: 5.w,
                               ));
                   }),
-                  GestureDetector(
+                  role == "admin" ? GestureDetector(
                       onTap: () {
                         setState(() {
                           addPost = false;
@@ -693,7 +693,7 @@ class _LayoutViewState extends State<LayoutView> {
                         blueIcon: AppAssets.dashboard,
                         whiteIcon: AppAssets.dashboardWhite,
                         padding: 5.w,
-                      )),
+                      )) : Container(),
                   GestureDetector(
                       onTap: () {
                         setState(() {
