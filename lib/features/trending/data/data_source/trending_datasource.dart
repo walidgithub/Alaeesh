@@ -63,7 +63,7 @@ class TrendingDataSource extends BaseDataSource {
         return HomePageModel(postModel: post, userSubscribed: isSubscribed);
       }).toList();
 
-      // Sort homePageModels by the count of subscribersList in descending order
+      // Sort homePageModels by the count of postSubscriptionsList in descending order
       homePageModels.sort((a, b) => b.postModel.postSubscribersList.length
           .compareTo(a.postModel.postSubscribersList.length));
 

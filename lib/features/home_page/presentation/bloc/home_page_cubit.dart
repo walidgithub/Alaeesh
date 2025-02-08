@@ -9,6 +9,7 @@ import 'package:last/features/home_page/domain/usecases/add_post_subscriber_usec
 import 'package:last/features/home_page/domain/usecases/delete_comment_emoji_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/get_home_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
@@ -34,7 +35,7 @@ import '../../domain/usecases/get_subscribers_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
-  HomePageCubit(this.deletePostUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+  HomePageCubit(this.deletePostUseCase, this.getHomePostsUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -57,6 +58,7 @@ class HomePageCubit extends Cubit<HomePageState> {
   final DeleteCommentEmojiUseCase deleteCommentEmojiUseCase;
 
   final GetAllPostsUseCase getAllPostsUseCase;
+  final GetHomePostsUseCase getHomePostsUseCase;
   final SearchPostUseCase searchPostUseCase;
 
   static HomePageCubit get(context) => BlocProvider.of(context);
@@ -70,6 +72,32 @@ class HomePageCubit extends Cubit<HomePageState> {
       result.fold(
             (failure) => emit(GetAllPostsErrorState(failure.message)),
             (posts) => emit(GetAllPostsSuccessState(posts)),
+      );
+    } else {
+      emit(HomePageNoInternetState());
+    }
+  }
+
+  Future<void> getHomePosts(GetPostsRequest getPostsRequest) async {
+    emit(GetHomePostsLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getHomePostsUseCase.call(getPostsRequest);
+      result.fold(
+            (failure) => emit(GetHomePostsErrorState(failure.message)),
+            (posts) => emit(GetHomePostsSuccessState(posts)),
+      );
+    } else {
+      emit(HomePageNoInternetState());
+    }
+  }
+
+  Future<void> getHomePostsAndScrollToTop(GetPostsRequest getPostsRequest) async {
+    emit(GetHomePostsAndScrollToTopLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getHomePostsUseCase.call(getPostsRequest);
+      result.fold(
+            (failure) => emit(GetHomePostsAndScrollToTopErrorState(failure.message)),
+            (posts) => emit(GetHomePostsAndScrollToTopSuccessState(posts)),
       );
     } else {
       emit(HomePageNoInternetState());

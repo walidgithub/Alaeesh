@@ -51,6 +51,7 @@ abstract class BaseDataSource {
       DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
   Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest);
+  Future<List<HomePageModel>> getHomePosts(GetPostsRequest getPostsRequest);
 }
 
 class HomePageDataSource extends BaseDataSource {
@@ -135,6 +136,61 @@ class HomePageDataSource extends BaseDataSource {
       // Sort homePageModels by lastUpdateTime
       homePageModels.sort((a, b) {
         return b.postModel.lastUpdateTime.compareTo(a.postModel.lastUpdateTime);
+      });
+
+      return homePageModels;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HomePageModel>> getHomePosts(
+      GetPostsRequest getPostsRequest) async {
+    try {
+      // Fetch posts and filtered subscribers concurrently
+      final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
+      if (getPostsRequest.allPosts) {
+        postsFuture = firestore.collection('posts')
+            .get();
+      } else {
+        postsFuture = firestore
+            .collection('posts')
+            .where('username', isEqualTo: getPostsRequest.username!.trim())
+            .get();
+      }
+      final subscribersFuture = firestore
+          .collection('subscribers')
+          .where('username', isEqualTo: getPostsRequest.currentUser.trim())
+          .get();
+
+      final results = await Future.wait([postsFuture, subscribersFuture]);
+
+      // Parse the data
+      final postDocs = results[0].docs;
+      final subscriberDocs = results[1].docs;
+
+      // Convert Firestore documents to PostModel and SubscribersModel lists
+      final postModels = postDocs.map((doc) {
+        final postData = {'id': doc.id, ...doc.data()};
+        return PostModel.fromMap(postData);
+      }).toList();
+
+      final subscriberModels = subscriberDocs.map((doc) {
+        final subscriberData = {'id': doc.id, ...doc.data()};
+        return SubscribersModel.fromMap(subscriberData);
+      }).toList();
+
+      // Combine data into HomePageModel
+      List<HomePageModel> homePageModels = postModels.map((post) {
+        final isSubscribed = subscriberModels.any((subscriber) =>
+        subscriber.postAuther == post.username); // Match post author
+        return HomePageModel(postModel: post, userSubscribed: isSubscribed);
+      }).toList();
+
+      // Sort homePageModels by Time
+      homePageModels.sort((a, b) {
+        return b.postModel.time!.compareTo(a.postModel.time!);
       });
 
       return homePageModels;

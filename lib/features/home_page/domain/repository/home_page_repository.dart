@@ -43,4 +43,5 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, void>> deleteCommentEmoji(DeleteCommentEmojiRequest deleteCommentEmojiRequest);
 
   Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest);
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getHomePosts(GetPostsRequest getPostsRequest);
 }

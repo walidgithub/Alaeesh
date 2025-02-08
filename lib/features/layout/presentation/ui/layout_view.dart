@@ -202,9 +202,9 @@ class _LayoutViewState extends State<LayoutView> {
                                     });
                                     Navigator.pop(context);
                                     if (showAll) {
-                                      getAllPosts(displayName, allPosts: true);
+                                      getHomePosts(displayName, allPosts: true);
                                     } else {
-                                      getAllPosts(displayName,
+                                      getHomePosts(displayName,
                                           allPosts: false,
                                           username: displayName);
                                     }
@@ -367,7 +367,7 @@ class _LayoutViewState extends State<LayoutView> {
   }
 
   void showAllAgain() {
-    getAllPosts(displayName, allPosts: true);
+    getHomePosts(displayName, allPosts: true);
   }
 
   void getUnSeenMessagesCount() {
@@ -393,9 +393,14 @@ class _LayoutViewState extends State<LayoutView> {
     getUserPermissions();
   }
 
-  getAllPosts(String displayName, {bool? allPosts, String? username}) {
-    HomePageCubit.get(context).getAllPosts(GetPostsRequest(
-        currentUser: displayName, allPosts: allPosts!, username: username));
+  getHomePosts(String displayName, {bool? allPosts, String? username, bool? addNewPost}) {
+    if (addNewPost!) {
+      HomePageCubit.get(context).getHomePostsAndScrollToTop(GetPostsRequest(
+          currentUser: displayName, allPosts: allPosts!, username: username));
+    } else {
+      HomePageCubit.get(context).getHomePosts(GetPostsRequest(
+          currentUser: displayName, allPosts: allPosts!, username: username));
+    }
   }
 
   @override
@@ -505,8 +510,8 @@ class _LayoutViewState extends State<LayoutView> {
                                                         .addPostSubscriber(
                                                             addPostSubscriberRequest);
 
-                                                    getAllPosts(displayName,
-                                                        allPosts: true);
+                                                    getHomePosts(displayName,
+                                                        allPosts: true,addNewPost: true);
                                                   },
                                                 ));
                                           },

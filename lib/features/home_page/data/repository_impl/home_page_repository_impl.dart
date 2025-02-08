@@ -69,6 +69,20 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getHomePosts(GetPostsRequest getPostsRequest) async {
+    try {
+      final result = await _homePageDataSource.getHomePosts(getPostsRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
   Future<Either<FirebaseFailure, void>> addComment(AddCommentRequest addCommentRequest) async {
     try {
       final result = await _homePageDataSource.addComment(addCommentRequest);

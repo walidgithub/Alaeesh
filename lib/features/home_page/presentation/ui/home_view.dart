@@ -42,6 +42,7 @@ class _HomeViewState extends State<HomeView> {
       sl<SecureStorageLoginHelper>();
 
   final TextEditingController _searchingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   String id = "";
   String email = "";
@@ -57,12 +58,12 @@ class _HomeViewState extends State<HomeView> {
   Future<void> refresh() async {
     setState(() {
       if (!showAll) {
-        HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+        HomePageCubit.get(context).getHomePosts(GetPostsRequest(
             currentUser: displayName,
             allPosts: false,
             username: homePageModel[selectedPost].postModel.username));
       } else {
-        HomePageCubit.get(context).getAllPosts(
+        HomePageCubit.get(context).getHomePosts(
             GetPostsRequest(currentUser: displayName, allPosts: true));
       }
     });
@@ -85,12 +86,12 @@ class _HomeViewState extends State<HomeView> {
       role = userData['role'] ?? '';
       
     });
-    getAllPosts(displayName, allPosts: true);
+    getHomePosts(displayName, allPosts: true);
   }
 
-  getAllPosts(String displayName, {bool? allPosts, String? username}) {
+  getHomePosts(String displayName, {bool? allPosts, String? username}) {
     HomePageCubit.get(context)
-        .getAllPosts(GetPostsRequest(currentUser: displayName, allPosts: true));
+        .getHomePosts(GetPostsRequest(currentUser: displayName, allPosts: true));
   }
 
   @override
@@ -117,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
                       setState(() {
                         showAll = true;
                       });
-                      HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                      HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                           currentUser: displayName, allPosts: true));
                     },
                     text: AppStrings.showAll,
@@ -208,9 +209,9 @@ class _HomeViewState extends State<HomeView> {
         Expanded(
           child: BlocConsumer<HomePageCubit, HomePageState>(
             listener: (context, state) async {
-              if (state is GetAllPostsLoadingState) {
+              if (state is GetHomePostsLoadingState) {
                 showLoading();
-              } else if (state is GetAllPostsSuccessState) {
+              } else if (state is GetHomePostsSuccessState) {
                 hideLoading();
                 homePageModel.clear();
                 homePageModel.addAll(state.homePageModel);
@@ -243,7 +244,7 @@ class _HomeViewState extends State<HomeView> {
                             setState(() {
                               showAll = false;
                             });
-                            HomePageCubit.get(context).getAllPosts(
+                            HomePageCubit.get(context).getHomePosts(
                                 GetPostsRequest(
                                     currentUser: displayName,
                                     allPosts: false,
@@ -314,7 +315,7 @@ class _HomeViewState extends State<HomeView> {
                                   deletePostSubscriberRequest);
                             } else if (status == 0) {
                               if (!showAll) {
-                                HomePageCubit.get(context).getAllPosts(
+                                HomePageCubit.get(context).getHomePosts(
                                     GetPostsRequest(
                                         currentUser: displayName,
                                         allPosts: false,
@@ -322,7 +323,7 @@ class _HomeViewState extends State<HomeView> {
                                             .postModel
                                             .username));
                               } else {
-                                HomePageCubit.get(context).getAllPosts(
+                                HomePageCubit.get(context).getHomePosts(
                                     GetPostsRequest(
                                         currentUser: displayName,
                                         allPosts: true));
@@ -343,7 +344,22 @@ class _HomeViewState extends State<HomeView> {
                     showCommentBottomSheet = false;
                   });
                 }
-              } else if (state is GetAllPostsErrorState) {
+
+              } else if (state is GetHomePostsErrorState) {
+                showSnackBar(context, state.errorMessage);
+                hideLoading();
+              } else if (state is GetHomePostsAndScrollToTopLoadingState) {
+                showLoading();
+              } else if (state is GetHomePostsAndScrollToTopSuccessState) {
+                hideLoading();
+                homePageModel.clear();
+                homePageModel.addAll(state.homePageModel);
+                _scrollController.animateTo(
+                  0.0, // Scrolls to the top
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
+              } else if (state is GetHomePostsAndScrollToTopErrorState) {
                 showSnackBar(context, state.errorMessage);
                 hideLoading();
               } else if (state is AddSubscriberLoadingState) {
@@ -351,13 +367,13 @@ class _HomeViewState extends State<HomeView> {
               } else if (state is AddSubscriberSuccessState) {
                 hideLoading();
                 if (!showAll) {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName,
                       allPosts: false,
                       username:
                           homePageModel[selectedPost].postModel.username));
                 } else {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName, allPosts: true));
                 }
               } else if (state is AddSubscriberErrorState) {
@@ -368,13 +384,13 @@ class _HomeViewState extends State<HomeView> {
               } else if (state is DeleteSubscriberSuccessState) {
                 hideLoading();
                 if (!showAll) {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName,
                       allPosts: false,
                       username:
                           homePageModel[selectedPost].postModel.username));
                 } else {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName, allPosts: true));
                 }
               } else if (state is DeleteSubscriberErrorState) {
@@ -383,13 +399,13 @@ class _HomeViewState extends State<HomeView> {
               } else if (state is AddPostSubscriberLoadingState) {
               } else if (state is AddPostSubscriberSuccessState) {
                 if (!showAll) {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName,
                       allPosts: false,
                       username:
                           homePageModel[selectedPost].postModel.username));
                 } else {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName, allPosts: true));
                 }
               } else if (state is AddPostSubscriberErrorState) {
@@ -397,13 +413,13 @@ class _HomeViewState extends State<HomeView> {
               } else if (state is DeletePostSubscriberLoadingState) {
               } else if (state is DeletePostSubscriberSuccessState) {
                 if (!showAll) {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName,
                       allPosts: false,
                       username:
                           homePageModel[selectedPost].postModel.username));
                 } else {
-                  HomePageCubit.get(context).getAllPosts(GetPostsRequest(
+                  HomePageCubit.get(context).getHomePosts(GetPostsRequest(
                       currentUser: displayName, allPosts: true));
                 }
               } else if (state is DeletePostSubscriberErrorState) {
@@ -420,6 +436,7 @@ class _HomeViewState extends State<HomeView> {
                       backgroundColor: AppColors.cWhite,
                       onRefresh: refresh,
                       child: ListView.builder(
+                          controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return PostView(
@@ -427,7 +444,7 @@ class _HomeViewState extends State<HomeView> {
                                 setState(() {
                                   showAll = false;
                                 });
-                                HomePageCubit.get(context).getAllPosts(
+                                HomePageCubit.get(context).getHomePosts(
                                     GetPostsRequest(
                                         currentUser: displayName,
                                         allPosts: false,
@@ -508,7 +525,7 @@ class _HomeViewState extends State<HomeView> {
                                           deletePostSubscriberRequest);
                                 } else if (status == 0) {
                                   if (!showAll) {
-                                    HomePageCubit.get(context).getAllPosts(
+                                    HomePageCubit.get(context).getHomePosts(
                                         GetPostsRequest(
                                             currentUser: displayName,
                                             allPosts: false,
@@ -516,7 +533,7 @@ class _HomeViewState extends State<HomeView> {
                                                 .postModel
                                                 .username));
                                   } else {
-                                    HomePageCubit.get(context).getAllPosts(
+                                    HomePageCubit.get(context).getHomePosts(
                                         GetPostsRequest(
                                             currentUser: displayName,
                                             allPosts: true));
@@ -553,7 +570,7 @@ class _HomeViewState extends State<HomeView> {
                                           deletePostSubscriberRequest);
                                 } else if (status == 0) {
                                   if (!showAll) {
-                                    HomePageCubit.get(context).getAllPosts(
+                                    HomePageCubit.get(context).getHomePosts(
                                         GetPostsRequest(
                                             currentUser: displayName,
                                             allPosts: false,
@@ -561,7 +578,7 @@ class _HomeViewState extends State<HomeView> {
                                                 .postModel
                                                 .username));
                                   } else {
-                                    HomePageCubit.get(context).getAllPosts(
+                                    HomePageCubit.get(context).getHomePosts(
                                         GetPostsRequest(
                                             currentUser: displayName,
                                             allPosts: true));
@@ -571,7 +588,7 @@ class _HomeViewState extends State<HomeView> {
                               statusBarHeight: statusBarHeight,
                               postUpdated: () {
                                 if (!showAll) {
-                                  HomePageCubit.get(context).getAllPosts(
+                                  HomePageCubit.get(context).getHomePosts(
                                       GetPostsRequest(
                                           currentUser: displayName,
                                           allPosts: false,
@@ -579,7 +596,7 @@ class _HomeViewState extends State<HomeView> {
                                               .postModel
                                               .username));
                                 } else {
-                                  HomePageCubit.get(context).getAllPosts(
+                                  HomePageCubit.get(context).getHomePosts(
                                       GetPostsRequest(
                                           currentUser: displayName,
                                           allPosts: true));

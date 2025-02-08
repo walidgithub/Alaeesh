@@ -118,6 +118,30 @@ class GetAllPostsErrorState extends HomePageState{
   GetAllPostsErrorState(this.errorMessage);
 }
 
+class GetHomePostsLoadingState extends HomePageState{}
+class GetHomePostsSuccessState extends HomePageState{
+  final List<HomePageModel> homePageModel;
+
+  GetHomePostsSuccessState(this.homePageModel);
+}
+class GetHomePostsErrorState extends HomePageState{
+  final String errorMessage;
+
+  GetHomePostsErrorState(this.errorMessage);
+}
+
+class GetHomePostsAndScrollToTopLoadingState extends HomePageState{}
+class GetHomePostsAndScrollToTopSuccessState extends HomePageState{
+  final List<HomePageModel> homePageModel;
+
+  GetHomePostsAndScrollToTopSuccessState(this.homePageModel);
+}
+class GetHomePostsAndScrollToTopErrorState extends HomePageState{
+  final String errorMessage;
+
+  GetHomePostsAndScrollToTopErrorState(this.errorMessage);
+}
+
 class SearchPostLoadingState extends HomePageState{}
 class SearchPostSuccessState extends HomePageState{
   final List<HomePageModel> homePageModel;
