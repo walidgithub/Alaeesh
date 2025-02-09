@@ -8,6 +8,7 @@ import 'package:last/features/dashboard/domain/repository/dashboard_repository.d
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_home_posts_usecase.dart';
+import 'package:last/features/notifications/domain/usecases/update_notification_to_seen_usecase.dart';
 import 'package:last/features/welcome/domain/usecases/update_user_permissions_usecase.dart';
 import 'package:last/features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import 'package:last/features/home_page/data/data_source/home_page_datasource.dart';
@@ -54,6 +55,7 @@ import '../../features/layout/data/data_source/layout_datasource.dart';
 import '../../features/layout/data/repository_impl/layout_repository_impl.dart';
 import '../../features/layout/domain/repository/layout_repository.dart';
 import '../../features/layout/domain/usecases/add_post_usecase.dart';
+import '../../features/notifications/domain/usecases/get_unseen_notifications_usecase.dart';
 import '../../features/welcome/domain/usecases/get_user_permissions_usecase.dart';
 import '../../features/layout/domain/usecases/send_advise_usecase.dart';
 import '../../features/layout/presentation/bloc/layout_cubit.dart';
@@ -68,7 +70,6 @@ import '../../features/mine/domain/usecases/get_mine_usecase.dart';
 import '../../features/mine/presentation/bloc/mine_cubit.dart';
 import '../../features/notifications/data/data_source/notifications_datasource.dart';
 import '../../features/notifications/data/repository_impl/notifications_repository_impl.dart';
-import '../../features/notifications/domain/usecases/delete_notification_usecase.dart';
 import '../../features/notifications/domain/usecases/get_notifications_usecase.dart';
 import '../../features/switch_user/data/repository_impl/switch_user_repository_impl.dart';
 import '../../features/switch_user/domain/usecases/switch_user_usecase.dart';
@@ -179,8 +180,9 @@ class ServiceLocator {
     sl.registerLazySingleton<GetMineUseCase>(() => GetMineUseCase(sl()));
 
     // notifications useCases
-    sl.registerLazySingleton<DeleteNotificationUseCase>(() => DeleteNotificationUseCase(sl()));
-    sl.registerLazySingleton<GetAllNotificationsUseCase>(() => GetAllNotificationsUseCase(sl()));
+    sl.registerLazySingleton<GetNotificationsUseCase>(() => GetNotificationsUseCase(sl()));
+    sl.registerLazySingleton<GetUnSeenNotificationsUseCase>(() => GetUnSeenNotificationsUseCase(sl()));
+    sl.registerLazySingleton<UpdateNotificationToSeenUseCase>(() => UpdateNotificationToSeenUseCase(sl()));
 
     // dashboard useCases
     sl.registerLazySingleton<GetUserAdvicesUseCase>(() => GetUserAdvicesUseCase(sl()));
@@ -195,7 +197,7 @@ class ServiceLocator {
     sl.registerFactory(() => SwitchUserCubit(sl(), sl(), sl()));
     sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl()));
-    sl.registerFactory(() => NotificationsCubit(sl(), sl()));
+    sl.registerFactory(() => NotificationsCubit(sl(), sl(), sl()));
     sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));

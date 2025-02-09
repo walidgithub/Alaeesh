@@ -1,27 +1,37 @@
-import 'package:last/features/Notifications/data/model/notifications_model.dart';
+import '../../data/model/notifications_model.dart';
 
 abstract class NotificationsState{}
 
 class NotificationsInitial extends NotificationsState{}
 
-class DeleteNotificationLoadingState extends NotificationsState{}
-class DeleteNotificationSuccessState extends NotificationsState{}
-class DeleteNotificationErrorState extends NotificationsState{
-  final String errorMessage;
+class GetNotificationsLoadingState extends NotificationsState{}
+class GetNotificationsSuccessState extends NotificationsState{
+  List<AlaeeshNotificationsModel> alaeeshNotificationsList;
+  GetNotificationsSuccessState(this.alaeeshNotificationsList);
+}
+class GetNotificationsErrorState extends NotificationsState{
+  final String errorNotification;
 
-  DeleteNotificationErrorState(this.errorMessage);
+  GetNotificationsErrorState(this.errorNotification);
 }
 
-class GetAllNotificationsLoadingState extends NotificationsState{}
-class GetAllNotificationsSuccessState extends NotificationsState{
-  final List<NotificationsModel> notificationsResult;
+class UpdateNotificationToSeenLoadingState extends NotificationsState{}
+class UpdateNotificationToSeenSuccessState extends NotificationsState{}
+class UpdateNotificationToSeenErrorState extends NotificationsState{
+  final String errorNotification;
 
-  GetAllNotificationsSuccessState(this.notificationsResult);
-}
-class GetAllNotificationsErrorState extends NotificationsState{
-  final String errorMessage;
-
-  GetAllNotificationsErrorState(this.errorMessage);
+  UpdateNotificationToSeenErrorState(this.errorNotification);
 }
 
-class NoInternetState extends NotificationsState{}
+class GetUnSeenNotificationsLoadingState extends NotificationsState{}
+class GetUnSeenNotificationsSuccessState extends NotificationsState{
+  int unSeenNotificationsCount;
+  GetUnSeenNotificationsSuccessState(this.unSeenNotificationsCount);
+}
+class GetUnSeenNotificationsErrorState extends NotificationsState{
+  final String errorNotification;
+
+  GetUnSeenNotificationsErrorState(this.errorNotification);
+}
+
+class NotificationsNoInternetState extends NotificationsState{}

@@ -45,6 +45,7 @@ class AppStrings {
   static const String updatedSuccessfully = 'تـمـام كـده 👍';
   static const String noPosts = 'لـو مـفـيـش ألـشـات، ابـدأ أنـت 🤷‍';
   static const String noMessages = 'مـفـيـش رسـايـل اتـبـعـتـت لـك 🤝‍';
+  static const String noNotifications = 'مـفـيـش إشـعـارات لـيـك 🤝‍';
   static const String noAdvices = 'مـفـيـش مـقـتـرحـات 🤝‍';
   static const String noActivities = 'مـفـيـش مـشـاركـات خـاصـة بـك 🤷‍';
   static const String addSuccess = 'شــكـرا 🥳';

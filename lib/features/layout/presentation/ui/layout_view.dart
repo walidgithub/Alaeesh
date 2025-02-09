@@ -33,6 +33,9 @@ import '../../../home_page/presentation/ui/home_view.dart';
 import '../../../messages/presentation/bloc/messages_state.dart';
 import '../../../messages/presentation/ui/messages_view.dart';
 import '../../../mine/presentation/ui/mine_view.dart';
+import '../../../notifications/data/model/requests/get_notifications_request.dart';
+import '../../../notifications/presentation/bloc/notifications_cubit.dart';
+import '../../../notifications/presentation/bloc/notifications_state.dart';
 import '../../../notifications/presentation/ui/notifications_view.dart';
 import '../../../welcome/presentation/bloc/welcome_cubit.dart';
 import '../../../welcome/presentation/bloc/welcome_state.dart';
@@ -46,9 +49,9 @@ class LayoutView extends StatefulWidget {
 }
 
 class _LayoutViewState extends State<LayoutView> {
-  final int _notificationBadgeAmount = 0;
+  int _notificationsBadgeAmount = 0;
   int _messagesBadgeAmount = 0;
-  final bool _showNotificationBadge = true;
+  final bool _notificationsBadge = true;
   final bool _messagesBadge = true;
   String returnedUserName = '';
   bool addPost = true;
@@ -375,6 +378,11 @@ class _LayoutViewState extends State<LayoutView> {
         .getUnSeenMessages(GetMessagesRequest(username: displayName));
   }
 
+  void getUnSeenNotificationsCount() {
+    NotificationsCubit.get(context)
+        .getUnSeenNotifications(GetNotificationsRequest(username: displayName));
+  }
+
   void getUserPermissions() {
     WelcomeCubit.get(context).getUserPermissions(displayName);
   }
@@ -390,6 +398,7 @@ class _LayoutViewState extends State<LayoutView> {
       role = userData['role'] ?? '';
     });
     getUnSeenMessagesCount();
+    getUnSeenNotificationsCount();
     getUserPermissions();
   }
 
@@ -528,7 +537,8 @@ class _LayoutViewState extends State<LayoutView> {
                                       hideLoading();
                                       onError(context, AppStrings.noInternet);
                                     }
-                                  }, builder: (context, state) {
+                                  },
+                                          builder: (context, state) {
                                     return Bounceable(
                                       onTap: () {
                                         WelcomeCubit.get(context)
@@ -701,40 +711,72 @@ class _LayoutViewState extends State<LayoutView> {
                         whiteIcon: AppAssets.dashboardWhite,
                         padding: 5.w,
                       )) : Container(),
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          addPost = false;
-                        });
-                        toggleIcon(3);
-                      },
-                      child: badges.Badge(
-                        position:
-                            badges.BadgePosition.topStart(top: 0, start: 0),
-                        badgeAnimation: const badges.BadgeAnimation.slide(
-                          disappearanceFadeAnimationDuration:
-                              Duration(milliseconds: 200),
-                          curve: Curves.bounceInOut,
-                        ),
-                        showBadge: _showNotificationBadge,
-                        badgeStyle: const badges.BadgeStyle(
-                          badgeColor: AppColors.cPrimary,
-                        ),
-                        badgeContent: Text(
-                          _notificationBadgeAmount.toString(),
-                          style: const TextStyle(color: AppColors.cWhite),
-                        ),
-                        child: TabIcon(
+                  BlocConsumer<NotificationsCubit, NotificationsState>(
+                      listener: (context, state) {
+                        if (state is GetUnSeenNotificationsLoadingState) {
+                          showLoading();
+                        } else if (state is GetUnSeenNotificationsSuccessState) {
+                          hideLoading();
+                          setState(() {
+                            _notificationsBadgeAmount = state.unSeenNotificationsCount;
+                          });
+                        } else if (state is GetUnSeenNotificationsErrorState) {
+                          hideLoading();
+                          showSnackBar(context, state.errorNotification);
+                        } else if (state is NotificationsNoInternetState) {
+                          hideLoading();
+                          onError(context, AppStrings.noInternet);
+                        }
+                      }, builder: (context, state) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            addPost = false;
+                            _notificationsBadgeAmount = 0;
+                          });
+                          toggleIcon(3);
+                        },
+                        child: _notificationsBadgeAmount > 0
+                            ? badges.Badge(
+                          position: badges.BadgePosition.topStart(
+                              top: 0, start: 0),
+                          badgeAnimation:
+                          const badges.BadgeAnimation.slide(
+                            disappearanceFadeAnimationDuration:
+                            Duration(milliseconds: 200),
+                            curve: Curves.bounceInOut,
+                          ),
+                          showBadge: _notificationsBadge,
+                          badgeStyle: const badges.BadgeStyle(
+                            badgeColor: AppColors.cPrimary,
+                          ),
+                          badgeContent: Text(
+                            _notificationsBadge.toString(),
+                            style:
+                            const TextStyle(color: AppColors.cWhite),
+                          ),
+                          child: TabIcon(
+                            selectedWidgets: selectedWidgets,
+                            selectScreen: selectScreen,
+                            index: 3,
+                            heightSize: 50.h,
+                            widthSize: 50.w,
+                            blueIcon: AppAssets.notification,
+                            whiteIcon: AppAssets.notificationWhite,
+                            padding: 5.w,
+                          ),
+                        )
+                            : TabIcon(
                           selectedWidgets: selectedWidgets,
                           selectScreen: selectScreen,
                           index: 3,
-                          heightSize: 45.h,
-                          widthSize: 45.w,
+                          heightSize: 50.h,
+                          widthSize: 50.w,
                           blueIcon: AppAssets.notification,
                           whiteIcon: AppAssets.notificationWhite,
                           padding: 5.w,
-                        ),
-                      )),
+                        ));
+                  }),
                   GestureDetector(
                       onTap: () {
                         setState(() {

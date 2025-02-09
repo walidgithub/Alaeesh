@@ -1,18 +1,58 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:last/features/notifications/data/model/requests/get_notifications_request.dart';
 import '../../../../core/di/di.dart';
 import '../model/notifications_model.dart';
+import '../model/requests/update_notification_to_seeen_request.dart';
 
 abstract class BaseDataSource {
-  Future<void> deleteNotification(int notificationId);
-  Future<List<NotificationsModel>> getAllNotifications(int userId);
+  Future<List<AlaeeshNotificationsModel>> getUserNotifications(
+      GetNotificationsRequest getNotificationsRequest);
+
+  Future<void> updateNotificationToSeen(
+      UpdateNotificationToSeenRequest updateNotificationToSeenRequest);
+
+  Future<int> getUnSeenNotifications(GetNotificationsRequest getNotificationsRequest);
 }
 
 class NotificationsDataSource extends BaseDataSource {
   final FirebaseFirestore firestore = sl<FirebaseFirestore>();
 
   @override
-  Future<void> deleteNotification(int notificationId) async {
+  Future<List<AlaeeshNotificationsModel>> getUserNotifications(
+      GetNotificationsRequest getNotificationsRequest) async {
+    List<AlaeeshNotificationsModel> alaeeshNotificationsList = [];
     try {
+      var docs = await firestore
+          .collection('Notifications')
+          .where('username', isEqualTo: getNotificationsRequest.username)
+          .get();
+
+      alaeeshNotificationsList = docs.docs.map((doc) {
+        var data = doc.data();
+        return AlaeeshNotificationsModel(
+            id: doc.id,
+            notification: data['notification'] ?? '',
+            time: data['time'] ?? '',
+            username: data['username'] ?? '',
+            seen: data['seen'] ?? false);
+      }).toList();
+
+      alaeeshNotificationsList.sort((a, b) => b.time.compareTo(a.time));
+
+      return alaeeshNotificationsList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateNotificationToSeen(UpdateNotificationToSeenRequest updateNotificationToSeenRequest) async {
+    try {
+      final notificationRef = firestore
+          .collection('Notifications')
+          .doc(updateNotificationToSeenRequest.id);
+
+      await notificationRef.update({'seen': true});
 
     } catch (e) {
       rethrow;
@@ -20,9 +60,27 @@ class NotificationsDataSource extends BaseDataSource {
   }
 
   @override
-  Future<List<NotificationsModel>> getAllNotifications(int userId) async {
+  Future<int> getUnSeenNotifications(GetNotificationsRequest getNotificationsRequest) async {
     try {
-      return [];
+      List<AlaeeshNotificationsModel> alaeeshNotificationsList = [];
+
+      var docs = await firestore
+          .collection('Notifications')
+          .where('username', isEqualTo: getNotificationsRequest.username)
+          .where('seen', isEqualTo: false)
+          .get();
+
+
+      alaeeshNotificationsList = docs.docs.map((doc) {
+        var data = doc.data();
+        return AlaeeshNotificationsModel(
+            id: doc.id,
+            notification: data['notification'] ?? '',
+            time: data['time'] ?? '',
+            username: data['username'] ?? '',
+            seen: data['seen'] ?? false);
+      }).toList();
+      return alaeeshNotificationsList.length;
     } catch (e) {
       rethrow;
     }

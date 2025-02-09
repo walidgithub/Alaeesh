@@ -1,30 +1,39 @@
 import '../../../home_page/data/model/post_model.dart';
 
-class NotificationsModel {
-  final String id;
-  final String username;
-  PostModel postModel;
-  NotificationsModel({
-    required this.id,
+class AlaeeshNotificationsModel {
+  String? id;
+  String notification;
+  String username;
+  String time;
+  bool seen;
+  AlaeeshNotificationsModel({
+    this.id,
+    required this.notification,
     required this.username,
-    required this.postModel,
+    required this.time,
+    required this.seen,
   });
 
-  static NotificationsModel fromMap(Map<String, dynamic> map) {
-    NotificationsModel notificationsModel = NotificationsModel(
-        id: map['id'],
-        username: map['username'],
-        postModel: map['postModel']);
-    return notificationsModel;
+  static AlaeeshNotificationsModel fromMap(Map<String, dynamic> map) {
+    AlaeeshNotificationsModel alaeeshNotificationsModel = AlaeeshNotificationsModel(
+      id: map['id'],
+      username: map['username'],
+      notification: map['notification'],
+      time: map['time'],
+      seen: map['seen'],
+    );
+    return alaeeshNotificationsModel;
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'username': username,
-      'postModel': postModel,
+      'notification': notification,
+      'time': time,
+      'seen': seen,
     };
   }
 }
 
-List<NotificationsModel> notificationsList = [];
+List<AlaeeshNotificationsModel> alaeeshNotificationsList = [];

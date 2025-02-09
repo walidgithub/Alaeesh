@@ -9,6 +9,7 @@ import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
 import '../../features/home_page/presentation/bloc/home_page_cubit.dart';
 import '../../features/layout/presentation/ui/layout_view.dart';
 import '../../features/mine/presentation/bloc/mine_cubit.dart';
+import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
 import '../../features/welcome/presentation/ui/welcome_view.dart';
 import '../di/di.dart';
 import 'arguments.dart';
@@ -37,6 +38,7 @@ class RouteGenerator {
                   BlocProvider(create: (mineContext) => sl<MineCubit>()),
                   BlocProvider(create: (dashboardContext) => sl<DashboardCubit>()),
                   BlocProvider(create: (messagesContext) => sl<MessagesCubit>()),
+                  BlocProvider(create: (notificationsContext) => sl<NotificationsCubit>()),
                   BlocProvider(create: (welcomeContext) => sl<WelcomeCubit>()),
                 ],
                 child: const LayoutView())));
