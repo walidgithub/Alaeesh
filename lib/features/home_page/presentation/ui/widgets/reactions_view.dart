@@ -9,7 +9,8 @@ import '../../../domain/entities/emoji_entity.dart';
 class ReactionsView extends StatefulWidget {
   Function returnEmojiData;
   Function deleteEmojiData;
-  ReactionsView({super.key, required this.returnEmojiData, required this.deleteEmojiData});
+  bool showSkip;
+  ReactionsView({super.key, required this.returnEmojiData, required this.deleteEmojiData, required this.showSkip});
 
   @override
   State<ReactionsView> createState() => _ReactionsViewState();
@@ -29,7 +30,7 @@ class _ReactionsViewState extends State<ReactionsView> {
       ),
       child: Row(
         children: [
-          Bounceable(
+          widget.showSkip ? Bounceable(
             onTap: () {
               widget.deleteEmojiData();
             },
@@ -37,7 +38,7 @@ class _ReactionsViewState extends State<ReactionsView> {
               emojisData[0].emojiData,
               style: AppTypography.kLight16.copyWith(color: AppColors.cTitle),
             ),
-          ),
+          ) : Container(),
           SizedBox(width: 10.w),
           Expanded(
             child: SingleChildScrollView(

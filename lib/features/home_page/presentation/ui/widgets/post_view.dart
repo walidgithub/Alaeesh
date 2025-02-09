@@ -11,9 +11,9 @@ import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_emoji_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_view.dart';
+import 'package:last/features/home_page/presentation/ui/widgets/report_complaint_dialog.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/update_post_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
@@ -24,6 +24,8 @@ import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../dashboard/data/model/requests/send_reply_request.dart';
+import '../../../../dashboard/presentation/ui/widgets/send_message_dialog.dart';
 import '../../../../welcome/presentation/bloc/welcome_cubit.dart';
 import '../../../../welcome/presentation/bloc/welcome_state.dart';
 import '../../../data/model/comments_model.dart';
@@ -286,6 +288,33 @@ class _PostViewState extends State<PostView> {
                           //     ],
                           //   ),
                           // )
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+                              Navigator.pop(context);
+                              ReportComplaintDialog.show(
+                                  context, AppStrings.adminName, widget.id);
+                            },
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.flag,
+                                  width: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.reportComplaint,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -390,6 +419,10 @@ class _PostViewState extends State<PostView> {
                           HomePageCubit.get(context)
                               .deleteEmoji(deleteEmojiRequest);
                         },
+                        showSkip: widget.emojisList
+                            .where((element) =>
+                        element.username == widget.loggedInUserName)
+                            .isNotEmpty,
                       );
                     },
                   ),
@@ -839,21 +872,21 @@ class _PostViewState extends State<PostView> {
                             );
                           }),
                         ),
-                        SizedBox(
-                          width: 30.w,
-                        ),
-                        Bounceable(
-                          onTap: () {
-                            Share.share(
-                              widget.postAlsha,
-                              subject: AppStrings.appName,
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.share,
-                            width: 25.w,
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 30.w,
+                        // ),
+                        // Bounceable(
+                        //   onTap: () {
+                        //     Share.share(
+                        //       widget.postAlsha,
+                        //       subject: AppStrings.appName,
+                        //     );
+                        //   },
+                        //   child: SvgPicture.asset(
+                        //     AppAssets.share,
+                        //     width: 25.w,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

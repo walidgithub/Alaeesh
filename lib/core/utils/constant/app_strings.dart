@@ -1,6 +1,9 @@
 class AppStrings {
   static const String appName = "ألائـــيـش";
   static const String google = "الـدخـول بـجـوجـل";
+  static const String regarding = "بـخـصـوص";
+  static const String adminName = "MyAssistant Program";
+  static const String reportComplaint = "إبـلاغ عـن ألـشـة ✍️";
   static const String lastPosts = "تـحـديـثـات";
   static const String suggestions = "مـقـتـرحـات";
   static const String loading = 'اصـبـر 😴';

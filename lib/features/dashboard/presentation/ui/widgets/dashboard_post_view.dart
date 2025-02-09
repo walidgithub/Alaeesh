@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
-import 'package:last/features/dashboard/presentation/ui/widgets/send_message_view.dart';
+import 'package:last/features/dashboard/presentation/ui/widgets/send_message_dialog.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 import 'package:last/features/welcome/data/model/user_permissions_model.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';

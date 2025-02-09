@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:last/features/home_page/data/model/comments_model.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_emoji_request.dart';
 import 'package:last/features/home_page/presentation/ui/widgets/reactions_comment_bottom_sheet.dart';
+import 'package:last/features/home_page/presentation/ui/widgets/report_complaint_dialog.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
@@ -158,6 +159,10 @@ showSnackBar(context, state.errorMessage);
                             HomePageCubit.get(context)
                                 .deleteCommentEmoji(deleteCommentEmojiRequest);
                           },
+                          showSkip: widget.commentEmojisModel
+                              .where((element) =>
+                          element.username == widget.loggedInUserName)
+                              .isNotEmpty,
                         ));
                   },
                 ))
@@ -337,6 +342,33 @@ showSnackBar(context, state.errorMessage);
                                   return SizedBox.shrink();
                                 }
                               },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Bounceable(
+                            onTap: () {
+                              Navigator.pop(context);
+                              ReportComplaintDialog.show(
+                                  context, AppStrings.adminName, widget.postId);
+                            },
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.flag,
+                                  width: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  AppStrings.reportComplaint,
+                                  style: AppTypography.kLight13,
+                                ),
+                              ],
                             ),
                           ),
                         ],

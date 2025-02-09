@@ -14,7 +14,6 @@ import 'package:last/features/home_page/presentation/ui/widgets/reactions_view.d
 import 'package:last/features/home_page/presentation/ui/widgets/update_post_bottom_sheet.dart';
 import 'package:last/features/trending/presentation/ui/widgets/top_post_comments_bottom_sheet.dart';
 import 'package:readmore/readmore.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../../core/functions/time_ago_function.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
@@ -336,6 +335,10 @@ showSnackBar(context, state.errorMessage);
                           TrendingCubit.get(context)
                               .deleteEmoji(deleteEmojiRequest);
                         },
+                        showSkip: widget.emojisList
+                            .where((element) =>
+                        element.username == widget.loggedInUserName)
+                            .isNotEmpty,
                       );
                     },
                   ),
@@ -750,21 +753,21 @@ showSnackBar(context, state.errorMessage);
                             width: 30.w,
                           ),
                         ),
-                        SizedBox(
-                          width: 30.w,
-                        ),
-                        Bounceable(
-                          onTap: () {
-                            Share.share(
-                              widget.postAlsha,
-                              subject: AppStrings.appName,
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.share,
-                            width: 25.w,
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 30.w,
+                        // ),
+                        // Bounceable(
+                        //   onTap: () {
+                        //     Share.share(
+                        //       widget.postAlsha,
+                        //       subject: AppStrings.appName,
+                        //     );
+                        //   },
+                        //   child: SvgPicture.asset(
+                        //     AppAssets.share,
+                        //     width: 25.w,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],
