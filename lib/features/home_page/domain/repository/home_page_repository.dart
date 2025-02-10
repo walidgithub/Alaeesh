@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:last/features/home_page/data/model/requests/add_emoji_request.dart';
+import 'package:last/features/home_page/data/model/requests/send_notification_request.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
 import '../../data/model/home_page_model.dart';
 import '../../data/model/requests/add_comment_emoji_request.dart';
@@ -18,6 +19,8 @@ import '../../data/model/requests/update_post_request.dart';
 import '../../data/model/subscribers_model.dart';
 
 abstract class HomePageRepository {
+  Future<Either<FirebaseFailure, void>> sendNotification(SendNotificationRequest sendNotificationRequest);
+
   Future<Either<FirebaseFailure, void>> updatePost(UpdatePostRequest updatePostRequest);
   Future<Either<FirebaseFailure, void>> deletePost(String postId);
   Future<Either<FirebaseFailure, List<HomePageModel>>> searchPost(String postText);

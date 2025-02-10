@@ -1,12 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:last/features/notifications/data/model/requests/get_notifications_request.dart';
 import '../../../../core/di/di.dart';
+import '../../../home_page/data/model/post_model.dart';
+import '../../../trending/data/model/requests/get_post_data_request.dart';
 import '../model/notifications_model.dart';
 import '../model/requests/update_notification_to_seeen_request.dart';
 
 abstract class BaseDataSource {
   Future<List<AlaeeshNotificationsModel>> getUserNotifications(
       GetNotificationsRequest getNotificationsRequest);
+
+  Future<PostModel> getPostData(
+      GetPostDataRequest getPostDataRequest);
 
   Future<void> updateNotificationToSeen(
       UpdateNotificationToSeenRequest updateNotificationToSeenRequest);
@@ -31,6 +36,7 @@ class NotificationsDataSource extends BaseDataSource {
         var data = doc.data();
         return AlaeeshNotificationsModel(
             id: doc.id,
+            postId: data['postId'] ?? '',
             notification: data['notification'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
@@ -75,6 +81,7 @@ class NotificationsDataSource extends BaseDataSource {
         var data = doc.data();
         return AlaeeshNotificationsModel(
             id: doc.id,
+            postId: data['postId'] ?? '',
             notification: data['notification'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
@@ -84,5 +91,11 @@ class NotificationsDataSource extends BaseDataSource {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<PostModel> getPostData(GetPostDataRequest getPostDataRequest) async {
+    // TODO: implement getPostData
+    throw UnimplementedError();
   }
 }

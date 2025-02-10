@@ -22,15 +22,17 @@ import '../../../../dashboard/presentation/bloc/dashboard_state.dart';
 class ReportComplaintDialog extends StatefulWidget {
   String username;
   String postId;
-  ReportComplaintDialog({super.key, required this.username, required this.postId});
+  String commentId;
+  String title;
+  ReportComplaintDialog({super.key, required this.username, required this.postId, required this.title, required this.commentId});
 
-  static Future<void> show(BuildContext context, String username, String postId) async {
+  static Future<void> show(BuildContext context, String username, String postId, String commentId, String title) async {
     final navigator = Navigator.of(context);
     await showDialog<void>(
       context: context,
       useRootNavigator: false,
       barrierDismissible: false,
-      builder: (_) => ReportComplaintDialog(username: username,postId: postId,),
+      builder: (_) => ReportComplaintDialog(username: username,postId: postId,title: title,commentId: commentId,),
     );
 
     if (navigator.mounted) {
@@ -63,7 +65,7 @@ class _ReportComplaintDialogState extends State<ReportComplaintDialog> {
             children: [
               const CustomDivider(),
               SizedBox(height: 20.h),
-              Text(AppStrings.reportComplaint, style: AppTypography.kBold24),
+              Text('${AppStrings.reportComplaint}${widget.title}', style: AppTypography.kBold24),
               SizedBox(height: 20.h),
               Row(
                 children: [
@@ -122,7 +124,10 @@ class _ReportComplaintDialogState extends State<ReportComplaintDialog> {
                               seen: false,
                               username: widget.username,
                               time: '$formattedDate $formattedTime',
-                              message: '${AppStrings.regarding} >>> ${messageEditingController.text.trim()} >>> ${widget.postId}');
+                              message: '${AppStrings.regarding} >>>'
+                                  ' ${messageEditingController.text.trim()} >>>'
+                                  ' ${widget.postId} ${widget.commentId == "" ? "" : ">>> '${AppStrings.comment}' "
+                              '${widget.commentId}' }');
                           DashboardCubit.get(context)
                               .sendReply(sendReplyRequest);
                         },

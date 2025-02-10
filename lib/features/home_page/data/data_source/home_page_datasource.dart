@@ -6,6 +6,7 @@ import 'package:last/features/home_page/data/model/requests/add_post_subscriber_
 import 'package:last/features/home_page/data/model/requests/delete_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
+import 'package:last/features/home_page/data/model/requests/send_notification_request.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../model/comments_model.dart';
@@ -24,6 +25,8 @@ import '../model/requests/update_post_request.dart';
 import '../model/subscribers_model.dart';
 
 abstract class BaseDataSource {
+  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest);
+
   Future<void> updatePost(UpdatePostRequest updatePostRequest);
   Future<void> deletePost(String postId);
   Future<List<HomePageModel>> searchPost(String postText);
@@ -591,6 +594,15 @@ class HomePageDataSource extends BaseDataSource {
       }).toList();
 
       return filteredHomePageModels;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest) async {
+    try {
+
     } catch (e) {
       rethrow;
     }

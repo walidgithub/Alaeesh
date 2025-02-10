@@ -9,6 +9,7 @@ import 'package:last/features/home_page/data/model/requests/delete_emoji_request
 import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/get_subscribers_request.dart';
+import 'package:last/features/home_page/data/model/requests/send_notification_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/update_post_request.dart';
 import 'package:last/features/home_page/data/model/subscribers_model.dart';
@@ -254,6 +255,20 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<FirebaseFailure, List<HomePageModel>>> searchPost(String postText) async {
     try {
       final result = await _homePageDataSource.searchPost(postText);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> sendNotification(SendNotificationRequest sendNotificationRequest) async {
+    try {
+      final result = await _homePageDataSource.sendNotification(sendNotificationRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

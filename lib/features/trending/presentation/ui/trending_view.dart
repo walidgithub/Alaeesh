@@ -135,7 +135,7 @@ class _TrendingViewState extends State<TrendingView> {
                 return Directionality(
                   textDirection: TextDirection.rtl,
                   child: CommentsBottomSheet(
-                    getUserPosts: () {
+                    getUserPosts: (String userName) {
                       TrendingCubit.get(context).getTopPosts(
                           GetTopPostsRequest(currentUser: displayName));
                     },
@@ -379,7 +379,7 @@ class _TrendingViewState extends State<TrendingView> {
                                     subscriptionsCount:
                                         suggestedUserModel[index]
                                             .subscriptionsCount,
-                                    getUserPosts: () {
+                                    getUserPosts: (String userName) {
                                       setState(() {
                                         selectedUserName =
                                             suggestedUserModel[index].userName;
@@ -502,11 +502,10 @@ class _TrendingViewState extends State<TrendingView> {
                           postSubscribersList: trendingModel[index]
                               .postModel
                               .postSubscribersList,
-                          getUserPosts: () {
+                          getUserPosts: (String userName) {
                             Navigator.pushNamed(context, Routes.userPostsRoute,
                                 arguments: UserPostsArguments(
-                                    username:
-                                        trendingModel[index].postModel.username,
+                                    username: userName,
                                     reload: () {
                                       getTopPosts(displayName);
                                       getSuggestedUsers();

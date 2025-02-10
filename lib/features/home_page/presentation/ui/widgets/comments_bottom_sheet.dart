@@ -319,8 +319,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             }
                           }, builder: (context, state) {
                             return CommentView(
-                              getUserPosts: () {
-                                widget.getUserPosts();
+                              getUserPosts: (String userName) {
+                                widget.getUserPosts(userName);
                               },
                               userEmail: widget.userEmail,
                               addOrRemoveSubscriber: (int status) {

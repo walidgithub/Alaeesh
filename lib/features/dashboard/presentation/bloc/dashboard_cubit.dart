@@ -12,8 +12,6 @@ import '../../../home_page/domain/usecases/delete_comment_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/get_all_posts_usecase.dart';
-import '../../../welcome/data/model/user_permissions_model.dart';
-import '../../../welcome/domain/usecases/update_user_permissions_usecase.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {

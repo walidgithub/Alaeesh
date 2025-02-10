@@ -351,7 +351,7 @@ showSnackBar(context, state.errorMessage);
                             onTap: () {
                               Navigator.pop(context);
                               ReportComplaintDialog.show(
-                                  context, AppStrings.adminName, widget.postId);
+                                  context, AppStrings.adminName, widget.postId, widget.id, AppStrings.comment);
                             },
                             child: Row(
                               mainAxisAlignment:
@@ -365,7 +365,7 @@ showSnackBar(context, state.errorMessage);
                                   width: 10.w,
                                 ),
                                 Text(
-                                  AppStrings.reportComplaint,
+                                  '${AppStrings.reportComplaint} ${AppStrings.comment} 🚨',
                                   style: AppTypography.kLight13,
                                 ),
                               ],
@@ -409,7 +409,7 @@ showSnackBar(context, state.errorMessage);
                                 children: [
                                   Bounceable(
                                     onTap: () {
-                                      widget.getUserPosts();
+                                      widget.getUserPosts(widget.username);
                                     },
                                     child: Row(
                                       children: [

@@ -295,7 +295,7 @@ class _PostViewState extends State<PostView> {
                             onTap: () {
                               Navigator.pop(context);
                               ReportComplaintDialog.show(
-                                  context, AppStrings.adminName, widget.id);
+                                  context, AppStrings.adminName, widget.id,"", AppStrings.alsha);
                             },
                             child: Row(
                               mainAxisAlignment:
@@ -309,7 +309,7 @@ class _PostViewState extends State<PostView> {
                                   width: 10.w,
                                 ),
                                 Text(
-                                  AppStrings.reportComplaint,
+                                  '${AppStrings.reportComplaint}${AppStrings.alsha} 🚨',
                                   style: AppTypography.kLight13,
                                 ),
                               ],
@@ -466,7 +466,7 @@ class _PostViewState extends State<PostView> {
                           children: [
                             Bounceable(
                               onTap: () {
-                                widget.getUserPosts();
+                                widget.getUserPosts(widget.postUsername);
                               },
                               child: Row(
                                 children: [
@@ -640,8 +640,8 @@ class _PostViewState extends State<PostView> {
                                         },
                                         statusBarHeight: widget.statusBarHeight,
                                         commentsList: widget.commentsList,
-                                        getUserPosts: () {
-                                          widget.getUserPosts();
+                                        getUserPosts: (String userName) {
+                                          widget.getUserPosts(userName);
                                         },
                                       ),
                                     );

@@ -37,7 +37,7 @@ class AddPostBottomSheet extends StatefulWidget {
 
 class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
   final TextEditingController _postController = TextEditingController();
-  
+  String postId = "";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -100,10 +100,20 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                             showLoading();
                           } else if (state is AddPostSuccessState) {
                             hideLoading();
-                            showSnackBar(context, AppStrings.addSuccess);
-                            widget.postAdded(state.addPostResponse.postId);
-                            Navigator.pop(context);
+                            postId = state.addPostResponse.postId;
+                            // send notification --------------------
                           } else if (state is AddPostErrorState) {
+                            hideLoading();
+                            showSnackBar(context, state.errorMessage);
+                            Navigator.pop(context);
+                          } else if (state is SendNotificationLoadingState) {
+                            showLoading();
+                          } else if (state is SendNotificationSuccessState) {
+                            hideLoading();
+                            showSnackBar(context, AppStrings.addSuccess);
+                            widget.postAdded(postId);
+                            Navigator.pop(context);
+                          } else if (state is SendNotificationErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);

@@ -170,4 +170,12 @@ class AddCommentEmojiErrorState extends HomePageState{
   AddCommentEmojiErrorState(this.errorMessage);
 }
 
+class SendNotificationLoadingState extends HomePageState{}
+class SendNotificationSuccessState extends HomePageState{}
+class SendNotificationErrorState extends HomePageState{
+  final String errorMessage;
+
+  SendNotificationErrorState(this.errorMessage);
+}
+
 class HomePageNoInternetState extends HomePageState{}

@@ -1,3 +1,4 @@
+import '../../../home_page/data/model/post_model.dart';
 import '../../data/model/notifications_model.dart';
 
 abstract class NotificationsState{}
@@ -13,6 +14,17 @@ class GetNotificationsErrorState extends NotificationsState{
   final String errorNotification;
 
   GetNotificationsErrorState(this.errorNotification);
+}
+
+class GetPostDataLoadingState extends NotificationsState{}
+class GetPostDataSuccessState extends NotificationsState{
+  PostModel postModel;
+  GetPostDataSuccessState(this.postModel);
+}
+class GetPostDataErrorState extends NotificationsState{
+  final String errorNotification;
+
+  GetPostDataErrorState(this.errorNotification);
 }
 
 class UpdateNotificationToSeenLoadingState extends NotificationsState{}

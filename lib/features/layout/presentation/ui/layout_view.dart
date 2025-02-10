@@ -190,51 +190,6 @@ class _LayoutViewState extends State<LayoutView> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          addPost
-                              ? Bounceable(
-                                  onTap: () {
-                                    setState(() {
-                                      if (showAll) {
-                                        showAll = false;
-                                      } else {
-                                        showAll = true;
-                                      }
-                                    });
-                                    Navigator.pop(context);
-                                    if (showAll) {
-                                      getHomePosts(displayName, allPosts: true);
-                                    } else {
-                                      getHomePosts(displayName,
-                                          allPosts: false,
-                                          username: displayName);
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SvgPicture.asset(
-                                        showAll
-                                            ? AppAssets.profileIcon
-                                            : AppAssets.all,
-                                        width: 30.w,
-                                      ),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Text(
-                                        showAll
-                                            ? AppStrings.profile
-                                            : AppStrings.showAll,
-                                        style: AppTypography.kLight14,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Container(),
                         ],
                       ),
                     );
@@ -370,7 +325,7 @@ class _LayoutViewState extends State<LayoutView> {
   }
 
   void showAllAgain() {
-    getHomePosts(displayName, allPosts: true);
+    getHomePosts(displayName, allPosts: true,addNewPost: false);
   }
 
   void getUnSeenMessagesCount() {
@@ -763,7 +718,7 @@ class _LayoutViewState extends State<LayoutView> {
                             widthSize: 50.w,
                             blueIcon: AppAssets.notification,
                             whiteIcon: AppAssets.notificationWhite,
-                            padding: 5.w,
+                            padding: 7.w,
                           ),
                         )
                             : TabIcon(
@@ -774,7 +729,7 @@ class _LayoutViewState extends State<LayoutView> {
                           widthSize: 50.w,
                           blueIcon: AppAssets.notification,
                           whiteIcon: AppAssets.notificationWhite,
-                          padding: 5.w,
+                          padding: 7.w,
                         ));
                   }),
                   GestureDetector(
@@ -788,11 +743,11 @@ class _LayoutViewState extends State<LayoutView> {
                         selectedWidgets: selectedWidgets,
                         selectScreen: selectScreen,
                         index: 2,
-                        heightSize: 45.h,
-                        widthSize: 45.w,
+                        heightSize: 50.h,
+                        widthSize: 50.w,
                         blueIcon: AppAssets.trending,
                         whiteIcon: AppAssets.trendingWhite,
-                        padding: 5.w,
+                        padding: 7.w,
                       )),
                   GestureDetector(
                       onTap: () {
@@ -824,6 +779,7 @@ class _LayoutViewState extends State<LayoutView> {
                         index: 0,
                         blueIcon: AppAssets.home,
                         whiteIcon: AppAssets.homeWhite,
+                        padding: 2.w,
                       )),
                 ],
               ),

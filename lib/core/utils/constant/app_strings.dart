@@ -3,7 +3,7 @@ class AppStrings {
   static const String google = "الـدخـول بـجـوجـل";
   static const String regarding = "بـخـصـوص";
   static const String adminName = "MyAssistant Program";
-  static const String reportComplaint = "إبـلاغ عـن ألـشـة ✍️";
+  static const String reportComplaint = "إبـلاغ عـن ";
   static const String lastPosts = "تـحـديـثـات";
   static const String suggestions = "مـقـتـرحـات";
   static const String loading = 'اصـبـر 😴';
@@ -30,7 +30,6 @@ class AppStrings {
   static const String logout = 'زقـهـت 😤';
   static const String switchUser = 'مـسـتـخـدم آخـر 🤖‍';
   static const String delete = 'بـلاش قـرف 🤮';
-  static const String profile = 'ألـشـاتـى 💪';
   static const String edit = 'اتـلـغـبـط مـعـلـش 😬';
   static const String search = 'بـحـث 🕵🏻‍';
   static const String skip = ' تـراجـع  ';
@@ -39,7 +38,6 @@ class AppStrings {
   static const String less = " تـمـام كـده 👍";
   static const String userSubscriptions = "مـشـاركـات";
   static const String mineSubscriptions = "مـشـاركـاتـى 🥳";
-  static const String showAll = "كـل الألـشـات";
   static const String subscriptions = "مـشـاركــات";
   static const String subscription = "مـشـاركــة";
   static const String moreThan = "أكـثـر مــن";

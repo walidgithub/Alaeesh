@@ -28,7 +28,7 @@ class _SuggestedUserViewState extends State<SuggestedUserView> {
       children: [
         Bounceable(
           onTap: () {
-            widget.getUserPosts();
+            widget.getUserPosts(widget.userName);
           },
           child: Container(
             width: 160.w,
