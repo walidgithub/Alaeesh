@@ -160,13 +160,17 @@ class _PostViewState extends State<PostView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           BlocProvider(
                             create: (context) => sl<WelcomeCubit>()
@@ -246,7 +250,7 @@ class _PostViewState extends State<PostView> {
                                           ),
                                           Text(
                                             AppStrings.edit,
-                                            style: AppTypography.kLight13,
+                                            style: AppTypography.kLight12,
                                           ),
                                         ],
                                       ),
@@ -287,7 +291,11 @@ class _PostViewState extends State<PostView> {
                           //   ),
                           // )
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           Bounceable(
                             onTap: () {
@@ -308,7 +316,7 @@ class _PostViewState extends State<PostView> {
                                 ),
                                 Text(
                                   '${AppStrings.reportComplaint}${AppStrings.alsha} 🚨',
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -528,7 +536,7 @@ class _PostViewState extends State<PostView> {
                                           timeAgoText,
                                           style: AppTypography.kLight12
                                               .copyWith(
-                                                  color: AppColors.cBlack),
+                                                  color: AppColors.greyDark),
                                         ),
                                       ),
                                     ],
@@ -581,7 +589,7 @@ class _PostViewState extends State<PostView> {
                         ),
                         ReadMoreText(
                           widget.postAlsha,
-                          style: AppTypography.kLight14,
+                          style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                           trimLines: 3,
                           colorClickableText: AppColors.cTitle,
                           trimMode: TrimMode.Line,

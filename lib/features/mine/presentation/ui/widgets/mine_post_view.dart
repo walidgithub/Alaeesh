@@ -138,7 +138,7 @@ class _MinePostViewState extends State<MinePostView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -232,7 +232,7 @@ class _MinePostViewState extends State<MinePostView> {
                                       child: Text(
                                         timeAgoText,
                                         style: AppTypography.kLight12
-                                            .copyWith(color: AppColors.cBlack),
+                                            .copyWith(color: AppColors.greyDark),
                                       ),
                                     ),
                                   ],
@@ -268,7 +268,7 @@ class _MinePostViewState extends State<MinePostView> {
                         ),
                         ReadMoreText(
                           widget.postAlsha,
-                          style: AppTypography.kLight14,
+                          style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                           trimLines: 3,
                           colorClickableText: AppColors.cTitle,
                           trimMode: TrimMode.Line,

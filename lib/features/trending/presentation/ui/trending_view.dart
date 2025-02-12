@@ -48,6 +48,9 @@ class _TrendingViewState extends State<TrendingView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController2 = ScrollController();
+
   String selectedUserName = "";
   bool userSubscribed = false;
 
@@ -429,39 +432,44 @@ class _TrendingViewState extends State<TrendingView> {
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width,
                               height: 180.h,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return SuggestedUserView(
-                                    userImage:
-                                        suggestedUserModel[index].userImage,
-                                    userName:
-                                        suggestedUserModel[index].userName,
-                                    subscriptionsCount:
-                                        suggestedUserModel[index]
-                                            .subscriptionsCount,
-                                    getUserPosts: (String userName) {
-                                      setState(() {
-                                        selectedUserName =
-                                            suggestedUserModel[index].userName;
-                                      });
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                controller: _scrollController2,
+                                child: ListView.builder(
+                                  controller: _scrollController2,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return SuggestedUserView(
+                                      userImage:
+                                          suggestedUserModel[index].userImage,
+                                      userName:
+                                          suggestedUserModel[index].userName,
+                                      subscriptionsCount:
+                                          suggestedUserModel[index]
+                                              .subscriptionsCount,
+                                      getUserPosts: (String userName) {
+                                        setState(() {
+                                          selectedUserName =
+                                              suggestedUserModel[index].userName;
+                                        });
 
-                                      CheckIfUserSubscribedRequest
-                                          checkIfUserSubscribedRequest =
-                                          CheckIfUserSubscribedRequest(
-                                              userName: displayName,
-                                              postAuther:
-                                                  suggestedUserModel[index]
-                                                      .userName);
-                                      TrendingCubit.get(context)
-                                          .checkIfUserSubscribed(
-                                              checkIfUserSubscribedRequest);
-                                    },
-                                  );
-                                },
-                                itemCount: suggestedUserModel.length,
+                                        CheckIfUserSubscribedRequest
+                                            checkIfUserSubscribedRequest =
+                                            CheckIfUserSubscribedRequest(
+                                                userName: displayName,
+                                                postAuther:
+                                                    suggestedUserModel[index]
+                                                        .userName);
+                                        TrendingCubit.get(context)
+                                            .checkIfUserSubscribed(
+                                                checkIfUserSubscribedRequest);
+                                      },
+                                    );
+                                  },
+                                  itemCount: suggestedUserModel.length,
+                                ),
                               ),
                             ),
                           ],
@@ -481,147 +489,152 @@ class _TrendingViewState extends State<TrendingView> {
                     color: AppColors.cTitle,
                     backgroundColor: AppColors.cWhite,
                     onRefresh: refresh,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return PostView(
-                          addNewComment: (int status, String returnedId) {
-                            setState(() {
-                              selectedId = returnedId;
-                              showCommentBottomSheet = true;
-                              notificationType["active"] = true;
-                              notificationType["status"] = status;
-                              notificationType["type"] = "comment";
-                              notificationType["postId"] = homePageModel[index].postModel.id!;
-                            });
-                            if (status == 1) {
-                              AddPostSubscriberRequest
-                                  addPostSubscriberRequest =
-                                  AddPostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                userEmail: email,
-                                postId: trendingModel[index].postModel.id!,
-                              ));
-                              TrendingCubit.get(context)
-                                  .addPostSubscriber(addPostSubscriberRequest);
-                            } else if (status == -1) {
-                              DeletePostSubscriberRequest
-                                  deletePostSubscriberRequest =
-                                  DeletePostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                userEmail: email,
-                                postId: trendingModel[index].postModel.id!,
-                              ));
-                              TrendingCubit.get(context).deletePostSubscriber(
-                                  deletePostSubscriberRequest);
-                            } else if (status == 0) {
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      controller: _scrollController,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return PostView(
+                            addNewComment: (int status, String returnedId) {
+                              setState(() {
+                                selectedId = returnedId;
+                                showCommentBottomSheet = true;
+                                notificationType["active"] = true;
+                                notificationType["status"] = status;
+                                notificationType["type"] = "comment";
+                                notificationType["postId"] = homePageModel[index].postModel.id!;
+                              });
+                              if (status == 1) {
+                                AddPostSubscriberRequest
+                                    addPostSubscriberRequest =
+                                    AddPostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  userEmail: email,
+                                  postId: trendingModel[index].postModel.id!,
+                                ));
+                                TrendingCubit.get(context)
+                                    .addPostSubscriber(addPostSubscriberRequest);
+                              } else if (status == -1) {
+                                DeletePostSubscriberRequest
+                                    deletePostSubscriberRequest =
+                                    DeletePostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  userEmail: email,
+                                  postId: trendingModel[index].postModel.id!,
+                                ));
+                                TrendingCubit.get(context).deletePostSubscriber(
+                                    deletePostSubscriberRequest);
+                              } else if (status == 0) {
+                                TrendingCubit.get(context).getTopPosts(
+                                    GetTopPostsRequest(currentUser: displayName));
+                              }
+                            },
+                            addNewEmoji: (int status) {
+                              setState(() {
+                                notificationType["active"] = true;
+                                notificationType["status"] = status;
+                                notificationType["type"] = "emoji";
+                                notificationType["postId"] = homePageModel[index].postModel.id!;
+                              });
+                              if (status == 1) {
+                                AddPostSubscriberRequest
+                                    addPostSubscriberRequest =
+                                    AddPostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  userEmail: email,
+                                  postId: trendingModel[index].postModel.id!,
+                                ));
+                                TrendingCubit.get(context)
+                                    .addPostSubscriber(addPostSubscriberRequest);
+                              } else if (status == -1) {
+                                DeletePostSubscriberRequest
+                                    deletePostSubscriberRequest =
+                                    DeletePostSubscriberRequest(
+                                        postSubscribersModel:
+                                            PostSubscribersModel(
+                                  username: displayName,
+                                  userImage: photoUrl,
+                                  userEmail: email,
+                                  postId: trendingModel[index].postModel.id!,
+                                ));
+                                TrendingCubit.get(context).deletePostSubscriber(
+                                    deletePostSubscriberRequest);
+                              } else if (status == 0) {
+                                TrendingCubit.get(context).getTopPosts(
+                                    GetTopPostsRequest(currentUser: displayName));
+                              }
+                            },
+                            postUpdated: () {
                               TrendingCubit.get(context).getTopPosts(
                                   GetTopPostsRequest(currentUser: displayName));
-                            }
-                          },
-                          addNewEmoji: (int status) {
-                            setState(() {
-                              notificationType["active"] = true;
-                              notificationType["status"] = status;
-                              notificationType["type"] = "emoji";
-                              notificationType["postId"] = homePageModel[index].postModel.id!;
-                            });
-                            if (status == 1) {
-                              AddPostSubscriberRequest
-                                  addPostSubscriberRequest =
-                                  AddPostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                userEmail: email,
-                                postId: trendingModel[index].postModel.id!,
-                              ));
-                              TrendingCubit.get(context)
-                                  .addPostSubscriber(addPostSubscriberRequest);
-                            } else if (status == -1) {
-                              DeletePostSubscriberRequest
-                                  deletePostSubscriberRequest =
-                                  DeletePostSubscriberRequest(
-                                      postSubscribersModel:
-                                          PostSubscribersModel(
-                                username: displayName,
-                                userImage: photoUrl,
-                                userEmail: email,
-                                postId: trendingModel[index].postModel.id!,
-                              ));
-                              TrendingCubit.get(context).deletePostSubscriber(
-                                  deletePostSubscriberRequest);
-                            } else if (status == 0) {
-                              TrendingCubit.get(context).getTopPosts(
-                                  GetTopPostsRequest(currentUser: displayName));
-                            }
-                          },
-                          postUpdated: () {
-                            TrendingCubit.get(context).getTopPosts(
-                                GetTopPostsRequest(currentUser: displayName));
-                          },
-                          loggedInUserEmail: email,
-                          postUserEmail: trendingModel[index]
-                              .postModel
-                              .userEmail,
-                          postSubscribersList: trendingModel[index]
-                              .postModel
-                              .postSubscribersList,
-                          getUserPosts: (String userName) {
-                            Navigator.pushNamed(context, Routes.userPostsRoute,
-                                arguments: UserPostsArguments(
-                                    username: userName,
-                                    reload: () {
-                                      getTopPosts(displayName);
-                                      getSuggestedUsers();
-                                    }));
-                          },
-                          addOrRemoveSubscriber: (int status) {
-                            if (status == -1) {
-                              DeleteSubscriberRequest deleteSubscriberRequest =
-                                  DeleteSubscriberRequest(
-                                      username: displayName,
-                                      postAuther: trendingModel[index]
-                                          .postModel
-                                          .username);
-                              TrendingCubit.get(context)
-                                  .deleteSubscriber(deleteSubscriberRequest);
-                            } else if (status == 1) {
-                              AddSubscriberRequest addSubscriberRequest =
-                                  AddSubscriberRequest(
-                                      username: displayName,
-                                      postAuther: trendingModel[index]
-                                          .postModel
-                                          .username);
-                              TrendingCubit.get(context)
-                                  .addSubscriber(addSubscriberRequest);
-                            }
-                          },
-                          index: index,
-                          id: trendingModel[index].postModel.id!,
-                          time: trendingModel[index].postModel.time!,
-                          postUsername: trendingModel[index].postModel.username,
-                          postUserImage:
-                              trendingModel[index].postModel.userImage,
-                          loggedInUserName: displayName,
-                          loggedInUserImage: photoUrl,
-                          postAlsha: trendingModel[index].postModel.postAlsha,
-                          commentsList:
-                              trendingModel[index].postModel.commentsList,
-                          emojisList: trendingModel[index].postModel.emojisList,
-                          statusBarHeight: statusBarHeight,
-                          userSubscribed: trendingModel[index].userSubscribed,
-                        );
-                      },
-                      itemCount: trendingModel.length,
+                            },
+                            loggedInUserEmail: email,
+                            postUserEmail: trendingModel[index]
+                                .postModel
+                                .userEmail,
+                            postSubscribersList: trendingModel[index]
+                                .postModel
+                                .postSubscribersList,
+                            getUserPosts: (String userName) {
+                              Navigator.pushNamed(context, Routes.userPostsRoute,
+                                  arguments: UserPostsArguments(
+                                      username: userName,
+                                      reload: () {
+                                        getTopPosts(displayName);
+                                        getSuggestedUsers();
+                                      }));
+                            },
+                            addOrRemoveSubscriber: (int status) {
+                              if (status == -1) {
+                                DeleteSubscriberRequest deleteSubscriberRequest =
+                                    DeleteSubscriberRequest(
+                                        username: displayName,
+                                        postAuther: trendingModel[index]
+                                            .postModel
+                                            .username);
+                                TrendingCubit.get(context)
+                                    .deleteSubscriber(deleteSubscriberRequest);
+                              } else if (status == 1) {
+                                AddSubscriberRequest addSubscriberRequest =
+                                    AddSubscriberRequest(
+                                        username: displayName,
+                                        postAuther: trendingModel[index]
+                                            .postModel
+                                            .username);
+                                TrendingCubit.get(context)
+                                    .addSubscriber(addSubscriberRequest);
+                              }
+                            },
+                            index: index,
+                            id: trendingModel[index].postModel.id!,
+                            time: trendingModel[index].postModel.time!,
+                            postUsername: trendingModel[index].postModel.username,
+                            postUserImage:
+                                trendingModel[index].postModel.userImage,
+                            loggedInUserName: displayName,
+                            loggedInUserImage: photoUrl,
+                            postAlsha: trendingModel[index].postModel.postAlsha,
+                            commentsList:
+                                trendingModel[index].postModel.commentsList,
+                            emojisList: trendingModel[index].postModel.emojisList,
+                            statusBarHeight: statusBarHeight,
+                            userSubscribed: trendingModel[index].userSubscribed,
+                          );
+                        },
+                        itemCount: trendingModel.length,
+                      ),
                     ),
                   ))
                 ],
@@ -634,7 +647,7 @@ class _TrendingViewState extends State<TrendingView> {
                     Center(
                       child: Text(
                         AppStrings.noPosts,
-                        style: AppTypography.kBold14,
+                        style: AppTypography.kBold12,
                       ),
                     ),
                   ],

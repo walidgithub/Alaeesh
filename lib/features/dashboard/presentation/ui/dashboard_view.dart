@@ -121,7 +121,7 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Center(
                       child: Text(
                         AppStrings.lastPosts,
-                        style: AppTypography.kBold18,
+                        style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),
                       ),
                     ),
                   ),
@@ -155,7 +155,7 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Center(
                       child: Text(
                         AppStrings.suggestions,
-                        style: AppTypography.kBold18,
+                        style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),
                       ),
                     ),
                   ),
@@ -284,7 +284,7 @@ class _DashboardViewState extends State<DashboardView> {
                                 Center(
                                   child: Text(
                                     AppStrings.noPosts,
-                                    style: AppTypography.kBold14,
+                                    style: AppTypography.kBold12,
                                   ),
                                 ),
                               ],
@@ -339,7 +339,7 @@ class _DashboardViewState extends State<DashboardView> {
                                 Center(
                                   child: Text(
                                     AppStrings.noAdvices,
-                                    style: AppTypography.kBold14,
+                                    style: AppTypography.kBold12,
                                   ),
                                 ),
                               ],

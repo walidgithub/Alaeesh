@@ -134,7 +134,7 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
                                               timeAgoText,
                                               style: AppTypography.kLight12
                                                   .copyWith(
-                                                  color: AppColors.cBlack),
+                                                  color: AppColors.greyDark),
                                             ),
                                           ),
                                         ],
@@ -149,7 +149,7 @@ class _TopPostCommentViewState extends State<TopPostCommentView> {
                               Text(
                                 widget.comment,
                                 style: AppTypography.kLight14
-                                    .copyWith(color: AppColors.cBlack),
+                                    .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
                               ),
                             ],
                           )),

@@ -144,7 +144,7 @@ class _MineCommentViewState extends State<MineCommentView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -230,7 +230,7 @@ class _MineCommentViewState extends State<MineCommentView> {
                                           timeAgoText,
                                           style: AppTypography.kLight12
                                               .copyWith(
-                                                  color: AppColors.cBlack),
+                                                  color: AppColors.greyDark),
                                         ),
                                       ),
                                     ],
@@ -267,7 +267,7 @@ class _MineCommentViewState extends State<MineCommentView> {
                           Text(
                             widget.comment,
                             style: AppTypography.kLight14
-                                .copyWith(color: AppColors.cBlack),
+                                .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
                           ),
                         ],
                       )),

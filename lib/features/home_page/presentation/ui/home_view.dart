@@ -799,7 +799,7 @@ class _HomeViewState extends State<HomeView> {
                           Center(
                             child: Text(
                               AppStrings.noPosts,
-                              style: AppTypography.kBold14,
+                              style: AppTypography.kBold12,
                             ),
                           ),
                         ],

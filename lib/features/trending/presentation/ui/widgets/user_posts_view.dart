@@ -655,7 +655,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                             Center(
                               child: Text(
                                 AppStrings.noPosts,
-                                style: AppTypography.kBold14,
+                                style: AppTypography.kBold12,
                               ),
                             ),
                           ],

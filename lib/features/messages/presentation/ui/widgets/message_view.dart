@@ -20,6 +20,7 @@ import '../../bloc/messages_state.dart';
 class MessageView extends StatefulWidget {
   final String id;
   final String username;
+  final String role;
   final String message;
   final String time;
   final bool seen;
@@ -27,6 +28,7 @@ class MessageView extends StatefulWidget {
   const MessageView({
     super.key,
     required this.id,
+    required this.role,
     required this.username,
     required this.message,
     required this.time,
@@ -105,7 +107,7 @@ class _MessageViewState extends State<MessageView> {
                                             CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                AppStrings.messageFromAdmin,
+                                                widget.role == "admin" ? AppStrings.regarding : AppStrings.messageFromAdmin,
                                                 style: AppTypography.kBold14
                                                     .copyWith(color: AppColors.cTitle),
                                               ),
@@ -115,7 +117,7 @@ class _MessageViewState extends State<MessageView> {
                                                   timeAgoText,
                                                   style: AppTypography.kLight12
                                                       .copyWith(
-                                                      color: AppColors.cBlack),
+                                                      color: AppColors.greyDark),
                                                 ),
                                               ),
                                             ],
@@ -141,7 +143,7 @@ class _MessageViewState extends State<MessageView> {
                                   Text(
                                     widget.message,
                                     style: AppTypography.kLight14
-                                        .copyWith(color: AppColors.cBlack),
+                                        .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
                                   ),
                                 ],
                               )),

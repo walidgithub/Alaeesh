@@ -105,6 +105,7 @@ class _MessagesViewState extends State<MessagesView> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return MessageView(
+                      role: role,
                       statusBarHeight: statusBarHeight,
                       id: messagesModel[index].id!,
                       username: messagesModel[index].username,
@@ -122,7 +123,7 @@ class _MessagesViewState extends State<MessagesView> {
                   Center(
                     child: Text(
                       AppStrings.noMessages,
-                      style: AppTypography.kBold14,
+                      style: AppTypography.kBold12,
                     ),
                   ),
                 ],

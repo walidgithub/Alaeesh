@@ -253,13 +253,17 @@ showSnackBar(context, state.errorMessage);
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           BlocProvider(
                             create: (context) =>
@@ -345,7 +349,11 @@ showSnackBar(context, state.errorMessage);
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           Bounceable(
                             onTap: () {
@@ -366,7 +374,7 @@ showSnackBar(context, state.errorMessage);
                                 ),
                                 Text(
                                   '${AppStrings.reportComplaint} ${AppStrings.comment} 🚨',
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -458,7 +466,7 @@ showSnackBar(context, state.errorMessage);
                                                 timeAgoText,
                                                 style: AppTypography.kLight12
                                                     .copyWith(
-                                                    color: AppColors.cBlack),
+                                                    color: AppColors.greyDark),
                                               ),
                                             ),
                                           ],
@@ -497,7 +505,7 @@ showSnackBar(context, state.errorMessage);
                               Text(
                                 widget.comment,
                                 style: AppTypography.kLight14
-                                    .copyWith(color: AppColors.cBlack),
+                                    .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
                               ),
                             ],
                           )),

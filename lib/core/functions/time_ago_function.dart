@@ -4,22 +4,23 @@ String timeAgo(DateTime postDate) {
   if (difference.inSeconds < 60) {
     return 'Just now';
   } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes}min مـنـذ';
+    return ' مـن ${difference.inMinutes} دقـيـقـة ';
   } else if (difference.inHours < 24) {
-    return '${difference.inHours}h مـنـذ';
+    return ' مـن ${difference.inHours} سـاعـة ';
   } else if (difference.inDays == 1) {
-    return 'Yesterday at ${_formatTime(postDate)}';
+    return '${_formatTime(postDate)} امـبـارح ';
   } else if (difference.inDays < 7) {
-    return '${difference.inDays}d مـنـذ';
+    return ' مـن ${difference.inDays} يــوم ';
   } else if (difference.inDays < 30) {
     final int weeks = (difference.inDays / 7).floor();
-    return weeks == 1 ? '1wk مـنـذ' : '${weeks}wks مـنـذ';
+    return weeks == 1 ? ' مـن أسـبـوع ' : ' مـن $weeks أسـابـيـع ';
   } else if (difference.inDays < 365) {
     final int months = (difference.inDays / 30).floor();
-    return months == 1 ? '1mo مـنـذ' : '${months}mos مـنـذ';
+    return months == 1 ? ' مـن شــهـر ' : ' مـن $months شـهـور ';
   } else {
     final int years = (difference.inDays / 365).floor();
-    return years == 1 ? '1yr مـنـذ' : '${years}yrs مـنـذ';
+    return years == 1 ? ' مـن سـنـة ' : ' مـن $years سـنـيـن ';
+
   }
 }
 

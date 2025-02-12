@@ -188,7 +188,7 @@ class _MineViewState extends State<MineView> {
                         Center(
                           child: Text(
                             AppStrings.noActivities,
-                            style: AppTypography.kBold14,
+                            style: AppTypography.kBold12,
                           ),
                         ),
                       ],

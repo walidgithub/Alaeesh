@@ -110,7 +110,7 @@ class _AdviceViewState extends State<AdviceView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -205,7 +205,7 @@ class _AdviceViewState extends State<AdviceView> {
                                       child: Text(
                                         timeAgoText,
                                         style: AppTypography.kLight12
-                                            .copyWith(color: AppColors.cBlack),
+                                            .copyWith(color: AppColors.greyDark),
                                       ),
                                     ),
                                   ],
@@ -232,7 +232,7 @@ class _AdviceViewState extends State<AdviceView> {
                         ),
                         ReadMoreText(
                           widget.adviceText,
-                          style: AppTypography.kLight14,
+                          style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                           trimLines: 3,
                           colorClickableText: AppColors.cTitle,
                           trimMode: TrimMode.Line,

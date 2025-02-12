@@ -124,7 +124,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                   Center(
                     child: Text(
                       AppStrings.noNotifications,
-                      style: AppTypography.kBold14,
+                      style: AppTypography.kBold12,
                     ),
                   ),
                 ],

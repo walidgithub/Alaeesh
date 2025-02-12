@@ -145,7 +145,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -233,7 +233,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                                               timeAgoText,
                                               style: AppTypography.kLight12
                                                   .copyWith(
-                                                  color: AppColors.cBlack),
+                                                  color: AppColors.greyDark),
                                             ),
                                           ),
                                         ],
@@ -265,7 +265,7 @@ class _DashboardCommentViewState extends State<DashboardCommentView> {
                               Text(
                                 widget.comment,
                                 style: AppTypography.kLight14
-                                    .copyWith(color: AppColors.cBlack),
+                                    .copyWith(color: AppColors.cBlack, fontFamily: "Cairo"),
                               ),
                             ],
                           )),

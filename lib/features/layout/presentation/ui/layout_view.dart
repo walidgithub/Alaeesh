@@ -160,13 +160,17 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                                 Text(
                                   AppStrings.logout,
-                                  style: AppTypography.kLight14,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           Bounceable(
                             onTap: () {
@@ -185,7 +189,7 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                                 Text(
                                   AppStrings.switchUser,
-                                  style: AppTypography.kLight14,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
@@ -262,16 +266,24 @@ class _LayoutViewState extends State<LayoutView> {
                                       ),
                                       Text(
                                         AppStrings.searchForPost,
-                                        style: AppTypography.kLight14,
+                                        style: AppTypography.kLight12,
                                       ),
                                     ],
                                   ),
                                 )
                               : Container(),
                           addPost
-                              ? SizedBox(
-                                  height: 10.h,
-                                )
+                              ? Column(
+                            children: [
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                            ],
+                          )
                               : Container(),
                           Bounceable(
                             onTap: () {
@@ -290,7 +302,7 @@ class _LayoutViewState extends State<LayoutView> {
                                 ),
                                 Text(
                                   AppStrings.showDrawer,
-                                  style: AppTypography.kLight14,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),

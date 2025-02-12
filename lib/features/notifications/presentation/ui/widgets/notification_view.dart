@@ -142,7 +142,7 @@ class _NotificationViewState extends State<NotificationView> {
                                             timeAgoText,
                                             style: AppTypography.kLight12
                                                 .copyWith(
-                                                    color: AppColors.cBlack),
+                                                    color: AppColors.greyDark),
                                           ),
                                         ),
                                       ],
@@ -168,7 +168,7 @@ class _NotificationViewState extends State<NotificationView> {
                                 Text(
                                   widget.notification,
                                   style: AppTypography.kLight14
-                                      .copyWith(color: AppColors.cBlack),
+                                      .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
                                 ),
                               ],
                             ),

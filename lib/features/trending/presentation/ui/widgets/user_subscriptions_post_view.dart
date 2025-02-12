@@ -15,7 +15,6 @@ import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../home_page/data/model/comments_model.dart';
 import '../../../../home_page/data/model/emoji_model.dart';
-import '../../../../home_page/presentation/ui/widgets/reactions_bottom_sheet.dart';
 
 class UserSubscriptionsPostView extends StatefulWidget {
   final String id;
@@ -147,7 +146,7 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                                         timeAgoText,
                                         style: AppTypography.kLight12
                                             .copyWith(
-                                            color: AppColors.cBlack),
+                                            color: AppColors.greyDark),
                                       ),
                                     ),
                                   ],
@@ -159,7 +158,7 @@ class _UserSubscriptionsPostViewState extends State<UserSubscriptionsPostView> {
                             ),
                             ReadMoreText(
                               widget.postAlsha,
-                              style: AppTypography.kLight14,
+                              style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                               trimLines: 3,
                               colorClickableText: AppColors.cTitle,
                               trimMode: TrimMode.Line,

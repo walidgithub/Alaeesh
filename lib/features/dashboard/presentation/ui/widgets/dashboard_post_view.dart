@@ -143,13 +143,17 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                 ),
                                 Text(
                                   AppStrings.delete,
-                                  style: AppTypography.kLight13,
+                                  style: AppTypography.kLight12,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           BlocProvider(
                             create: (homeContext) => sl<WelcomeCubit>(),
@@ -234,7 +238,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                         isEnabled
                                             ? AppStrings.preventAdd
                                             : AppStrings.enableAdd,
-                                        style: AppTypography.kLight13,
+                                        style: AppTypography.kLight12,
                                       ),
                                     ],
                                   ),
@@ -243,7 +247,11 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                             ),
                           ),
                           SizedBox(
-                            height: 10.h,
+                            height: 7.h,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 7.h,
                           ),
                           BlocProvider(
                             create: (homeContext) => sl<WelcomeCubit>(),
@@ -309,7 +317,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                         isUser
                                             ? AppStrings.admin
                                             : AppStrings.user,
-                                        style: AppTypography.kLight13,
+                                        style: AppTypography.kLight12,
                                       ),
                                     ],
                                   ),
@@ -319,9 +327,17 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                           ),
                           isUser
                               ? Container()
-                              : SizedBox(
-                                  height: 10.h,
-                                ),
+                              : Column(
+                            children: [
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                            ],
+                          ),
                           isUser
                               ? Container()
                               : Bounceable(
@@ -343,7 +359,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                       ),
                                       Text(
                                         AppStrings.sendMessage,
-                                        style: AppTypography.kLight13,
+                                        style: AppTypography.kLight12,
                                       ),
                                     ],
                                   ),
@@ -438,7 +454,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                       child: Text(
                                         timeAgoText,
                                         style: AppTypography.kLight12
-                                            .copyWith(color: AppColors.cBlack),
+                                            .copyWith(color: AppColors.greyDark),
                                       ),
                                     ),
                                   ],
@@ -520,7 +536,7 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                         ),
                         ReadMoreText(
                           widget.postAlsha,
-                          style: AppTypography.kLight14,
+                          style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                           trimLines: 3,
                           colorClickableText: AppColors.cTitle,
                           trimMode: TrimMode.Line,

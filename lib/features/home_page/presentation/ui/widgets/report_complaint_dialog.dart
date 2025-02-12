@@ -124,9 +124,9 @@ class _ReportComplaintDialogState extends State<ReportComplaintDialog> {
                               seen: false,
                               username: widget.username,
                               time: '$formattedDate $formattedTime',
-                              message: '${AppStrings.regarding} >>>'
-                                  ' ${messageEditingController.text.trim()} >>>'
-                                  ' ${widget.postId} ${widget.commentId == "" ? "" : ">>> '${AppStrings.comment}' "
+                              message:
+                                  ' ${AppStrings.postNum} >>> ${widget.postId} ${AppStrings.complaint} >>> ${messageEditingController.text.trim()} '
+                                  ' ${widget.commentId == "" ? "" : ">>> ${AppStrings.commentNum} "
                               '${widget.commentId}' }');
                           DashboardCubit.get(context)
                               .sendReply(sendReplyRequest);

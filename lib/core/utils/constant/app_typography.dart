@@ -5,60 +5,62 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTypography {
   // Light.
   static TextStyle kLight11 =
-      GoogleFonts.poppins(fontSize: 11.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight12 =
-  GoogleFonts.poppins(fontSize: 12.sp, fontWeight: FontWeight.w400);
+  TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight13 =
-      GoogleFonts.poppins(fontSize: 13.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight14 =
-      GoogleFonts.poppins(fontSize: 14.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight16 =
-      GoogleFonts.poppins(fontSize: 16.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight18 =
-  GoogleFonts.poppins(fontSize: 18.sp, fontWeight: FontWeight.w400);
+  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight20 =
-      GoogleFonts.poppins(fontSize: 25.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 25.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight30 =
-      GoogleFonts.poppins(fontSize: 30.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   static TextStyle kLight36 =
-      GoogleFonts.poppins(fontSize: 36.sp, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w400, fontFamily: 'Blabeloo');
   // Extra Light.
   static TextStyle kExtraLight13 =
-      GoogleFonts.poppins(fontSize: 13.sp, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, fontFamily: 'Blabeloo');
   static TextStyle kExtraLight14 =
-      GoogleFonts.poppins(fontSize: 14.sp, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, fontFamily: 'Blabeloo');
   static TextStyle kExtraLight15 =
-      GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500, fontFamily: 'Blabeloo');
   static TextStyle kExtraLight18 =
-      GoogleFonts.poppins(fontSize: 18.sp, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, fontFamily: 'Blabeloo');
 
   // Medium.
   static TextStyle kMedium14 =
-      GoogleFonts.poppins(fontSize: 14.sp, fontWeight: FontWeight.w600);
+      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, fontFamily: 'Blabeloo');
   static TextStyle kMedium15 =
-      GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w600);
+      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, fontFamily: 'Blabeloo');
   static TextStyle kMedium16 =
-      GoogleFonts.poppins(fontSize: 16.sp, fontWeight: FontWeight.w600);
+      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, fontFamily: 'Blabeloo');
   static TextStyle kMedium18 =
-      GoogleFonts.poppins(fontSize: 18.sp, fontWeight: FontWeight.w600);
+      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, fontFamily: 'Blabeloo');
   static TextStyle kMedium24 =
-      GoogleFonts.poppins(fontSize: 24.sp, fontWeight: FontWeight.w600);
+      TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600, fontFamily: 'Blabeloo');
 
   // Bold.
+  static TextStyle kBold12 =
+  TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold14 =
-      GoogleFonts.poppins(fontSize: 14.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold16 =
-      GoogleFonts.poppins(fontSize: 16.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold18 =
-      GoogleFonts.poppins(fontSize: 18.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold22 =
-  GoogleFonts.poppins(fontSize: 22.sp, fontWeight: FontWeight.w700);
+  TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold24 =
-      GoogleFonts.poppins(fontSize: 24.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold30 =
-      GoogleFonts.poppins(fontSize: 30.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold36 =
-      GoogleFonts.poppins(fontSize: 36.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
   static TextStyle kBold48 =
-      GoogleFonts.poppins(fontSize: 48.sp, fontWeight: FontWeight.w700);
+      TextStyle(fontSize: 48.sp, fontWeight: FontWeight.w700, fontFamily: 'Blabeloo');
 }
