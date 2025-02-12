@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import 'package:last/features/messages/presentation/bloc/messages_cubit.dart';
+import 'package:last/features/notifications/presentation/ui/widgets/post_data_view.dart';
 import 'package:last/features/switch_user/presentation/ui/switch_user_view.dart';
 import 'package:last/features/trending/presentation/bloc/trending_cubit.dart';
 import 'package:last/features/trending/presentation/ui/widgets/user_posts_view.dart';
@@ -19,6 +20,7 @@ class Routes {
   static const String layoutRoute = "/layout";
   static const String switchUserRoute = "/switchUser";
   static const String userPostsRoute = "/userPosts";
+  static const String postDataRoute = "/postData";
 }
 
 class RouteGenerator {
@@ -50,6 +52,11 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Directionality(
                 textDirection: TextDirection.rtl, child: BlocProvider(create: (homeContext) => sl<HomePageCubit>(),child: UserPostsView(arguments: settings.arguments as UserPostsArguments))));
+
+      case Routes.postDataRoute:
+        return MaterialPageRoute(
+            builder: (_) => Directionality(
+                textDirection: TextDirection.rtl, child: BlocProvider(create: (homeContext) => sl<HomePageCubit>(),child: PostDataView(arguments: settings.arguments as PostDataArguments))));
       default:
         return unDefinedRoute();
     }

@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:last/core/router/arguments.dart';
+import 'package:last/features/notifications/data/model/requests/get_post_data_request.dart';
 import '../../../../../core/functions/time_ago_function.dart';
+import '../../../../../core/router/app_router.dart';
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import '../../../../../core/utils/constant/app_strings.dart';
@@ -71,6 +74,16 @@ class _NotificationViewState extends State<NotificationView> {
         } else if (state is UpdateNotificationToSeenErrorState) {
           hideLoading();
           showSnackBar(context, state.errorNotification);
+        } else if (state is GetPostDataLoadingState) {
+          showLoading();
+        } else if (state is GetPostDataSuccessState) {
+          hideLoading();
+          Navigator.pushNamed(context, Routes.postDataRoute,
+              arguments: PostDataArguments(
+                  postData: state.postModel.id));
+        } else if (state is GetPostDataErrorState) {
+          hideLoading();
+          showSnackBar(context, state.errorNotification);
         } else if (state is NotificationsNoInternetState) {
           hideLoading();
           onError(context, AppStrings.noInternet);
@@ -96,7 +109,10 @@ class _NotificationViewState extends State<NotificationView> {
                           ),
                           Expanded(
                               child: Bounceable(
-                            onTap: () {},
+                            onTap: () {
+                              GetPostDataRequest getPostDataRequest = GetPostDataRequest(postId: "");
+                              NotificationsCubit.get(context).getPostData(getPostDataRequest);
+                            },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

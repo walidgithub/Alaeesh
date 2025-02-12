@@ -4,3 +4,8 @@ class UserPostsArguments {
   Function? reload;
   UserPostsArguments({this.username, this.reload});
 }
+
+class PostDataArguments {
+  String? postData;
+  PostDataArguments({this.postData});
+}

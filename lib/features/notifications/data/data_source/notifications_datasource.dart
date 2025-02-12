@@ -97,7 +97,17 @@ class NotificationsDataSource extends BaseDataSource {
 
   @override
   Future<PostModel> getPostData(GetPostDataRequest getPostDataRequest) async {
-    // TODO: implement getPostData
-    throw UnimplementedError();
+    try {
+      DocumentSnapshot postDoc =
+      await FirebaseFirestore.instance.collection('posts').doc(getPostDataRequest.postId).get();
+
+      if (postDoc.exists) {
+        return PostModel.fromMap(postDoc.data() as Map<String, dynamic>);
+      } else {
+        throw "Post not found";
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
