@@ -1,4 +1,5 @@
 class GetPostDataRequest {
   String postId;
-  GetPostDataRequest({required this.postId});
+  String username;
+  GetPostDataRequest({required this.postId, required this.username});
 }

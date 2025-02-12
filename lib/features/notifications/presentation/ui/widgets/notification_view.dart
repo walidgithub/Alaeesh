@@ -24,6 +24,7 @@ import '../../bloc/notifications_state.dart';
 
 class NotificationView extends StatefulWidget {
   final String id;
+  final String postId;
   final String username;
   final String userImage;
   final String notification;
@@ -33,6 +34,7 @@ class NotificationView extends StatefulWidget {
   const NotificationView({
     super.key,
     required this.id,
+    required this.postId,
     required this.username,
     required this.userImage,
     required this.notification,
@@ -74,16 +76,6 @@ class _NotificationViewState extends State<NotificationView> {
         } else if (state is UpdateNotificationToSeenErrorState) {
           hideLoading();
           showSnackBar(context, state.errorNotification);
-        } else if (state is GetPostDataLoadingState) {
-          showLoading();
-        } else if (state is GetPostDataSuccessState) {
-          hideLoading();
-          Navigator.pushNamed(context, Routes.postDataRoute,
-              arguments: PostDataArguments(
-                  postData: state.postModel.id));
-        } else if (state is GetPostDataErrorState) {
-          hideLoading();
-          showSnackBar(context, state.errorNotification);
         } else if (state is NotificationsNoInternetState) {
           hideLoading();
           onError(context, AppStrings.noInternet);
@@ -110,8 +102,9 @@ class _NotificationViewState extends State<NotificationView> {
                           Expanded(
                               child: Bounceable(
                             onTap: () {
-                              GetPostDataRequest getPostDataRequest = GetPostDataRequest(postId: "");
-                              NotificationsCubit.get(context).getPostData(getPostDataRequest);
+                              Navigator.pushNamed(context, Routes.postDataRoute,
+                                  arguments: PostDataArguments(
+                                      postId: widget.postId,username: widget.username));
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

@@ -107,6 +107,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                       child: NotificationView(
                         statusBarHeight: statusBarHeight,
                         id: alaeeshNotificationsList[index].id!,
+                        postId: alaeeshNotificationsList[index].postId,
                         username: alaeeshNotificationsList[index].username,
                         userImage: alaeeshNotificationsList[index].userImage,
                         time: alaeeshNotificationsList[index].time,

@@ -1,4 +1,6 @@
 
+import '../../features/home_page/data/model/post_model.dart';
+
 class UserPostsArguments {
   String? username;
   Function? reload;
@@ -6,6 +8,7 @@ class UserPostsArguments {
 }
 
 class PostDataArguments {
-  String? postData;
-  PostDataArguments({this.postData});
+  String? postId;
+  String? username;
+  PostDataArguments({this.username, this.postId});
 }

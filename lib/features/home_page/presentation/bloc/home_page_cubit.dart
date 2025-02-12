@@ -17,6 +17,8 @@ import 'package:last/features/home_page/domain/usecases/update_comment_usecase.d
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../notifications/data/model/requests/get_post_data_request.dart';
+import '../../domain/usecases/get_post_data_usecase.dart';
 import '../../data/model/requests/add_comment_request.dart';
 import '../../data/model/requests/add_emoji_request.dart';
 import '../../data/model/requests/add_post_subscriber_request.dart';
@@ -38,7 +40,7 @@ import '../../domain/usecases/send_general_notification_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
-  HomePageCubit(this.deletePostUseCase, this.getHomePostsUseCase, this.sendGeneralNotificationUseCase, this.sendPostNotificationUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+  HomePageCubit(this.deletePostUseCase, this.getPostDataUseCase, this.getHomePostsUseCase, this.sendGeneralNotificationUseCase, this.sendPostNotificationUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -66,6 +68,8 @@ class HomePageCubit extends Cubit<HomePageState> {
 
   final SendPostNotificationUseCase sendPostNotificationUseCase;
   final SendGeneralNotificationUseCase sendGeneralNotificationUseCase;
+
+  final GetPostDataUseCase getPostDataUseCase;
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
@@ -325,6 +329,19 @@ class HomePageCubit extends Cubit<HomePageState> {
       result.fold(
             (failure) => emit(SendGeneralNotificationErrorState(failure.message)),
             (notificationSent) => emit(SendGeneralNotificationSuccessState()),
+      );
+    } else {
+      emit(HomePageNoInternetState());
+    }
+  }
+
+  Future<void> getPostData(GetPostDataRequest getPostDataRequest) async {
+    emit(GetPostDataLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getPostDataUseCase.call(getPostDataRequest);
+      result.fold(
+            (failure) => emit(GetPostDataErrorState(failure.message)),
+            (posts) => emit(GetPostDataSuccessState(posts)),
       );
     } else {
       emit(HomePageNoInternetState());

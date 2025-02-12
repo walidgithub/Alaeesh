@@ -10,9 +10,6 @@ abstract class NotificationsRepository {
   Future<Either<FirebaseFailure, List<AlaeeshNotificationsModel>>> getUserNotifications(
       GetNotificationsRequest getNotificationsRequest);
 
-  Future<Either<FirebaseFailure, PostModel>> getPostData(
-      GetPostDataRequest getPostDataRequest);
-
   Future<Either<FirebaseFailure, void>> updateNotificationToSeen(UpdateNotificationToSeenRequest updateNotificationToSeenRequest);
 
   Future<Either<FirebaseFailure, int>> getUnSeenNotifications(GetNotificationsRequest getNotificationsRequest);

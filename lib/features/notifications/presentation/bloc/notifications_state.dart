@@ -16,17 +16,6 @@ class GetNotificationsErrorState extends NotificationsState{
   GetNotificationsErrorState(this.errorNotification);
 }
 
-class GetPostDataLoadingState extends NotificationsState{}
-class GetPostDataSuccessState extends NotificationsState{
-  PostModel postModel;
-  GetPostDataSuccessState(this.postModel);
-}
-class GetPostDataErrorState extends NotificationsState{
-  final String errorNotification;
-
-  GetPostDataErrorState(this.errorNotification);
-}
-
 class UpdateNotificationToSeenLoadingState extends NotificationsState{}
 class UpdateNotificationToSeenSuccessState extends NotificationsState{}
 class UpdateNotificationToSeenErrorState extends NotificationsState{

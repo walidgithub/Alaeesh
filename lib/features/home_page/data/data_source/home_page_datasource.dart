@@ -10,6 +10,7 @@ import 'package:last/features/home_page/data/model/requests/send_notification_re
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
 import '../../../notifications/data/model/notifications_model.dart';
+import '../../../notifications/data/model/requests/get_post_data_request.dart';
 import '../model/comments_model.dart';
 import '../model/emoji_model.dart';
 import '../model/requests/add_comment_emoji_request.dart';
@@ -57,6 +58,9 @@ abstract class BaseDataSource {
 
   Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest);
   Future<List<HomePageModel>> getHomePosts(GetPostsRequest getPostsRequest);
+
+  Future<List<HomePageModel>> getPostData(
+      GetPostDataRequest getPostDataRequest);
 }
 
 class HomePageDataSource extends BaseDataSource {
@@ -673,6 +677,58 @@ class HomePageDataSource extends BaseDataSource {
         }
       }
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HomePageModel>> getPostData(GetPostDataRequest getPostDataRequest) async {
+    try {
+        // Fetch posts and filtered subscribers concurrently
+        final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
+          postsFuture = firestore
+              .collection('posts')
+              .where('username', isEqualTo: getPostDataRequest.username)
+              .where('id', isEqualTo: getPostDataRequest.postId)
+              .get();
+
+        final subscribersFuture = firestore
+            .collection('subscribers')
+            .where('username', isEqualTo: getPostDataRequest.username)
+            .get();
+
+        final results = await Future.wait([postsFuture, subscribersFuture]);
+
+        // Parse the data
+        final postDocs = results[0].docs;
+        final subscriberDocs = results[1].docs;
+
+        // Convert Firestore documents to PostModel and SubscribersModel lists
+        final postModels = postDocs.map((doc) {
+          final postData = {'id': doc.id, ...doc.data()};
+          return PostModel.fromMap(postData);
+        }).toList();
+
+        final subscriberModels = subscriberDocs.map((doc) {
+          final subscriberData = {'id': doc.id, ...doc.data()};
+          return SubscribersModel.fromMap(subscriberData);
+        }).toList();
+
+        // Combine data into HomePageModel
+        List<HomePageModel> homePageModels = postModels.map((post) {
+          final isSubscribed = subscriberModels.any((subscriber) =>
+          subscriber.postAuther == post.username); // Match post author
+          return HomePageModel(postModel: post, userSubscribed: isSubscribed);
+        }).toList();
+
+        // Sort homePageModels by Time
+        homePageModels.sort((a, b) {
+          return b.postModel.time!.compareTo(a.postModel.time!);
+        });
+
+        return homePageModels;
+
+      } catch (e) {
       rethrow;
     }
   }

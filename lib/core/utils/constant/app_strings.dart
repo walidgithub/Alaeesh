@@ -48,6 +48,7 @@ class AppStrings {
   static const String topPosts = "أعـلـى ألـشـات 🤣";
   static const String updatedSuccessfully = 'تـمـام كـده 👍';
   static const String noPosts = 'لـو مـفـيـش ألـشـات، ابـدأ أنـت 🤷‍';
+  static const String noPostFound = 'الألـشـة دى مـش مـوجـودة 🤷‍';
   static const String noMessages = 'مـفـيـش رسـايـل اتـبـعـتـت لـك 🤝‍';
   static const String noNotifications = 'مـفـيـش إشـعـارات لـيـك 🤝‍';
   static const String noAdvices = 'مـفـيـش مـقـتـرحـات 🤝‍';

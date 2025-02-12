@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:last/features/home_page/data/model/requests/add_emoji_request.dart';
 import 'package:last/features/home_page/data/model/requests/send_notification_request.dart';
 import '../../../../core/firebase/error/firebase_failure.dart';
+import '../../../notifications/data/model/requests/get_post_data_request.dart';
 import '../../data/model/home_page_model.dart';
 import '../../data/model/requests/add_comment_emoji_request.dart';
 import '../../data/model/requests/add_comment_request.dart';
@@ -48,4 +49,7 @@ abstract class HomePageRepository {
 
   Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest);
   Future<Either<FirebaseFailure, List<HomePageModel>>> getHomePosts(GetPostsRequest getPostsRequest);
+
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getPostData(
+      GetPostDataRequest getPostDataRequest);
 }

@@ -14,6 +14,7 @@ import 'package:last/features/home_page/data/model/requests/update_comment_reque
 import 'package:last/features/home_page/data/model/requests/update_post_request.dart';
 import 'package:last/features/home_page/data/model/subscribers_model.dart';
 import '../../../../core/firebase/error/firebase_error_handler.dart';
+import '../../../notifications/data/model/requests/get_post_data_request.dart';
 import '../../domain/repository/home_page_repository.dart';
 import '../data_source/home_page_datasource.dart';
 import '../model/home_page_model.dart';
@@ -283,6 +284,21 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<FirebaseFailure, void>> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
     try {
       final result = await _homePageDataSource.sendGeneralNotification(sendNotificationRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, List<HomePageModel>>> getPostData(GetPostDataRequest getPostDataRequest) async {
+    try {
+      final result =
+      await _homePageDataSource.getPostData(getPostDataRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:last/features/notifications/data/model/requests/get_notifications_request.dart';
 import '../../../../core/di/di.dart';
+import '../../../home_page/data/model/home_page_model.dart';
 import '../../../home_page/data/model/post_model.dart';
 import '../../../trending/data/model/requests/get_post_data_request.dart';
 import '../model/notifications_model.dart';
@@ -9,9 +10,6 @@ import '../model/requests/update_notification_to_seeen_request.dart';
 abstract class BaseDataSource {
   Future<List<AlaeeshNotificationsModel>> getUserNotifications(
       GetNotificationsRequest getNotificationsRequest);
-
-  Future<PostModel> getPostData(
-      GetPostDataRequest getPostDataRequest);
 
   Future<void> updateNotificationToSeen(
       UpdateNotificationToSeenRequest updateNotificationToSeenRequest);
@@ -90,22 +88,6 @@ class NotificationsDataSource extends BaseDataSource {
             seen: data['seen'] ?? false);
       }).toList();
       return alaeeshNotificationsList.length;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<PostModel> getPostData(GetPostDataRequest getPostDataRequest) async {
-    try {
-      DocumentSnapshot postDoc =
-      await FirebaseFirestore.instance.collection('posts').doc(getPostDataRequest.postId).get();
-
-      if (postDoc.exists) {
-        return PostModel.fromMap(postDoc.data() as Map<String, dynamic>);
-      } else {
-        throw "Post not found";
-      }
     } catch (e) {
       rethrow;
     }

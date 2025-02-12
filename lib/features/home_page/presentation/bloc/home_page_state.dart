@@ -1,6 +1,7 @@
 import 'package:last/features/home_page/data/model/subscribers_model.dart';
 
 import '../../data/model/home_page_model.dart';
+import '../../data/model/post_model.dart';
 
 abstract class HomePageState{}
 
@@ -184,6 +185,17 @@ class SendGeneralNotificationErrorState extends HomePageState{
   final String errorMessage;
 
   SendGeneralNotificationErrorState(this.errorMessage);
+}
+
+class GetPostDataLoadingState extends HomePageState{}
+class GetPostDataSuccessState extends HomePageState{
+  final List<HomePageModel> homePageModel;
+  GetPostDataSuccessState(this.homePageModel);
+}
+class GetPostDataErrorState extends HomePageState{
+  final String errorMessage;
+
+  GetPostDataErrorState(this.errorMessage);
 }
 
 class HomePageNoInternetState extends HomePageState{}

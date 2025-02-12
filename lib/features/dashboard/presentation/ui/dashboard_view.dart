@@ -183,8 +183,8 @@ class _DashboardViewState extends State<DashboardView> {
                       showLoading();
                     } else if (state is GetAllPostsSuccessState) {
                       hideLoading();
-                      homePageModel.clear();
-                      homePageModel.addAll(state.homePageModel);
+                      dashboardModel.clear();
+                      dashboardModel.addAll(state.homePageModel);
                     } else if (state is GetAllPostsErrorState) {
                       hideLoading();
                       showSnackBar(context, state.errorMessage);
@@ -209,7 +209,7 @@ class _DashboardViewState extends State<DashboardView> {
                     }
                   },
                   builder: (context, state) {
-                    return homePageModel.isNotEmpty
+                    return dashboardModel.isNotEmpty
                         ? RefreshIndicator(
                             color: AppColors.cTitle,
                             backgroundColor: AppColors.cWhite,
@@ -219,22 +219,22 @@ class _DashboardViewState extends State<DashboardView> {
                                 itemBuilder: (context, index) {
                                   return DashboardPostView(
                                     index: index,
-                                    id: homePageModel[index].postModel.id!,
-                                    time: homePageModel[index].postModel.time!,
+                                    id: dashboardModel[index].postModel.id!,
+                                    time: dashboardModel[index].postModel.time!,
                                     postUsername:
-                                        homePageModel[index].postModel.username,
-                                    postUserImage: homePageModel[index]
+                                        dashboardModel[index].postModel.username,
+                                    postUserImage: dashboardModel[index]
                                         .postModel
                                         .userImage,
                                     loggedInUserName: displayName,
                                     loggedInUserImage: photoUrl,
-                                    postAlsha: homePageModel[index]
+                                    postAlsha: dashboardModel[index]
                                         .postModel
                                         .postAlsha,
-                                    commentsList: homePageModel[index]
+                                    commentsList: dashboardModel[index]
                                         .postModel
                                         .commentsList,
-                                    emojisList: homePageModel[index]
+                                    emojisList: dashboardModel[index]
                                         .postModel
                                         .emojisList,
                                     statusBarHeight: statusBarHeight,
@@ -245,14 +245,14 @@ class _DashboardViewState extends State<DashboardView> {
                                             DeletePostSubscriberRequest(
                                                 postSubscribersModel:
                                                     PostSubscribersModel(
-                                          username: homePageModel[index]
+                                          username: dashboardModel[index]
                                               .postModel
                                               .username,
-                                          userEmail: homePageModel[index]
+                                          userEmail: dashboardModel[index]
                                               .postModel
                                               .userEmail,
                                           userImage: photoUrl,
-                                          postId: homePageModel[index]
+                                          postId: dashboardModel[index]
                                               .postModel
                                               .id!,
                                         ));
@@ -274,7 +274,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     },
                                   );
                                 },
-                                itemCount: homePageModel.length),
+                                itemCount: dashboardModel.length),
                           )
                         : SizedBox(
                             height: MediaQuery.sizeOf(context).height,

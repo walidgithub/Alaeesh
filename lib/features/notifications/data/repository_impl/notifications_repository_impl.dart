@@ -59,20 +59,5 @@ class NotificationsRepositoryImpl extends NotificationsRepository {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
     }
   }
-
-  @override
-  Future<Either<FirebaseFailure, PostModel>> getPostData(GetPostDataRequest getPostDataRequest) async {
-    try {
-      final result =
-      await _notificationsDataSource.getPostData(getPostDataRequest);
-      return Right(result);
-    } on FirebaseAuthException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
-    } on FirebaseException catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
-    } catch (e) {
-      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
-    }
-  }
   
 }
