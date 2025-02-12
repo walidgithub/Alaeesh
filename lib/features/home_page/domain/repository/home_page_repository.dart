@@ -19,7 +19,8 @@ import '../../data/model/requests/update_post_request.dart';
 import '../../data/model/subscribers_model.dart';
 
 abstract class HomePageRepository {
-  Future<Either<FirebaseFailure, void>> sendNotification(SendNotificationRequest sendNotificationRequest);
+  Future<Either<FirebaseFailure, void>> sendPostNotification(SendNotificationRequest sendNotificationRequest);
+  Future<Either<FirebaseFailure, void>> sendGeneralNotification(SendNotificationRequest sendNotificationRequest);
 
   Future<Either<FirebaseFailure, void>> updatePost(UpdatePostRequest updatePostRequest);
   Future<Either<FirebaseFailure, void>> deletePost(String postId);

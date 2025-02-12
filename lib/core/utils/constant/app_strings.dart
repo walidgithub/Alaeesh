@@ -63,6 +63,9 @@ class AppStrings {
   static const String enableAdd = 'إتـاحـة إضـافـة 🤝';
   static const String sendMessage = 'إرسـال رسـالـة ✍️';
   static const String message = 'الـرسـالـة';
+  static const String newPostAddedNotification = ' ضـاف ألـشـة جـديـدة 🥳 ';
+  static const String newCommentAddedNotification = ' ضـاف كـومـنـت جـديـد 🥳 ';
+  static const String newEmojiAddedNotification = ' ضـاف إيـمـوجـى جـديـد 🥳 ';
   static const String closeDialog = 'لا خـلاص';
   static const String messageFromAdmin = 'رســالـة مـن الأدمــن';
   static const String preventMessage = 'مـعـلـش انـت اتـمـنـعـت إنـك تـضـيـف أى ألـشـة أو كـومـنـت، شـويـة كـده وحـنـرجـعـك بـس خـد بـالـك الـمـرة الـجـايـة 🤝';

@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../../core/functions/time_ago_function.dart';
@@ -20,6 +22,7 @@ import '../../bloc/notifications_state.dart';
 class NotificationView extends StatefulWidget {
   final String id;
   final String username;
+  final String userImage;
   final String notification;
   final String time;
   final bool seen;
@@ -28,6 +31,7 @@ class NotificationView extends StatefulWidget {
     super.key,
     required this.id,
     required this.username,
+    required this.userImage,
     required this.notification,
     required this.time,
     required this.seen,
@@ -41,9 +45,9 @@ class NotificationView extends StatefulWidget {
 class _NotificationViewState extends State<NotificationView> {
   String timeAgoText = "";
 
-
   Future<void> updateNotificationToSeen(String notificationId) async {
-    NotificationsCubit.get(context).updateNotificationToSeenUseCase(UpdateNotificationToSeenRequest(id: notificationId));
+    NotificationsCubit.get(context).updateNotificationToSeenUseCase(
+        UpdateNotificationToSeenRequest(id: notificationId));
   }
 
   @override
@@ -55,7 +59,6 @@ class _NotificationViewState extends State<NotificationView> {
     updateNotificationToSeen(widget.id);
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,59 +95,84 @@ class _NotificationViewState extends State<NotificationView> {
                             width: 5.w,
                           ),
                           Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "test",
-                                                style: AppTypography.kBold14
-                                                    .copyWith(color: AppColors.cTitle),
-                                              ),
-                                              Directionality(
-                                                textDirection: TextDirection.ltr,
-                                                child: Text(
-                                                  timeAgoText,
-                                                  style: AppTypography.kLight12
-                                                      .copyWith(
-                                                      color: AppColors.cBlack),
+                              child: Bounceable(
+                            onTap: () {},
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                            radius: 25.r,
+                                            backgroundColor: AppColors.cWhite,
+                                            child: Container(
+                                                padding: EdgeInsets.all(2.w),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: AppColors.cTitle,
+                                                    width: 2,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                child: ClipOval(
+                                                  child: CachedNetworkImage(
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 2.w,
+                                                      color: AppColors.cTitle,
+                                                    ),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        Image.asset(
+                                                            AppAssets.profile),
+                                                    imageUrl: widget.userImage,
+                                                  ),
+                                                ))),
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        Directionality(
+                                          textDirection: TextDirection.ltr,
+                                          child: Text(
+                                            timeAgoText,
+                                            style: AppTypography.kLight12
+                                                .copyWith(
+                                                    color: AppColors.cBlack),
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 10.w,
-                                          ),
-                                          SvgPicture.asset(
-                                            widget.seen ? AppAssets.seen : AppAssets.unseen,
-                                            width: 25.w,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  Text(
-                                    widget.notification,
-                                    style: AppTypography.kLight14
-                                        .copyWith(color: AppColors.cBlack),
-                                  ),
-                                ],
-                              )),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        SvgPicture.asset(
+                                          widget.seen
+                                              ? AppAssets.seen
+                                              : AppAssets.unseen,
+                                          width: 25.w,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  widget.notification,
+                                  style: AppTypography.kLight14
+                                      .copyWith(color: AppColors.cBlack),
+                                ),
+                              ],
+                            ),
+                          )),
                         ],
                       ),
                       SizedBox(

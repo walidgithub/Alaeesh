@@ -9,6 +9,7 @@ import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
 import 'package:last/features/home_page/data/model/requests/send_notification_request.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/preferences/secure_local_data.dart';
+import '../../../notifications/data/model/notifications_model.dart';
 import '../model/comments_model.dart';
 import '../model/emoji_model.dart';
 import '../model/requests/add_comment_emoji_request.dart';
@@ -25,7 +26,8 @@ import '../model/requests/update_post_request.dart';
 import '../model/subscribers_model.dart';
 
 abstract class BaseDataSource {
-  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest);
+  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest);
+  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest);
 
   Future<void> updatePost(UpdatePostRequest updatePostRequest);
   Future<void> deletePost(String postId);
@@ -600,9 +602,76 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest) async {
+  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest) async {
     try {
+      QuerySnapshot subscriberSnapshot = await firestore
+          .collection('subscribers')
+          .where('postAuther', isEqualTo: sendNotificationRequest.postAuther)
+          .get();
 
+      for (var doc in subscriberSnapshot.docs) {
+        SubscribersModel subscriber = SubscribersModel.fromMap(doc.data() as Map<String, dynamic>);
+
+        var uuid = Uuid();
+        String notificationId = uuid.v4();
+        AlaeeshNotificationsModel notification = AlaeeshNotificationsModel(
+          id: notificationId,
+          postId: sendNotificationRequest.postId,
+          notification: sendNotificationRequest.message,
+          username: subscriber.username,
+          userImage: sendNotificationRequest.userImage,
+          time: sendNotificationRequest.time,
+          seen: false,
+        );
+
+        await firestore.collection('notifications').add(notification.toMap());
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
+    try {
+      DocumentSnapshot postDoc = await firestore.collection('posts').doc(sendNotificationRequest.postId).get();
+
+      if (!postDoc.exists) {
+        throw "Post not found.";
+      }
+
+      PostModel post = PostModel.fromMap(postDoc.data() as Map<String, dynamic>);
+
+      Set<String> uniqueSubscribers = post.postSubscribersList.map((sub) => sub.username).toSet();
+
+      for (String subscriberUsername in uniqueSubscribers) {
+        QuerySnapshot subscriberSnapshot = await firestore
+            .collection('subscribers')
+            .where('postAuther', isEqualTo: subscriberUsername)
+            .get();
+
+        for (var subDoc in subscriberSnapshot.docs) {
+          SubscribersModel sub = SubscribersModel.fromMap(subDoc.data() as Map<String, dynamic>);
+
+          if (sendNotificationRequest.postAuther == sub.username) {
+            break;
+          }
+
+          var uuid = Uuid();
+          String notificationId = uuid.v4();
+          AlaeeshNotificationsModel notification = AlaeeshNotificationsModel(
+            id: notificationId,
+            postId: sendNotificationRequest.postId,
+            notification: sendNotificationRequest.message,
+            username: sub.username,
+            userImage: sendNotificationRequest.userImage,
+            time: sendNotificationRequest.time,
+            seen: false, // Mark as unseen initially
+          );
+
+          await firestore.collection('notifications').add(notification.toMap());
+        }
+      }
     } catch (e) {
       rethrow;
     }

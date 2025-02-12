@@ -28,7 +28,7 @@ class NotificationsDataSource extends BaseDataSource {
     List<AlaeeshNotificationsModel> alaeeshNotificationsList = [];
     try {
       var docs = await firestore
-          .collection('Notifications')
+          .collection('notifications')
           .where('username', isEqualTo: getNotificationsRequest.username)
           .get();
 
@@ -40,6 +40,7 @@ class NotificationsDataSource extends BaseDataSource {
             notification: data['notification'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
+            userImage: data['userImage'] ?? '',
             seen: data['seen'] ?? false);
       }).toList();
 
@@ -55,7 +56,7 @@ class NotificationsDataSource extends BaseDataSource {
   Future<void> updateNotificationToSeen(UpdateNotificationToSeenRequest updateNotificationToSeenRequest) async {
     try {
       final notificationRef = firestore
-          .collection('Notifications')
+          .collection('notifications')
           .doc(updateNotificationToSeenRequest.id);
 
       await notificationRef.update({'seen': true});
@@ -71,7 +72,7 @@ class NotificationsDataSource extends BaseDataSource {
       List<AlaeeshNotificationsModel> alaeeshNotificationsList = [];
 
       var docs = await firestore
-          .collection('Notifications')
+          .collection('notifications')
           .where('username', isEqualTo: getNotificationsRequest.username)
           .where('seen', isEqualTo: false)
           .get();
@@ -83,6 +84,7 @@ class NotificationsDataSource extends BaseDataSource {
             id: doc.id,
             postId: data['postId'] ?? '',
             notification: data['notification'] ?? '',
+            userImage: data['userImage'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
             seen: data['seen'] ?? false);

@@ -2,17 +2,19 @@ class SendNotificationRequest {
   String? id;
   String postId;
   String message;
-  String username;
+  String postAuther;
+  String userImage;
   String time;
   bool seen;
-  SendNotificationRequest({this.id, required this.postId, required this.message, required this.username, required this.time, required this.seen});
+  SendNotificationRequest({this.id, required this.postId, required this.message, required this.postAuther, required this.userImage, required this.time, required this.seen});
 
   static SendNotificationRequest fromMap(Map<String, dynamic> map, String? id) {
     SendNotificationRequest sndReplyRequest = SendNotificationRequest(
       id: id,
       message: map['message'],
       postId: map['postId'],
-      username: map['username'],
+      postAuther: map['postAuther'],
+      userImage: map['userImage'],
       time: map['time'],
       seen: map['seen'],
     );
@@ -24,7 +26,8 @@ class SendNotificationRequest {
       'id': id,
       'postId': postId,
       'message': message,
-      'username': username,
+      'postAuther': postAuther,
+      'userImage': userImage,
       'time': time,
       'seen': seen,
     };

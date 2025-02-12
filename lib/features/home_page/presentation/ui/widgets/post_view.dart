@@ -24,8 +24,6 @@ import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/card_divider.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
-import '../../../../dashboard/data/model/requests/send_reply_request.dart';
-import '../../../../dashboard/presentation/ui/widgets/send_message_dialog.dart';
 import '../../../../welcome/presentation/bloc/welcome_cubit.dart';
 import '../../../../welcome/presentation/bloc/welcome_state.dart';
 import '../../../data/model/comments_model.dart';

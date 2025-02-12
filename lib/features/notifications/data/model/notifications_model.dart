@@ -5,6 +5,7 @@ class AlaeeshNotificationsModel {
   String postId;
   String notification;
   String username;
+  String userImage;
   String time;
   bool seen;
   AlaeeshNotificationsModel({
@@ -12,6 +13,7 @@ class AlaeeshNotificationsModel {
     required this.postId,
     required this.notification,
     required this.username,
+    required this.userImage,
     required this.time,
     required this.seen,
   });
@@ -21,6 +23,7 @@ class AlaeeshNotificationsModel {
       id: map['id'],
       postId: map['postId'],
       username: map['username'],
+      userImage: map['userImage'],
       notification: map['notification'],
       time: map['time'],
       seen: map['seen'],
@@ -33,6 +36,7 @@ class AlaeeshNotificationsModel {
       'id': id,
       'postId': postId,
       'username': username,
+      'userImage': userImage,
       'notification': notification,
       'time': time,
       'seen': seen,

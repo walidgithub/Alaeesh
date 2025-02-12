@@ -59,9 +59,7 @@ class _NotificationsViewState extends State<NotificationsView> {
       role = userData['role'] ?? '';
 
     });
-    // if (!_isErrorDialogShown) {
     getNotifications();
-    // }
   }
 
   getNotifications() {
@@ -104,13 +102,17 @@ class _NotificationsViewState extends State<NotificationsView> {
               child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return NotificationView(
-                      statusBarHeight: statusBarHeight,
-                      id: alaeeshNotificationsList[index].id!,
-                      username: alaeeshNotificationsList[index].username,
-                      time: alaeeshNotificationsList[index].time,
-                      notification: alaeeshNotificationsList[index].notification,
-                      seen: alaeeshNotificationsList[index].seen,
+                    return Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: NotificationView(
+                        statusBarHeight: statusBarHeight,
+                        id: alaeeshNotificationsList[index].id!,
+                        username: alaeeshNotificationsList[index].username,
+                        userImage: alaeeshNotificationsList[index].userImage,
+                        time: alaeeshNotificationsList[index].time,
+                        notification: alaeeshNotificationsList[index].notification,
+                        seen: alaeeshNotificationsList[index].seen,
+                      ),
                     );
                   },
                   itemCount: alaeeshNotificationsList.length),

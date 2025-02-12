@@ -5,18 +5,18 @@ import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../home_page/data/model/post_model.dart';
 import '../../../home_page/data/model/requests/send_notification_request.dart';
-import '../../../home_page/domain/usecases/send_notification_usecase.dart';
+import '../../../home_page/domain/usecases/send_post_notification_usecase.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
 import '../../data/model/requests/send_advise_request.dart';
 import '../../domain/usecases/send_advise_usecase.dart';
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
-  LayoutCubit(this.addPostUseCase, this.sendAdviceUseCase, this.sendNotificationUseCase) : super(LayoutInitial());
+  LayoutCubit(this.addPostUseCase, this.sendAdviceUseCase, this.sendPostNotificationUseCase) : super(LayoutInitial());
 
   final AddPostUseCase addPostUseCase;
   final SendAdviceUseCase sendAdviceUseCase;
-  final SendNotificationUseCase sendNotificationUseCase;
+  final SendPostNotificationUseCase sendPostNotificationUseCase;
 
   static LayoutCubit get(context) => BlocProvider.of(context);
 
@@ -48,13 +48,13 @@ class LayoutCubit extends Cubit<LayoutState> {
     }
   }
 
-  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest) async {
-    emit(SendNotificationLoadingState());
+  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest) async {
+    emit(SendPostNotificationLoadingState());
     if (await _networkInfo.isConnected) {
-      final result = await sendNotificationUseCase.call(sendNotificationRequest);
+      final result = await sendPostNotificationUseCase.call(sendNotificationRequest);
       result.fold(
-            (failure) => emit(SendNotificationErrorState(failure.message)),
-            (notificationSent) => emit(SendNotificationSuccessState()),
+            (failure) => emit(SendPostNotificationErrorState(failure.message)),
+            (notificationSent) => emit(SendPostNotificationSuccessState()),
       );
     } else {
       emit(LayoutNoInternetState());

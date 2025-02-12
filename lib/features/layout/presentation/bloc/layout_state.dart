@@ -24,12 +24,12 @@ class SendAdviceErrorState extends LayoutState{
   SendAdviceErrorState(this.errorMessage);
 }
 
-class SendNotificationLoadingState extends LayoutState{}
-class SendNotificationSuccessState extends LayoutState{}
-class SendNotificationErrorState extends LayoutState{
+class SendPostNotificationLoadingState extends LayoutState{}
+class SendPostNotificationSuccessState extends LayoutState{}
+class SendPostNotificationErrorState extends LayoutState{
   final String errorMessage;
 
-  SendNotificationErrorState(this.errorMessage);
+  SendPostNotificationErrorState(this.errorMessage);
 }
 
 class LayoutNoInternetState extends LayoutState{}

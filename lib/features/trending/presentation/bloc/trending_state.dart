@@ -158,4 +158,12 @@ class CheckIfUserSubscribedErrorState extends TrendingState{
   CheckIfUserSubscribedErrorState(this.errorMessage);
 }
 
+class SendGeneralNotificationLoadingState extends TrendingState{}
+class SendGeneralNotificationSuccessState extends TrendingState{}
+class SendGeneralNotificationErrorState extends TrendingState{
+  final String errorMessage;
+
+  SendGeneralNotificationErrorState(this.errorMessage);
+}
+
 class TrendingNoInternetState extends TrendingState{}

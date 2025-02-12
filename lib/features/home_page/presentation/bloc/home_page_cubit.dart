@@ -12,7 +12,7 @@ import 'package:last/features/home_page/domain/usecases/delete_comment_usecase.d
 import 'package:last/features/home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_home_posts_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/search_post_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/send_notification_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/send_post_notification_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_comment_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/update_post_usecase.dart';
 import '../../../../core/di/di.dart';
@@ -34,10 +34,11 @@ import '../../domain/usecases/delete_post_usecase.dart';
 import '../../domain/usecases/delete_subscriber_usecase.dart';
 import '../../domain/usecases/get_all_posts_usecase.dart';
 import '../../domain/usecases/get_subscribers_usecase.dart';
+import '../../domain/usecases/send_general_notification_usecase.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
-  HomePageCubit(this.deletePostUseCase, this.getHomePostsUseCase, this.sendNotificationUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
+  HomePageCubit(this.deletePostUseCase, this.getHomePostsUseCase, this.sendGeneralNotificationUseCase, this.sendPostNotificationUseCase, this.addCommentUseCase, this.searchPostUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addCommentEmojiUseCase, this.getAllPostsUseCase, this.deleteCommentEmojiUseCase,this.updateCommentUseCase,this.updatePostUseCase,this.addSubscriberUseCase,this.deleteSubscriberUseCase,this.getSubscribersUseCase,this.deleteEmojiUseCase, this.deletePostSubscriberUseCase, this.addPostSubscriberUseCase) : super(HomePageInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final UpdatePostUseCase updatePostUseCase;
@@ -63,7 +64,8 @@ class HomePageCubit extends Cubit<HomePageState> {
   final GetHomePostsUseCase getHomePostsUseCase;
   final SearchPostUseCase searchPostUseCase;
 
-  final SendNotificationUseCase sendNotificationUseCase;
+  final SendPostNotificationUseCase sendPostNotificationUseCase;
+  final SendGeneralNotificationUseCase sendGeneralNotificationUseCase;
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
@@ -303,13 +305,26 @@ class HomePageCubit extends Cubit<HomePageState> {
     }
   }
 
-  Future<void> sendNotification(SendNotificationRequest sendNotificationRequest) async {
-    emit(SendNotificationLoadingState());
+  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest) async {
+    emit(SendPostNotificationLoadingState());
     if (await _networkInfo.isConnected) {
-      final result = await sendNotificationUseCase.call(sendNotificationRequest);
+      final result = await sendPostNotificationUseCase.call(sendNotificationRequest);
       result.fold(
-            (failure) => emit(SendNotificationErrorState(failure.message)),
-            (notificationSent) => emit(SendNotificationSuccessState()),
+            (failure) => emit(SendPostNotificationErrorState(failure.message)),
+            (notificationSent) => emit(SendPostNotificationSuccessState()),
+      );
+    } else {
+      emit(HomePageNoInternetState());
+    }
+  }
+
+  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
+    emit(SendGeneralNotificationLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await sendGeneralNotificationUseCase.call(sendNotificationRequest);
+      result.fold(
+            (failure) => emit(SendGeneralNotificationErrorState(failure.message)),
+            (notificationSent) => emit(SendGeneralNotificationSuccessState()),
       );
     } else {
       emit(HomePageNoInternetState());

@@ -14,6 +14,7 @@ import '../../../../../core/utils/ui_components/custom_divider.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../home_page/data/model/post_model.dart';
+import '../../../../home_page/data/model/requests/send_notification_request.dart';
 import '../../bloc/layout_cubit.dart';
 import '../../bloc/layout_state.dart';
 
@@ -102,18 +103,34 @@ class _AddPostBottomSheetState extends State<AddPostBottomSheet> {
                             hideLoading();
                             postId = state.addPostResponse.postId;
                             // send notification --------------------
+                            DateTime now = DateTime.now();
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(now);
+                            String formattedTime =
+                                DateFormat('hh:mm a').format(now);
+                            SendNotificationRequest sendNotificationRequest =
+                                SendNotificationRequest(
+                                    postAuther: widget.username,
+                                    postId: state.addPostResponse.postId,
+                                    time: '$formattedDate $formattedTime',
+                                    userImage: widget.userImage,
+                                    message:
+                                        '${widget.username}${AppStrings.newPostAddedNotification}',
+                                    seen: false);
+                            LayoutCubit.get(context)
+                                .sendPostNotification(sendNotificationRequest);
                           } else if (state is AddPostErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);
-                          } else if (state is SendNotificationLoadingState) {
+                          } else if (state is SendPostNotificationLoadingState) {
                             showLoading();
-                          } else if (state is SendNotificationSuccessState) {
+                          } else if (state is SendPostNotificationSuccessState) {
                             hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
                             widget.postAdded(postId);
                             Navigator.pop(context);
-                          } else if (state is SendNotificationErrorState) {
+                          } else if (state is SendPostNotificationErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                             Navigator.pop(context);

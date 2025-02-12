@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:last/features/trending/data/model/requests/check_if_user_subscribed_request.dart';
 import 'package:last/features/trending/presentation/ui/widgets/suggested_user_view.dart';
 import 'package:last/features/trending/presentation/ui/widgets/user_subscriptions_bottom_sheet.dart';
@@ -21,6 +22,7 @@ import '../../../home_page/data/model/requests/add_post_subscriber_request.dart'
 import '../../../home_page/data/model/requests/add_subscriber_request.dart';
 import '../../../home_page/data/model/requests/delete_post_subscriber_request.dart';
 import '../../../home_page/data/model/requests/delete_subscriber_request.dart';
+import '../../../home_page/data/model/requests/send_notification_request.dart';
 import '../../../home_page/data/model/subscribers_model.dart';
 import '../../../home_page/presentation/ui/widgets/comments_bottom_sheet.dart';
 import '../../../home_page/presentation/ui/widgets/post_view.dart';
@@ -29,6 +31,7 @@ import '../../data/model/requests/get_top_posts_request.dart';
 import '../../data/model/suggested_user_model.dart';
 import '../bloc/trending_cubit.dart';
 import '../bloc/trending_state.dart';
+import 'dart:ui' as ui;
 
 class TrendingView extends StatefulWidget {
   const TrendingView({super.key});
@@ -57,6 +60,8 @@ class _TrendingViewState extends State<TrendingView> {
 
   List<SubscribersModel> subscribersList = [];
   var userData;
+
+  var notificationType = {"active": false, "status": 0, "type": "", "postId":""};
 
   @override
   void initState() {
@@ -133,7 +138,7 @@ class _TrendingViewState extends State<TrendingView> {
               ),
               builder: (context2) {
                 return Directionality(
-                  textDirection: TextDirection.rtl,
+                  textDirection: ui.TextDirection.rtl,
                   child: CommentsBottomSheet(
                     getUserPosts: (String userName) {
                       TrendingCubit.get(context).getTopPosts(
@@ -171,6 +176,10 @@ class _TrendingViewState extends State<TrendingView> {
                       setState(() {
                         selectedId = returnedId;
                         showCommentBottomSheet = true;
+                        notificationType["active"] = true;
+                        notificationType["status"] = status;
+                        notificationType["type"] = "comment";
+                        notificationType["postId"] = homePageModel[selectedPost].postModel.id!;
                       });
                       if (status == 1) {
                         AddPostSubscriberRequest addPostSubscriberRequest =
@@ -211,6 +220,41 @@ class _TrendingViewState extends State<TrendingView> {
             setState(() {
               showCommentBottomSheet = false;
             });
+          }
+
+          if (notificationType["active"] == true) {
+            if (notificationType["status"] == 1) {
+              DateTime now = DateTime.now();
+              String formattedDate =
+              DateFormat('yyyy-MM-dd').format(now);
+              String formattedTime =
+              DateFormat('hh:mm a').format(now);
+              if (notificationType["type"] == "comment") {
+                SendNotificationRequest sendNotificationRequest =
+                SendNotificationRequest(
+                    postAuther: displayName,
+                    postId: notificationType["postId"].toString(),
+                    time: '$formattedDate $formattedTime',
+                    userImage: photoUrl,
+                    message:
+                    '$displayName${AppStrings.newCommentAddedNotification}',
+                    seen: false);
+                TrendingCubit.get(context)
+                    .sendGeneralNotification(sendNotificationRequest);
+              } else if (notificationType["type"] == "emoji") {
+                SendNotificationRequest sendNotificationRequest =
+                SendNotificationRequest(
+                    postAuther: displayName,
+                    postId: notificationType["postId"].toString(),
+                    userImage: photoUrl,
+                    time: '$formattedDate $formattedTime',
+                    message:
+                    '$displayName${AppStrings.newEmojiAddedNotification}',
+                    seen: false);
+                TrendingCubit.get(context)
+                    .sendGeneralNotification(sendNotificationRequest);
+              }
+            }
           }
         } else if (state is GetTopPostsErrorState) {
           showSnackBar(context, state.errorMessage);
@@ -294,7 +338,7 @@ class _TrendingViewState extends State<TrendingView> {
             ),
             builder: (context2) {
               return Directionality(
-                textDirection: TextDirection.rtl,
+                textDirection: ui.TextDirection.rtl,
                 child: UserSubscriptionsBottomSheet(
                   addOrRemoveSubscriber: (int status) {
                     if (status == -1) {
@@ -338,6 +382,25 @@ class _TrendingViewState extends State<TrendingView> {
               .getTopPosts(GetTopPostsRequest(currentUser: displayName));
         } else if (state is DeletePostSubscriberErrorState) {
           showSnackBar(context, state.errorMessage);
+        } else if (state is SendGeneralNotificationLoadingState) {
+          showLoading();
+        } else if (state is SendGeneralNotificationSuccessState) {
+          hideLoading();
+          setState(() {
+            notificationType["active"] = false;
+            notificationType["status"] = 0;
+            notificationType["type"] = "";
+            notificationType["postId"] = "";
+          });
+        } else if (state is SendGeneralNotificationErrorState) {
+          hideLoading();
+          showSnackBar(context, state.errorMessage);
+          setState(() {
+            notificationType["active"] = false;
+            notificationType["status"] = 0;
+            notificationType["type"] = "";
+            notificationType["postId"] = "";
+          });
         } else if (state is TrendingNoInternetState) {
           hideLoading();
           onError(context, AppStrings.noInternet);
@@ -427,6 +490,10 @@ class _TrendingViewState extends State<TrendingView> {
                             setState(() {
                               selectedId = returnedId;
                               showCommentBottomSheet = true;
+                              notificationType["active"] = true;
+                              notificationType["status"] = status;
+                              notificationType["type"] = "comment";
+                              notificationType["postId"] = homePageModel[index].postModel.id!;
                             });
                             if (status == 1) {
                               AddPostSubscriberRequest
@@ -460,6 +527,12 @@ class _TrendingViewState extends State<TrendingView> {
                             }
                           },
                           addNewEmoji: (int status) {
+                            setState(() {
+                              notificationType["active"] = true;
+                              notificationType["status"] = status;
+                              notificationType["type"] = "emoji";
+                              notificationType["postId"] = homePageModel[index].postModel.id!;
+                            });
                             if (status == 1) {
                               AddPostSubscriberRequest
                                   addPostSubscriberRequest =

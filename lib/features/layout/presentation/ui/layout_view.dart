@@ -706,7 +706,7 @@ class _LayoutViewState extends State<LayoutView> {
                             badgeColor: AppColors.cPrimary,
                           ),
                           badgeContent: Text(
-                            _notificationsBadge.toString(),
+                            _notificationsBadgeAmount.toString(),
                             style:
                             const TextStyle(color: AppColors.cWhite),
                           ),

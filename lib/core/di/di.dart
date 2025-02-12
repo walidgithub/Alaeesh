@@ -8,7 +8,7 @@ import 'package:last/features/dashboard/domain/repository/dashboard_repository.d
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
 import 'package:last/features/home_page/domain/usecases/get_home_posts_usecase.dart';
-import 'package:last/features/home_page/domain/usecases/send_notification_usecase.dart';
+import 'package:last/features/home_page/domain/usecases/send_post_notification_usecase.dart';
 import 'package:last/features/notifications/domain/usecases/get_post_data_usecase.dart';
 import 'package:last/features/notifications/domain/usecases/update_notification_to_seen_usecase.dart';
 import 'package:last/features/welcome/domain/usecases/update_user_permissions_usecase.dart';
@@ -53,6 +53,7 @@ import '../../features/home_page/domain/repository/home_page_repository.dart';
 import '../../features/home_page/domain/usecases/add_subscriber_usecase.dart';
 import '../../features/home_page/domain/usecases/delete_subscriber_usecase.dart';
 import '../../features/home_page/domain/usecases/get_subscribers_usecase.dart';
+import '../../features/home_page/domain/usecases/send_general_notification_usecase.dart';
 import '../../features/layout/data/data_source/layout_datasource.dart';
 import '../../features/layout/data/repository_impl/layout_repository_impl.dart';
 import '../../features/layout/domain/repository/layout_repository.dart';
@@ -172,7 +173,8 @@ class ServiceLocator {
     sl.registerLazySingleton<GetHomePostsUseCase>(() => GetHomePostsUseCase(sl()));
     sl.registerLazySingleton<SearchPostUseCase>(() => SearchPostUseCase(sl()));
 
-    sl.registerLazySingleton<SendNotificationUseCase>(() => SendNotificationUseCase(sl()));
+    sl.registerLazySingleton<SendPostNotificationUseCase>(() => SendPostNotificationUseCase(sl()));
+    sl.registerLazySingleton<SendGeneralNotificationUseCase>(() => SendGeneralNotificationUseCase(sl()));
 
     // trending useCases
     sl.registerLazySingleton<GetTopPostsUseCase>(() => GetTopPostsUseCase(sl()));
@@ -203,8 +205,8 @@ class ServiceLocator {
     sl.registerFactory(() => WelcomeCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => LayoutCubit(sl(), sl(), sl()));
     sl.registerFactory(() => NotificationsCubit(sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => TrendingCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => HomePageCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MineCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => DashboardCubit(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MessagesCubit(sl(), sl(), sl()));

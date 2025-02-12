@@ -16,6 +16,7 @@ import '../../../home_page/data/model/requests/delete_comment_request.dart';
 import '../../../home_page/data/model/requests/delete_emoji_request.dart';
 import '../../../home_page/data/model/requests/delete_post_subscriber_request.dart';
 import '../../../home_page/data/model/requests/delete_subscriber_request.dart';
+import '../../../home_page/data/model/requests/send_notification_request.dart';
 import '../../../home_page/data/model/requests/update_comment_request.dart';
 import '../../../home_page/data/model/requests/update_post_request.dart';
 import '../../../home_page/domain/usecases/add_comment_emoji_usecase.dart';
@@ -29,6 +30,7 @@ import '../../../home_page/domain/usecases/delete_emoji_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/delete_subscriber_usecase.dart';
+import '../../../home_page/domain/usecases/send_general_notification_usecase.dart';
 import '../../../home_page/domain/usecases/update_comment_usecase.dart';
 import '../../../home_page/domain/usecases/update_post_usecase.dart';
 import '../../data/model/requests/check_if_user_subscribed_request.dart';
@@ -38,7 +40,7 @@ import '../../domain/usecases/get_top_posts_usecase.dart';
 
 class TrendingCubit extends Cubit<TrendingState> {
   TrendingCubit(
-      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.getSuggestedUserPostsUseCase, this.addSubscriberUseCase, this.deleteSubscriberUseCase, this.deleteEmojiUseCase, this.updatePostUseCase, this.updateCommentUseCase, this.deleteCommentEmojiUseCase, this.deletePostUseCase, this.addCommentEmojiUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addPostSubscriberUseCase, this.deletePostSubscriberUseCase, this.checkIfUserSubscribedUseCase)
+      this.getTopPostsUseCase, this.getSuggestedUsersUseCase, this.sendGeneralNotificationUseCase, this.getSuggestedUserPostsUseCase, this.addSubscriberUseCase, this.deleteSubscriberUseCase, this.deleteEmojiUseCase, this.updatePostUseCase, this.updateCommentUseCase, this.deleteCommentEmojiUseCase, this.deletePostUseCase, this.addCommentEmojiUseCase, this.addCommentUseCase, this.deleteCommentUseCase, this.addEmojiUseCase, this.addPostSubscriberUseCase, this.deletePostSubscriberUseCase, this.checkIfUserSubscribedUseCase)
       : super(TrendingInitial());
 
   final GetTopPostsUseCase getTopPostsUseCase;
@@ -64,6 +66,7 @@ class TrendingCubit extends Cubit<TrendingState> {
   final DeleteCommentEmojiUseCase deleteCommentEmojiUseCase;
 
   final CheckIfUserSubscribedUseCase checkIfUserSubscribedUseCase;
+  final SendGeneralNotificationUseCase sendGeneralNotificationUseCase;
 
   static TrendingCubit get(context) => BlocProvider.of(context);
 
@@ -285,6 +288,19 @@ class TrendingCubit extends Cubit<TrendingState> {
       result.fold(
             (failure) => emit(CheckIfUserSubscribedErrorState(failure.message)),
             (checkIfUserSubscribed) => emit(CheckIfUserSubscribedSuccessState(checkIfUserSubscribed)),
+      );
+    } else {
+      emit(TrendingNoInternetState());
+    }
+  }
+
+  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
+    emit(SendGeneralNotificationLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await sendGeneralNotificationUseCase.call(sendNotificationRequest);
+      result.fold(
+            (failure) => emit(SendGeneralNotificationErrorState(failure.message)),
+            (notificationSent) => emit(SendGeneralNotificationSuccessState()),
       );
     } else {
       emit(TrendingNoInternetState());

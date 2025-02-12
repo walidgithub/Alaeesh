@@ -266,9 +266,23 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, void>> sendNotification(SendNotificationRequest sendNotificationRequest) async {
+  Future<Either<FirebaseFailure, void>> sendPostNotification(SendNotificationRequest sendNotificationRequest) async {
     try {
-      final result = await _homePageDataSource.sendNotification(sendNotificationRequest);
+      final result = await _homePageDataSource.sendPostNotification(sendNotificationRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
+    try {
+      final result = await _homePageDataSource.sendGeneralNotification(sendNotificationRequest);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
