@@ -38,7 +38,8 @@ class NotificationsDataSource extends BaseDataSource {
             notification: data['notification'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
-            userImage: data['userImage'] ?? '',
+            postAuthor: data['postAuthor'] ?? '',
+            authorImage: data['authorImage'] ?? '',
             seen: data['seen'] ?? false);
       }).toList();
 
@@ -82,7 +83,8 @@ class NotificationsDataSource extends BaseDataSource {
             id: doc.id,
             postId: data['postId'] ?? '',
             notification: data['notification'] ?? '',
-            userImage: data['userImage'] ?? '',
+            postAuthor: data['postAuthor'] ?? '',
+            authorImage: data['authorImage'] ?? '',
             time: data['time'] ?? '',
             username: data['username'] ?? '',
             seen: data['seen'] ?? false);

@@ -13,7 +13,7 @@ class GetPostDataUseCase extends FirebaseBaseUseCase {
   GetPostDataUseCase(this.homePageRepository);
 
   @override
-  Future<Either<FirebaseFailure, List<HomePageModel>>> call(parameters) async {
+  Future<Either<FirebaseFailure, HomePageModel>> call(parameters) async {
     return await homePageRepository.getPostData(parameters);
   }
 }

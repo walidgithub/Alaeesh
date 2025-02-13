@@ -10,5 +10,6 @@ class UserPostsArguments {
 class PostDataArguments {
   String? postId;
   String? username;
-  PostDataArguments({this.username, this.postId});
+  String? postAuther;
+  PostDataArguments({this.username, this.postAuther, this.postId});
 }

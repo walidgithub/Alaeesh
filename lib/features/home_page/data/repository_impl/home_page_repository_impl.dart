@@ -295,7 +295,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }
 
   @override
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getPostData(GetPostDataRequest getPostDataRequest) async {
+  Future<Either<FirebaseFailure, HomePageModel>> getPostData(GetPostDataRequest getPostDataRequest) async {
     try {
       final result =
       await _homePageDataSource.getPostData(getPostDataRequest);

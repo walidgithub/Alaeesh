@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:last/core/utils/constant/app_strings.dart';
 import 'package:last/features/home_page/data/model/home_page_model.dart';
 import 'package:last/features/home_page/data/model/post_model.dart';
 import 'package:last/features/home_page/data/model/requests/add_comment_request.dart';
-import 'package:last/features/home_page/data/model/requests/add_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_comment_request.dart';
 import 'package:last/features/home_page/data/model/requests/delete_post_subscriber_request.dart';
 import 'package:last/features/home_page/data/model/post_subscribers_model.dart';
@@ -16,6 +16,7 @@ import '../model/emoji_model.dart';
 import '../model/requests/add_comment_emoji_request.dart';
 import '../model/requests/add_emoji_request.dart';
 import 'package:uuid/uuid.dart';
+import '../model/requests/add_post_subscriber_request.dart';
 import '../model/requests/add_subscriber_request.dart';
 import '../model/requests/delete_comment_emoji_request.dart';
 import '../model/requests/delete_emoji_request.dart';
@@ -27,8 +28,10 @@ import '../model/requests/update_post_request.dart';
 import '../model/subscribers_model.dart';
 
 abstract class BaseDataSource {
-  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest);
-  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest);
+  Future<void> sendPostNotification(
+      SendNotificationRequest sendNotificationRequest);
+  Future<void> sendGeneralNotification(
+      SendNotificationRequest sendNotificationRequest);
 
   Future<void> updatePost(UpdatePostRequest updatePostRequest);
   Future<void> deletePost(String postId);
@@ -59,8 +62,7 @@ abstract class BaseDataSource {
   Future<List<HomePageModel>> getAllPosts(GetPostsRequest getPostsRequest);
   Future<List<HomePageModel>> getHomePosts(GetPostsRequest getPostsRequest);
 
-  Future<List<HomePageModel>> getPostData(
-      GetPostDataRequest getPostDataRequest);
+  Future<HomePageModel> getPostData(GetPostDataRequest getPostDataRequest);
 }
 
 class HomePageDataSource extends BaseDataSource {
@@ -160,8 +162,7 @@ class HomePageDataSource extends BaseDataSource {
       // Fetch posts and filtered subscribers concurrently
       final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
       if (getPostsRequest.allPosts) {
-        postsFuture = firestore.collection('posts')
-            .get();
+        postsFuture = firestore.collection('posts').get();
       } else {
         postsFuture = firestore
             .collection('posts')
@@ -193,7 +194,7 @@ class HomePageDataSource extends BaseDataSource {
       // Combine data into HomePageModel
       List<HomePageModel> homePageModels = postModels.map((post) {
         final isSubscribed = subscriberModels.any((subscriber) =>
-        subscriber.postAuther == post.username); // Match post author
+            subscriber.postAuther == post.username); // Match post author
         return HomePageModel(postModel: post, userSubscribed: isSubscribed);
       }).toList();
 
@@ -235,7 +236,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addCommentRequest.postId).update({
           'commentsList': updatedComments,
-          'lastUpdateTime':  addCommentRequest.lastTimeUpdate
+          'lastUpdateTime': addCommentRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -246,9 +247,8 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> updateComment(UpdateCommentRequest updateCommentRequest) async {
     try {
-      final postRef = firestore
-          .collection('posts')
-          .doc(updateCommentRequest.postId);
+      final postRef =
+          firestore.collection('posts').doc(updateCommentRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
@@ -265,9 +265,12 @@ class HomePageDataSource extends BaseDataSource {
           }
         }
 
-        await postRef.update({'commentsList': commentsList,'lastUpdateTime':  updateCommentRequest.lastTimeUpdate});
+        await postRef.update({
+          'commentsList': commentsList,
+          'lastUpdateTime': updateCommentRequest.lastTimeUpdate
+        });
       } else {
-        throw "Post document does not exist.";
+        throw AppStrings.noPostFound;
       }
     } catch (e) {
       rethrow;
@@ -277,9 +280,8 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteComment(DeleteCommentRequest deleteCommentRequest) async {
     try {
-      final postRef = firestore
-          .collection('posts')
-          .doc(deleteCommentRequest.postId);
+      final postRef =
+          firestore.collection('posts').doc(deleteCommentRequest.postId);
 
       // Fetch the post document
       final snapshot = await postRef.get();
@@ -289,9 +291,12 @@ class HomePageDataSource extends BaseDataSource {
         commentsList.removeWhere(
             (comment) => comment['id'] == deleteCommentRequest.commentId);
 
-        await postRef.update({'commentsList': commentsList,'lastUpdateTime':  deleteCommentRequest.lastTimeUpdate});
+        await postRef.update({
+          'commentsList': commentsList,
+          'lastUpdateTime': deleteCommentRequest.lastTimeUpdate
+        });
       } else {
-        throw "Post document does not exist.";
+        throw AppStrings.noPostFound;
       }
     } catch (e) {
       rethrow;
@@ -325,7 +330,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addEmojiRequest.postId).update({
           'emojisList': updatedEmojies,
-          'lastUpdateTime':  addEmojiRequest.lastTimeUpdate
+          'lastUpdateTime': addEmojiRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -336,9 +341,8 @@ class HomePageDataSource extends BaseDataSource {
   @override
   Future<void> deleteEmoji(DeleteEmojiRequest deleteEmojiRequest) async {
     try {
-      final postRef = firestore
-          .collection('posts')
-          .doc(deleteEmojiRequest.postId);
+      final postRef =
+          firestore.collection('posts').doc(deleteEmojiRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
@@ -349,7 +353,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postRef.update({'emojisList': emojisList});
       } else {
-        throw "Post document does not exist.";
+        throw AppStrings.noPostFound;
       }
     } catch (e) {
       rethrow;
@@ -413,7 +417,7 @@ class HomePageDataSource extends BaseDataSource {
           throw "Subscriber with the specified username not found.";
         }
       } else {
-        throw "Post document does not exist.";
+        throw AppStrings.noPostFound;
       }
     } catch (e) {
       rethrow;
@@ -459,7 +463,7 @@ class HomePageDataSource extends BaseDataSource {
 
         await postsCollection.doc(addCommentEmojiRequest.postId).update({
           'commentsList': updatedComments,
-          'lastUpdateTime':  addCommentEmojiRequest.lastTimeUpdate
+          'lastUpdateTime': addCommentEmojiRequest.lastTimeUpdate
         });
       }
     } catch (e) {
@@ -471,9 +475,8 @@ class HomePageDataSource extends BaseDataSource {
   Future<void> deleteCommentEmoji(
       DeleteCommentEmojiRequest deleteCommentEmojiRequest) async {
     try {
-      final postRef = firestore
-          .collection('posts')
-          .doc(deleteCommentEmojiRequest.postId);
+      final postRef =
+          firestore.collection('posts').doc(deleteCommentEmojiRequest.postId);
 
       final snapshot = await postRef.get();
       if (snapshot.exists) {
@@ -492,7 +495,7 @@ class HomePageDataSource extends BaseDataSource {
         }
         await postRef.update({'commentsList': commentsList});
       } else {
-        throw "Post document does not exist.";
+        throw AppStrings.noPostFound;
       }
     } catch (e) {
       rethrow;
@@ -565,9 +568,7 @@ class HomePageDataSource extends BaseDataSource {
 
       postsFuture = firestore.collection('posts').get();
 
-      final subscribersFuture = firestore
-          .collection('subscribers')
-          .get();
+      final subscribersFuture = firestore.collection('subscribers').get();
 
       final results = await Future.wait([postsFuture, subscribersFuture]);
 
@@ -589,7 +590,7 @@ class HomePageDataSource extends BaseDataSource {
       // Combine data into HomePageModel
       List<HomePageModel> homePageModels = postModels.map((post) {
         final isSubscribed = subscriberModels.any((subscriber) =>
-        subscriber.postAuther == post.username); // Match post author
+            subscriber.postAuther == post.username); // Match post author
         return HomePageModel(postModel: post, userSubscribed: isSubscribed);
       }).toList();
 
@@ -606,7 +607,8 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> sendPostNotification(SendNotificationRequest sendNotificationRequest) async {
+  Future<void> sendPostNotification(
+      SendNotificationRequest sendNotificationRequest) async {
     try {
       QuerySnapshot subscriberSnapshot = await firestore
           .collection('subscribers')
@@ -614,7 +616,8 @@ class HomePageDataSource extends BaseDataSource {
           .get();
 
       for (var doc in subscriberSnapshot.docs) {
-        SubscribersModel subscriber = SubscribersModel.fromMap(doc.data() as Map<String, dynamic>);
+        SubscribersModel subscriber =
+            SubscribersModel.fromMap(doc.data() as Map<String, dynamic>);
 
         var uuid = Uuid();
         String notificationId = uuid.v4();
@@ -623,7 +626,8 @@ class HomePageDataSource extends BaseDataSource {
           postId: sendNotificationRequest.postId,
           notification: sendNotificationRequest.message,
           username: subscriber.username,
-          userImage: sendNotificationRequest.userImage,
+          postAuthor: sendNotificationRequest.postAuther,
+          authorImage: sendNotificationRequest.userImage,
           time: sendNotificationRequest.time,
           seen: false,
         );
@@ -636,17 +640,23 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<void> sendGeneralNotification(SendNotificationRequest sendNotificationRequest) async {
+  Future<void> sendGeneralNotification(
+      SendNotificationRequest sendNotificationRequest) async {
     try {
-      DocumentSnapshot postDoc = await firestore.collection('posts').doc(sendNotificationRequest.postId).get();
+      DocumentSnapshot postDoc = await firestore
+          .collection('posts')
+          .doc(sendNotificationRequest.postId)
+          .get();
 
       if (!postDoc.exists) {
-        throw "Post not found.";
+        throw AppStrings.noPostFound;
       }
 
-      PostModel post = PostModel.fromMap(postDoc.data() as Map<String, dynamic>);
+      PostModel post =
+          PostModel.fromMap(postDoc.data() as Map<String, dynamic>);
 
-      Set<String> uniqueSubscribers = post.postSubscribersList.map((sub) => sub.username).toSet();
+      Set<String> uniqueSubscribers =
+          post.postSubscribersList.map((sub) => sub.username).toSet();
 
       for (String subscriberUsername in uniqueSubscribers) {
         QuerySnapshot subscriberSnapshot = await firestore
@@ -655,7 +665,8 @@ class HomePageDataSource extends BaseDataSource {
             .get();
 
         for (var subDoc in subscriberSnapshot.docs) {
-          SubscribersModel sub = SubscribersModel.fromMap(subDoc.data() as Map<String, dynamic>);
+          SubscribersModel sub =
+              SubscribersModel.fromMap(subDoc.data() as Map<String, dynamic>);
 
           if (sendNotificationRequest.postAuther == sub.username) {
             break;
@@ -668,7 +679,8 @@ class HomePageDataSource extends BaseDataSource {
             postId: sendNotificationRequest.postId,
             notification: sendNotificationRequest.message,
             username: sub.username,
-            userImage: sendNotificationRequest.userImage,
+            postAuthor: sendNotificationRequest.postAuther,
+            authorImage: sendNotificationRequest.userImage,
             time: sendNotificationRequest.time,
             seen: false, // Mark as unseen initially
           );
@@ -682,53 +694,47 @@ class HomePageDataSource extends BaseDataSource {
   }
 
   @override
-  Future<List<HomePageModel>> getPostData(GetPostDataRequest getPostDataRequest) async {
+  Future<HomePageModel> getPostData(
+      GetPostDataRequest getPostDataRequest) async {
     try {
-        // Fetch posts and filtered subscribers concurrently
-        final Future<QuerySnapshot<Map<String, dynamic>>> postsFuture;
-          postsFuture = firestore
-              .collection('posts')
-              .where('username', isEqualTo: getPostDataRequest.username)
-              .where('id', isEqualTo: getPostDataRequest.postId)
-              .get();
+      final collection = firestore.collection('posts');
 
-        final subscribersFuture = firestore
-            .collection('subscribers')
-            .where('username', isEqualTo: getPostDataRequest.username)
-            .get();
+      final postQuerySnapshot = await collection
+          .where('id', isEqualTo: getPostDataRequest.postId)
+          .get();
 
-        final results = await Future.wait([postsFuture, subscribersFuture]);
+      if (postQuerySnapshot.docs.isEmpty) {
+        throw AppStrings.noPostFound;
+      }
 
-        // Parse the data
-        final postDocs = results[0].docs;
-        final subscriberDocs = results[1].docs;
+      var post = PostModel.fromMap(postQuerySnapshot.docs.first.data());
 
-        // Convert Firestore documents to PostModel and SubscribersModel lists
-        final postModels = postDocs.map((doc) {
-          final postData = {'id': doc.id, ...doc.data()};
-          return PostModel.fromMap(postData);
-        }).toList();
+      post = PostModel(
+        id: post.id,
+        username: post.username,
+        lastUpdateTime: post.lastUpdateTime,
+        postSubscribersList: post.postSubscribersList,
+        commentsList: post.commentsList,
+        emojisList: post.emojisList,
+        postAlsha: post.postAlsha,
+        userImage: post.userImage,
+        userEmail: post.userEmail,
+        time: post.time
+      );
 
-        final subscriberModels = subscriberDocs.map((doc) {
-          final subscriberData = {'id': doc.id, ...doc.data()};
-          return SubscribersModel.fromMap(subscriberData);
-        }).toList();
+      var docs = await firestore.collection('subscribers')
+          .where('postAuther', isEqualTo: getPostDataRequest.postAuther)
+          .where('username', isEqualTo: getPostDataRequest.username)
+          .get();
 
-        // Combine data into HomePageModel
-        List<HomePageModel> homePageModels = postModels.map((post) {
-          final isSubscribed = subscriberModels.any((subscriber) =>
-          subscriber.postAuther == post.username); // Match post author
-          return HomePageModel(postModel: post, userSubscribed: isSubscribed);
-        }).toList();
+      // final userSubscribed = post.postSubscribersList.any(
+      //     (subscriber) => subscriber.username == getPostDataRequest.username);
 
-        // Sort homePageModels by Time
-        homePageModels.sort((a, b) {
-          return b.postModel.time!.compareTo(a.postModel.time!);
-        });
-
-        return homePageModels;
-
-      } catch (e) {
+      return HomePageModel(
+        postModel: post,
+        userSubscribed: docs.docs.isNotEmpty,
+      );
+    } catch (e) {
       rethrow;
     }
   }

@@ -189,7 +189,7 @@ class SendGeneralNotificationErrorState extends HomePageState{
 
 class GetPostDataLoadingState extends HomePageState{}
 class GetPostDataSuccessState extends HomePageState{
-  final List<HomePageModel> homePageModel;
+  final HomePageModel homePageModel;
   GetPostDataSuccessState(this.homePageModel);
 }
 class GetPostDataErrorState extends HomePageState{

@@ -50,6 +50,6 @@ abstract class HomePageRepository {
   Future<Either<FirebaseFailure, List<HomePageModel>>> getAllPosts(GetPostsRequest getPostsRequest);
   Future<Either<FirebaseFailure, List<HomePageModel>>> getHomePosts(GetPostsRequest getPostsRequest);
 
-  Future<Either<FirebaseFailure, List<HomePageModel>>> getPostData(
+  Future<Either<FirebaseFailure, HomePageModel>> getPostData(
       GetPostDataRequest getPostDataRequest);
 }

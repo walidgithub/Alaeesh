@@ -26,7 +26,8 @@ class NotificationView extends StatefulWidget {
   final String id;
   final String postId;
   final String username;
-  final String userImage;
+  final String authorImage;
+  final String postAuthor;
   final String notification;
   final String time;
   final bool seen;
@@ -36,7 +37,8 @@ class NotificationView extends StatefulWidget {
     required this.id,
     required this.postId,
     required this.username,
-    required this.userImage,
+    required this.authorImage,
+    required this.postAuthor,
     required this.notification,
     required this.time,
     required this.seen,
@@ -94,95 +96,95 @@ class _NotificationViewState extends State<NotificationView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Expanded(
-                              child: Bounceable(
-                            onTap: () {
-                              Navigator.pushNamed(context, Routes.postDataRoute,
-                                  arguments: PostDataArguments(
-                                      postId: widget.postId,username: widget.username));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                      Bounceable(
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.postDataRoute,
+                              arguments: PostDataArguments(
+                                  postId: widget.postId,username: widget.username,postAuther: widget.postAuthor));
+                        },
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        CircleAvatar(
-                                            radius: 25.r,
-                                            backgroundColor: AppColors.cWhite,
-                                            child: Container(
-                                                padding: EdgeInsets.all(2.w),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: AppColors.cTitle,
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                                child: ClipOval(
-                                                  child: CachedNetworkImage(
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 2.w,
-                                                      color: AppColors.cTitle,
+                                        Row(
+                                          children: [
+                                            CircleAvatar(
+                                                radius: 25.r,
+                                                backgroundColor: AppColors.cWhite,
+                                                child: Container(
+                                                    padding: EdgeInsets.all(2.w),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: AppColors.cTitle,
+                                                        width: 2,
+                                                      ),
                                                     ),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        Image.asset(
-                                                            AppAssets.profile),
-                                                    imageUrl: widget.userImage,
-                                                  ),
-                                                ))),
-                                        SizedBox(
-                                          width: 10.w,
+                                                    child: ClipOval(
+                                                      child: CachedNetworkImage(
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            CircularProgressIndicator(
+                                                          strokeWidth: 2.w,
+                                                          color: AppColors.cTitle,
+                                                        ),
+                                                        errorWidget: (context, url,
+                                                                error) =>
+                                                            Image.asset(
+                                                                AppAssets.profile),
+                                                        imageUrl: widget.authorImage,
+                                                      ),
+                                                    ))),
+                                            SizedBox(
+                                              width: 10.w,
+                                            ),
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: Text(
+                                                timeAgoText,
+                                                style: AppTypography.kLight12
+                                                    .copyWith(
+                                                        color: AppColors.greyDark),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Directionality(
-                                          textDirection: TextDirection.ltr,
-                                          child: Text(
-                                            timeAgoText,
-                                            style: AppTypography.kLight12
-                                                .copyWith(
-                                                    color: AppColors.greyDark),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10.w,
-                                        ),
-                                        SvgPicture.asset(
-                                          widget.seen
-                                              ? AppAssets.seen
-                                              : AppAssets.unseen,
-                                          width: 25.w,
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 10.w,
+                                            ),
+                                            SvgPicture.asset(
+                                              widget.seen
+                                                  ? AppAssets.seen
+                                                  : AppAssets.unseen,
+                                              width: 25.w,
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Text(
+                                      widget.notification,
+                                      style: AppTypography.kLight14
+                                          .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
+                                    ),
                                   ],
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                Text(
-                                  widget.notification,
-                                  style: AppTypography.kLight14
-                                      .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
-                                ),
-                              ],
-                            ),
-                          )),
-                        ],
+                                )),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 5.h,

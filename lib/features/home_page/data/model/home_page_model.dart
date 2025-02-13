@@ -10,6 +10,6 @@ class HomePageModel {
 List<HomePageModel> homePageModel = [];
 List<HomePageModel> trendingModel = [];
 List<HomePageModel> mineModel = [];
-List<HomePageModel> notificationPostData = [];
+HomePageModel? notificationPostData;
 List<HomePageModel> dashboardModel = [];
 List<HomePageModel> userPostsModel = [];

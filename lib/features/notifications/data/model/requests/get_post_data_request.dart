@@ -1,5 +1,6 @@
 class GetPostDataRequest {
   String postId;
   String username;
-  GetPostDataRequest({required this.postId, required this.username});
+  String postAuther;
+  GetPostDataRequest({required this.postId, required this.username, required this.postAuther});
 }
