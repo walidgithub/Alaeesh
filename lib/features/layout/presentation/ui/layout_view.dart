@@ -602,7 +602,7 @@ class _LayoutViewState extends State<LayoutView> {
                     } else if (state is GetUnSeenMessagesSuccessState) {
                       hideLoading();
                       setState(() {
-                        _messagesBadgeAmount = state.unSeenMessagesCount;
+                        // _messagesBadgeAmount = state.unSeenMessagesCount;
                       });
                     } else if (state is GetUnSeenMessagesErrorState) {
                       hideLoading();
@@ -635,7 +635,7 @@ class _LayoutViewState extends State<LayoutView> {
                                   badgeColor: AppColors.cPrimary,
                                 ),
                                 badgeContent: Text(
-                                  _messagesBadgeAmount.toString(),
+                                  _messagesBadgeAmount > 50 ? '+50' : _messagesBadgeAmount.toString(),
                                   style:
                                       const TextStyle(color: AppColors.cWhite),
                                 ),
@@ -714,11 +714,11 @@ class _LayoutViewState extends State<LayoutView> {
                             curve: Curves.bounceInOut,
                           ),
                           showBadge: _notificationsBadge,
-                          badgeStyle: const badges.BadgeStyle(
+                          badgeStyle: badges.BadgeStyle(
                             badgeColor: AppColors.cPrimary,
                           ),
                           badgeContent: Text(
-                            _notificationsBadgeAmount.toString(),
+                              _notificationsBadgeAmount > 50 ? '+50' : _notificationsBadgeAmount.toString(),
                             style:
                             const TextStyle(color: AppColors.cWhite),
                           ),

@@ -15,7 +15,7 @@ class AppStrings {
   static const String error = 'خـطـأ 😵‍';
   static const String noInternet = 'فـى مـشـكـلـة فـى الـنـت تـقـريـبـًا!! 😵‍';
   static const String closeApp = 'هـان عـلـيـك تـقـفـل ألائـــيـش؟ 😌';
-  static const String welcome = 'أهـلاً بـك 🥰 فـى ';
+  static const String welcome = 'أهـلاً بـيـك 🥰 فـى ';
   static const String loginWithOtherUser = 'الـدخـول بـمـسـتـخـدم آخــر';
   static const String hello = 'مـنـور 🤝 يـا ';
   static const String addPost = 'عـايـز أضـيـف ألـشـة ✍️';

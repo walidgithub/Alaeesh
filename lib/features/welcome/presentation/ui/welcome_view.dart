@@ -102,7 +102,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                           child: Row(
                             children: [
                               Text(AppStrings.welcome,
-                                  style: AppTypography.kBold24),
+                                  style: AppTypography.kLight20),
                               Image.asset(
                                 AppAssets.splash,
                                 width: MediaQuery.of(context).size.width / 3,
