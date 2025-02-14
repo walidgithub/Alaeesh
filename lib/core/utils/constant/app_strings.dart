@@ -45,6 +45,8 @@ class AppStrings {
   static const String subscription = "مـشـاركــة";
   static const String moreThan = "أكـثـر مــن";
   static const String suggestedUsers = "الـمـفـروض نـاس دمـهـا خـفـيـف 🤐";
+  static const String someThingWentWrong = "فـى خـطـأ حـصـل مـمـكـن تـكـلـم الـدعـم الـفـنـى وتـشـرحـلـه الـتـفـاصـيـل عـشـان يـسـاعـدك 🤐";
+  static const String email = "walidmohamedbarakat@gmail.com";
   static const String topPosts = "أعـلـى ألـشـات 🤣";
   static const String updatedSuccessfully = 'تـمـام كـده 👍';
   static const String noPosts = 'لـو مـفـيـش ألـشـات، ابـدأ أنـت 🤷‍';

@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:last/core/preferences/app_pref.dart';
+import 'package:last/core/utils/style/app_colors.dart';
 
 import 'core/di/di.dart';
 import 'core/router/app_router.dart';
+import 'core/utils/constant/app_constants.dart';
 import 'core/utils/constant/app_strings.dart';
 import 'core/utils/style/app_theme.dart';
 
@@ -26,6 +28,37 @@ void main() async {
 
   // runApp(DevicePreview(builder: (context) => const MyApp()));
   runApp(MyApp(isLoggedIn: isLoggedIn));
+
+  ErrorWidget.builder = (FlutterErrorDetails details) => Scaffold(
+    body: SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              Text(
+                AppStrings.someThingWentWrong,
+                style: TextStyle(color: AppColors.cPrimary),
+              ),
+              SizedBox(
+                height: AppConstants.heightBetweenElements,
+              ),
+              Text(
+                AppStrings.email,
+                style: TextStyle(color: AppColors.cPrimary),
+              ),
+              SizedBox(
+                height: AppConstants.heightBetweenElements,
+              ),
+              Text(
+                details.exceptionAsString(),
+                style: TextStyle(color: AppColors.cPrimary),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 Future<bool> checkUserLoginStatus() async {
