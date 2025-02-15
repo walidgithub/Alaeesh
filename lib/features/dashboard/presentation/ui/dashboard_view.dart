@@ -38,7 +38,6 @@ class _DashboardViewState extends State<DashboardView> {
   String role = "";
 
   var userData;
-  
 
   @override
   void initState() {
@@ -68,7 +67,6 @@ class _DashboardViewState extends State<DashboardView> {
       displayName = userData['displayName'] ?? '';
       photoUrl = userData['photoUrl'] ?? '';
       role = userData['role'] ?? '';
-      
     });
     getAllPosts(displayName, allPosts: true);
     getUserAdvices();
@@ -93,262 +91,310 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Widget bodyContent(BuildContext context, double statusBarHeight) {
-    return Column(
-      children: [
-        Column(
-          children: [
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (!lastPosts) {
-                      setState(() {
-                        lastPosts = !lastPosts;
-                      });
-                    }
-                  },
-                  child: Container(
-                    height: 70.h,
-                    width: (MediaQuery.sizeOf(context).width / 2) - 15.w,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                      color:
-                          lastPosts ? AppColors.cTitle : AppColors.cTransparent,
-                      width: 5,
-                    ))),
-                    child: Center(
-                      child: Text(
-                        AppStrings.lastPosts,
-                        style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.primaryDelta! > 1.0) {
+          setState(() {
+            lastPosts = true;
+          });
+        } else {
+          setState(() {
+            lastPosts = false;
+          });
+        }
+      },
+      child: Column(
+        children: [
+          Column(
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (!lastPosts) {
+                        setState(() {
+                          lastPosts = !lastPosts;
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 70.h,
+                      width: (MediaQuery.sizeOf(context).width / 2) - 15.w,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: lastPosts
+                            ? AppColors.cTitle
+                            : AppColors.cTransparent,
+                        width: 5,
+                      ))),
+                      child: Center(
+                        child: Text(
+                          AppStrings.lastPosts,
+                          style: AppTypography.kBold18
+                              .copyWith(color: AppColors.cSecondary),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 45.h,
-                  width: 1.5.w,
-                  color: AppColors.cTitle,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (lastPosts) {
-                      setState(() {
-                        lastPosts = !lastPosts;
-                      });
-                    }
-                  },
-                  child: Container(
-                    height: 70.h,
-                    width: (MediaQuery.sizeOf(context).width / 2) - 15.w,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: AppColors.cTransparent,
-                        border: Border(
-                            bottom: BorderSide(
-                          color: lastPosts
-                              ? AppColors.cTransparent
-                              : AppColors.cTitle,
-                          width: 5,
-                        ))),
-                    child: Center(
-                      child: Text(
-                        AppStrings.suggestions,
-                        style: AppTypography.kBold18.copyWith(color: AppColors.cSecondary),
+                  Container(
+                    height: 45.h,
+                    width: 1.5.w,
+                    color: AppColors.cTitle,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (lastPosts) {
+                        setState(() {
+                          lastPosts = !lastPosts;
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 70.h,
+                      width: (MediaQuery.sizeOf(context).width / 2) - 15.w,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: AppColors.cTransparent,
+                          border: Border(
+                              bottom: BorderSide(
+                            color: lastPosts
+                                ? AppColors.cTransparent
+                                : AppColors.cTitle,
+                            width: 5,
+                          ))),
+                      child: Center(
+                        child: Text(
+                          AppStrings.suggestions,
+                          style: AppTypography.kBold18
+                              .copyWith(color: AppColors.cSecondary),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Container(
-                width: MediaQuery.sizeOf(context).width - 10.w,
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                  color: AppColors.cTitle,
-                  width: 1,
-                ))))
-          ],
-        ),
-        SizedBox(
-          height: 10.h,
-        ),
-        lastPosts
-            ? Expanded(
-                child: BlocConsumer<DashboardCubit, DashboardState>(
-                  listener: (context, state) {
-                    if (state is GetAllPostsLoadingState) {
-                      showLoading();
-                    } else if (state is GetAllPostsSuccessState) {
-                      hideLoading();
-                      dashboardModel.clear();
-                      dashboardModel.addAll(state.homePageModel);
-                    } else if (state is GetAllPostsErrorState) {
-                      hideLoading();
-                      showSnackBar(context, state.errorMessage);
-                    } else if (state is GetUserAdvicesLoadingState) {
-                      showLoading();
-                    } else if (state is GetUserAdvicesSuccessState) {
-                      hideLoading();
-                      adviceModel.clear();
-                      adviceModel.addAll(state.adviceList);
-                    } else if (state is GetUserAdvicesErrorState) {
-                      hideLoading();
-                      showSnackBar(context, state.errorMessage);
-                    } else if (state is DeletePostSubscriberLoadingState) {
-                    } else if (state is DeletePostSubscriberSuccessState) {
-                      DashboardCubit.get(context).getAllPosts(GetPostsRequest(
-                          currentUser: displayName, allPosts: true));
-                    } else if (state is DeletePostSubscriberErrorState) {
-                      showSnackBar(context, state.errorMessage);
-                    } else if (state is DashboardNoInternetState) {
-                      hideLoading();
-                      onError(context, AppStrings.noInternet);
-                    }
-                  },
-                  builder: (context, state) {
-                    return dashboardModel.isNotEmpty
-                        ? RefreshIndicator(
-                            color: AppColors.cTitle,
-                            backgroundColor: AppColors.cWhite,
-                            onRefresh: refreshLastPosts,
-                            child: ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return DashboardPostView(
-                                    index: index,
-                                    id: dashboardModel[index].postModel.id!,
-                                    time: dashboardModel[index].postModel.time!,
-                                    postUsername:
-                                        dashboardModel[index].postModel.username,
-                                    postUserImage: dashboardModel[index]
-                                        .postModel
-                                        .userImage,
-                                    loggedInUserName: displayName,
-                                    loggedInUserImage: photoUrl,
-                                    postAlsha: dashboardModel[index]
-                                        .postModel
-                                        .postAlsha,
-                                    commentsList: dashboardModel[index]
-                                        .postModel
-                                        .commentsList,
-                                    emojisList: dashboardModel[index]
-                                        .postModel
-                                        .emojisList,
-                                    statusBarHeight: statusBarHeight,
-                                    addNewComment: (int status) {
-                                      if (status == -1) {
-                                        DeletePostSubscriberRequest
-                                            deletePostSubscriberRequest =
-                                            DeletePostSubscriberRequest(
-                                                postSubscribersModel:
-                                                    PostSubscribersModel(
-                                          username: dashboardModel[index]
-                                              .postModel
-                                              .username,
-                                          userEmail: dashboardModel[index]
-                                              .postModel
-                                              .userEmail,
-                                          userImage: photoUrl,
-                                          postId: dashboardModel[index]
+                ],
+              ),
+              Container(
+                  width: MediaQuery.sizeOf(context).width - 10.w,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                    color: AppColors.cTitle,
+                    width: 1,
+                  ))))
+            ],
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              if (details.primaryDelta! > 1.0) {
+                setState(() {
+                  lastPosts = true;
+                });
+              } else {
+                setState(() {
+                  lastPosts = false;
+                });
+              }
+            },
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              height: (MediaQuery.sizeOf(context).height / 1.5) - 75.h,
+              child: lastPosts
+                  ? Expanded(
+                      child: BlocConsumer<DashboardCubit, DashboardState>(
+                        listener: (context, state) {
+                          if (state is GetAllPostsLoadingState) {
+                            showLoading();
+                          } else if (state is GetAllPostsSuccessState) {
+                            hideLoading();
+                            dashboardModel.clear();
+                            dashboardModel.addAll(state.homePageModel);
+                          } else if (state is GetAllPostsErrorState) {
+                            hideLoading();
+                            showSnackBar(context, state.errorMessage);
+                          } else if (state is GetUserAdvicesLoadingState) {
+                            showLoading();
+                          } else if (state is GetUserAdvicesSuccessState) {
+                            hideLoading();
+                            adviceModel.clear();
+                            adviceModel.addAll(state.adviceList);
+                          } else if (state is GetUserAdvicesErrorState) {
+                            hideLoading();
+                            showSnackBar(context, state.errorMessage);
+                          } else if (state
+                              is DeletePostSubscriberLoadingState) {
+                          } else if (state
+                              is DeletePostSubscriberSuccessState) {
+                            DashboardCubit.get(context).getAllPosts(
+                                GetPostsRequest(
+                                    currentUser: displayName, allPosts: true));
+                          } else if (state is DeletePostSubscriberErrorState) {
+                            showSnackBar(context, state.errorMessage);
+                          } else if (state is DashboardNoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
+                          }
+                        },
+                        builder: (context, state) {
+                          return dashboardModel.isNotEmpty
+                              ? RefreshIndicator(
+                                  color: AppColors.cTitle,
+                                  backgroundColor: AppColors.cWhite,
+                                  onRefresh: refreshLastPosts,
+                                  child: ListView.builder(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return DashboardPostView(
+                                          index: index,
+                                          id: dashboardModel[index]
                                               .postModel
                                               .id!,
-                                        ));
-                                        DashboardCubit.get(context)
-                                            .deletePostSubscriber(
-                                                deletePostSubscriberRequest);
-                                      } else if (status == 0) {
-                                        DashboardCubit.get(context).getAllPosts(
-                                            GetPostsRequest(
-                                                currentUser: displayName,
-                                                allPosts: true));
-                                      }
-                                    },
-                                    postUpdated: () {
-                                      DashboardCubit.get(context).getAllPosts(
-                                          GetPostsRequest(
-                                              currentUser: displayName,
-                                              allPosts: true));
-                                    },
-                                  );
-                                },
-                                itemCount: dashboardModel.length),
-                          )
-                        : SizedBox(
-                            height: MediaQuery.sizeOf(context).height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    AppStrings.noPosts,
-                                    style: AppTypography.kBold12,
+                                          time: dashboardModel[index]
+                                              .postModel
+                                              .time!,
+                                          postUsername: dashboardModel[index]
+                                              .postModel
+                                              .username,
+                                          postUserImage: dashboardModel[index]
+                                              .postModel
+                                              .userImage,
+                                          loggedInUserName: displayName,
+                                          loggedInUserImage: photoUrl,
+                                          postAlsha: dashboardModel[index]
+                                              .postModel
+                                              .postAlsha,
+                                          commentsList: dashboardModel[index]
+                                              .postModel
+                                              .commentsList,
+                                          emojisList: dashboardModel[index]
+                                              .postModel
+                                              .emojisList,
+                                          statusBarHeight: statusBarHeight,
+                                          addNewComment: (int status) {
+                                            if (status == -1) {
+                                              DeletePostSubscriberRequest
+                                                  deletePostSubscriberRequest =
+                                                  DeletePostSubscriberRequest(
+                                                      postSubscribersModel:
+                                                          PostSubscribersModel(
+                                                username: dashboardModel[index]
+                                                    .postModel
+                                                    .username,
+                                                userEmail: dashboardModel[index]
+                                                    .postModel
+                                                    .userEmail,
+                                                userImage: photoUrl,
+                                                postId: dashboardModel[index]
+                                                    .postModel
+                                                    .id!,
+                                              ));
+                                              DashboardCubit.get(context)
+                                                  .deletePostSubscriber(
+                                                      deletePostSubscriberRequest);
+                                            } else if (status == 0) {
+                                              DashboardCubit.get(context)
+                                                  .getAllPosts(GetPostsRequest(
+                                                      currentUser: displayName,
+                                                      allPosts: true));
+                                            }
+                                          },
+                                          postUpdated: () {
+                                            DashboardCubit.get(context)
+                                                .getAllPosts(GetPostsRequest(
+                                                    currentUser: displayName,
+                                                    allPosts: true));
+                                          },
+                                        );
+                                      },
+                                      itemCount: dashboardModel.length),
+                                )
+                              : SizedBox(
+                                  height: MediaQuery.sizeOf(context).height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          AppStrings.noPosts,
+                                          style: AppTypography.kBold12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                  },
-                ),
-              )
-            : Expanded(
-                child: BlocConsumer<DashboardCubit, DashboardState>(
-                  listener: (context, state) {
-                    if (state is GetUserAdvicesLoadingState) {
-                      showLoading();
-                    } else if (state is GetUserAdvicesSuccessState) {
-                      hideLoading();
-                      adviceModel.clear();
-                      adviceModel.addAll(state.adviceList);
-                    } else if (state is GetUserAdvicesErrorState) {
-                      hideLoading();
-                      showSnackBar(context, state.errorMessage);
-                    } else if (state is DashboardNoInternetState) {
-                      hideLoading();
-                      onError(context, AppStrings.noInternet);
-                    }
-                  },
-                  builder: (context, state) {
-                    return adviceModel.isNotEmpty
-                        ? RefreshIndicator(
-                            color: AppColors.cTitle,
-                            backgroundColor: AppColors.cWhite,
-                            onRefresh: refreshAdvices,
-                            child: ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return AdviceView(
-                                      adviceId: adviceModel[index].adviceId!,
-                                      adviceText: adviceModel[index].adviceText,
-                                      username: adviceModel[index].username,
-                                      userImage: adviceModel[index].userImage,
-                                      userEmail: adviceModel[index].userEmail,
-                                      statusBarHeight: statusBarHeight,
-                                      time: adviceModel[index].time,
-                                      index: index);
-                                },
-                                itemCount: adviceModel.length),
-                          )
-                        : SizedBox(
-                            height: MediaQuery.sizeOf(context).height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    AppStrings.noAdvices,
-                                    style: AppTypography.kBold12,
+                                );
+                        },
+                      ),
+                    )
+                  : Expanded(
+                      child: BlocConsumer<DashboardCubit, DashboardState>(
+                        listener: (context, state) {
+                          if (state is GetUserAdvicesLoadingState) {
+                            showLoading();
+                          } else if (state is GetUserAdvicesSuccessState) {
+                            hideLoading();
+                            adviceModel.clear();
+                            adviceModel.addAll(state.adviceList);
+                          } else if (state is GetUserAdvicesErrorState) {
+                            hideLoading();
+                            showSnackBar(context, state.errorMessage);
+                          } else if (state is DashboardNoInternetState) {
+                            hideLoading();
+                            onError(context, AppStrings.noInternet);
+                          }
+                        },
+                        builder: (context, state) {
+                          return adviceModel.isNotEmpty
+                              ? RefreshIndicator(
+                                  color: AppColors.cTitle,
+                                  backgroundColor: AppColors.cWhite,
+                                  onRefresh: refreshAdvices,
+                                  child: ListView.builder(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return AdviceView(
+                                            adviceId:
+                                                adviceModel[index].adviceId!,
+                                            adviceText:
+                                                adviceModel[index].adviceText,
+                                            username:
+                                                adviceModel[index].username,
+                                            userImage:
+                                                adviceModel[index].userImage,
+                                            userEmail:
+                                                adviceModel[index].userEmail,
+                                            statusBarHeight: statusBarHeight,
+                                            time: adviceModel[index].time,
+                                            index: index);
+                                      },
+                                      itemCount: adviceModel.length),
+                                )
+                              : SizedBox(
+                                  height: MediaQuery.sizeOf(context).height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          AppStrings.noAdvices,
+                                          style: AppTypography.kBold12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                  },
-                ),
-              )
-      ],
+                                );
+                        },
+                      ),
+                    ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

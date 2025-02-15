@@ -143,7 +143,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             ),
             ReadMoreText(
               widget.postAlsha,
-              style: AppTypography.kLight14,
+              style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
               trimLines: 3,
               colorClickableText: AppColors.cTitle,
               trimMode: TrimMode.Line,
@@ -224,8 +224,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             }, builder: (context, state) {
                               return Bounceable(
                                   onTap: () {
-                                    if (_commentController.text.trim() == "")
+                                    if (_commentController.text.trim() == "") {
                                       return;
+                                    }
                                     DateTime now = DateTime.now();
                                     String formattedDate =
                                         DateFormat('yyyy-MM-dd').format(now);

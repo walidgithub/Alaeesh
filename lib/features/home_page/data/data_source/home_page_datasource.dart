@@ -658,6 +658,8 @@ class HomePageDataSource extends BaseDataSource {
       Set<String> uniqueSubscribers =
           post.postSubscribersList.map((sub) => sub.username).toSet();
 
+      Set<String> copySubscribers = Set.from(uniqueSubscribers);
+
       for (String subscriberUsername in uniqueSubscribers) {
         QuerySnapshot subscriberSnapshot = await firestore
             .collection('subscribers')
@@ -669,7 +671,7 @@ class HomePageDataSource extends BaseDataSource {
               SubscribersModel.fromMap(subDoc.data() as Map<String, dynamic>);
 
           if (sendNotificationRequest.postAuther == sub.username) {
-            break;
+            continue;
           }
 
           var uuid = Uuid();
@@ -682,11 +684,33 @@ class HomePageDataSource extends BaseDataSource {
             postAuthor: sendNotificationRequest.postAuther,
             authorImage: sendNotificationRequest.userImage,
             time: sendNotificationRequest.time,
-            seen: false, // Mark as unseen initially
+            seen: false,
           );
 
           await firestore.collection('notifications').add(notification.toMap());
+
+          copySubscribers.removeWhere((subscriber) => subscriber == sub.username);
         }
+      }
+      for (String subscriberUsername2 in copySubscribers) {
+        if (sendNotificationRequest.postAuther == subscriberUsername2) {
+          continue;
+        }
+
+        var uuid = Uuid();
+        String notificationId = uuid.v4();
+        AlaeeshNotificationsModel notification = AlaeeshNotificationsModel(
+          id: notificationId,
+          postId: sendNotificationRequest.postId,
+          notification: sendNotificationRequest.message,
+          username: subscriberUsername2,
+          postAuthor: sendNotificationRequest.postAuther,
+          authorImage: sendNotificationRequest.userImage,
+          time: sendNotificationRequest.time,
+          seen: false,
+        );
+
+        await firestore.collection('notifications').add(notification.toMap());
       }
     } catch (e) {
       rethrow;

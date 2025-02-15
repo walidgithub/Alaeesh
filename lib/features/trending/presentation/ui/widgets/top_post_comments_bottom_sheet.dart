@@ -112,7 +112,7 @@ class _TopPostCommentsBottomSheetState extends State<TopPostCommentsBottomSheet>
                 ),
                 ReadMoreText(
                   widget.postAlsha,
-                  style: AppTypography.kLight14,
+                  style: AppTypography.kLight14.copyWith(fontFamily: "Cairo"),
                   trimLines: 3,
                   colorClickableText: AppColors.cTitle,
                   trimMode: TrimMode.Line,

@@ -2,7 +2,7 @@ String timeAgo(DateTime postDate) {
   final Duration difference = DateTime.now().difference(postDate);
 
   if (difference.inSeconds < 60) {
-    return 'Just now';
+    return 'لـسـه حـالًا';
   } else if (difference.inMinutes < 60) {
     return ' مـن ${difference.inMinutes} دقـيـقـة ';
   } else if (difference.inHours < 24) {
@@ -20,7 +20,6 @@ String timeAgo(DateTime postDate) {
   } else {
     final int years = (difference.inDays / 365).floor();
     return years == 1 ? ' مـن سـنـة ' : ' مـن $years سـنـيـن ';
-
   }
 }
 
