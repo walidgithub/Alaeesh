@@ -33,27 +33,29 @@ void main() async {
     body: SafeArea(
       child: Scaffold(
         body: Center(
-          child: Column(
-            children: [
-              Text(
-                AppStrings.someThingWentWrong,
-                style: TextStyle(color: AppColors.cPrimary),
-              ),
-              SizedBox(
-                height: AppConstants.heightBetweenElements,
-              ),
-              Text(
-                AppStrings.email,
-                style: TextStyle(color: AppColors.cPrimary),
-              ),
-              SizedBox(
-                height: AppConstants.heightBetweenElements,
-              ),
-              Text(
-                details.exceptionAsString(),
-                style: TextStyle(color: AppColors.cPrimary),
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  AppStrings.someThingWentWrong,
+                  style: TextStyle(color: AppColors.cPrimary),
+                ),
+                SizedBox(
+                  height: AppConstants.heightBetweenElements,
+                ),
+                Text(
+                  AppStrings.email,
+                  style: TextStyle(color: AppColors.cTitle),
+                ),
+                SizedBox(
+                  height: AppConstants.heightBetweenElements,
+                ),
+                Text(
+                  details.exceptionAsString(),
+                  style: TextStyle(color: AppColors.cBlack),
+                ),
+              ],
+            ),
           ),
         ),
       ),
