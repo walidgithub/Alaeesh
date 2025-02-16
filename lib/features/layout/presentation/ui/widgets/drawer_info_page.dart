@@ -178,7 +178,7 @@ class _DrawerInfoState extends State<DrawerInfo> {
                           await Future.delayed(
                               const Duration(milliseconds: 700));
                           LaunchReview.launch(
-                              androidAppId: "com.iyaffle.kural");
+                              androidAppId: "com.alaeeesh.alaeeeesh");
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
