@@ -65,7 +65,7 @@ class _ReportComplaintDialogState extends State<ReportComplaintDialog> {
             children: [
               const CustomDivider(),
               SizedBox(height: 20.h),
-              Text('${AppStrings.reportComplaint}${widget.title}', style: AppTypography.kBold24),
+              Text('${AppStrings.reportComplaint}${widget.title}', style: AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
               SizedBox(height: 20.h),
               Row(
                 children: [
@@ -82,7 +82,6 @@ class _ReportComplaintDialogState extends State<ReportComplaintDialog> {
                                 borderSide: BorderSide(color: AppColors.cTitle),
                                 borderRadius: BorderRadius.circular(AppConstants.radius),
                               ),
-                              hintText: AppStrings.message,
                               labelText: AppStrings.message,
                               border: InputBorder.none)),
                     ),
