@@ -202,6 +202,7 @@ class _LayoutViewState extends State<LayoutView> {
                         displayName: displayName,
                         photoUrl: photoUrl,
                         email: email,
+                        role: role,
                         statusBarHeight: statusBarHeight,
                         getHomePosts: () {
                           getHomePosts(displayName,
@@ -215,7 +216,8 @@ class _LayoutViewState extends State<LayoutView> {
                               _appPreferences,
                               addPost,
                               scaffoldKey,
-                              updateSearching);
+                              updateSearching,
+                          role);
                         }),
                     ProfileDataView(
                       photoUrl: photoUrl,

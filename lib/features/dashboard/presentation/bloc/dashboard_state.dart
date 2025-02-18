@@ -61,4 +61,12 @@ class DashboardSendReplyErrorState extends DashboardState{
   DashboardSendReplyErrorState(this.errorMessage);
 }
 
+class AddUserLoadingState extends DashboardState{}
+class AddUserSuccessState extends DashboardState{}
+class AddUserErrorState extends DashboardState{
+  final String errorMessage;
+
+  AddUserErrorState(this.errorMessage);
+}
+
 class DashboardNoInternetState extends DashboardState{}

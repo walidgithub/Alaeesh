@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/features/dashboard/data/model/requests/send_reply_request.dart';
+import 'package:last/features/dashboard/domain/usecases/add_user_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/get_user_advices_usecase.dart';
 import 'package:last/features/dashboard/domain/usecases/send_reply_usecase.dart';
 import '../../../../core/base_usecase/firebase_base_usecase.dart';
@@ -12,16 +13,18 @@ import '../../../home_page/domain/usecases/delete_comment_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_subscriber_usecase.dart';
 import '../../../home_page/domain/usecases/delete_post_usecase.dart';
 import '../../../home_page/domain/usecases/get_all_posts_usecase.dart';
+import '../../data/model/user_model.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit(this.sendReplyUseCase, this.getUserAdvicesUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
+  DashboardCubit(this.sendReplyUseCase, this.addUserUseCase, this.getUserAdvicesUseCase, this.deletePostUseCase, this.deleteCommentUseCase, this.deletePostSubscriberUseCase, this.getAllPostsUseCase)
       : super(DashboardInitial());
 
   final DeletePostUseCase deletePostUseCase;
   final DeleteCommentUseCase deleteCommentUseCase;
   final DeletePostSubscriberUseCase deletePostSubscriberUseCase;
   final SendReplyUseCase sendReplyUseCase;
+  final AddUserUseCase addUserUseCase;
 
   final GetAllPostsUseCase getAllPostsUseCase;
   final GetUserAdvicesUseCase getUserAdvicesUseCase;
@@ -104,6 +107,19 @@ class DashboardCubit extends Cubit<DashboardState> {
       result.fold(
             (failure) => emit(DashboardSendReplyErrorState(failure.message)),
             (replySent) => emit(DashboardSendReplySuccessState()),
+      );
+    } else {
+      emit(DashboardNoInternetState());
+    }
+  }
+
+  Future<void> addUser(AllowedUserModel allowedUserModel) async {
+    emit(AddUserLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await addUserUseCase.call(allowedUserModel);
+      result.fold(
+            (failure) => emit(AddUserErrorState(failure.message)),
+            (userAdded) => emit(AddUserSuccessState()),
       );
     } else {
       emit(DashboardNoInternetState());

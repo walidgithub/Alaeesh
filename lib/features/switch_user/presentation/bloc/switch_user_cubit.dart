@@ -5,15 +5,17 @@ import '../../../../core/di/di.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
 import '../../../welcome/domain/usecases/add_user_permissions_usecase.dart';
+import '../../../welcome/domain/usecases/get_allowed_users_usecase.dart';
 import '../../../welcome/domain/usecases/get_user_permissions_usecase.dart';
 import '../../domain/usecases/switch_user_usecase.dart';
 
 class SwitchUserCubit extends Cubit<SwitchUserState> {
-  SwitchUserCubit(this.switchUserUseCase, this.addUserPermissionsUseCase, this.getUserPermissionsUseCase) : super(SwitchUserInitial());
+  SwitchUserCubit(this.switchUserUseCase, this.getAllowedUsersUseCase, this.addUserPermissionsUseCase, this.getUserPermissionsUseCase) : super(SwitchUserInitial());
 
   final SwitchUserUseCase switchUserUseCase;
   final AddUserPermissionsUseCase addUserPermissionsUseCase;
   final GetUserPermissionsUseCase getUserPermissionsUseCase;
+  final GetAllowedUsersUseCase getAllowedUsersUseCase;
 
   static SwitchUserCubit get(context) => BlocProvider.of(context);
 
@@ -52,6 +54,19 @@ class SwitchUserCubit extends Cubit<SwitchUserState> {
       result.fold(
             (failure) => emit(GetUserPermissionsErrorState(failure.message)),
             (userPermissions) => emit(GetUserPermissionsSuccessState(userPermissions)),
+      );
+    } else {
+      emit(SwitchUserNoInternetState());
+    }
+  }
+
+  Future<void> getAllowedUsers() async {
+    emit(GetAllowedUsersLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getAllowedUsersUseCase.call(const FirebaseNoParameters());
+      result.fold(
+            (failure) => emit(GetAllowedUsersErrorState(failure.message)),
+            (allowedUsers) => emit(GetAllowedUsersSuccessState(allowedUsers)),
       );
     } else {
       emit(SwitchUserNoInternetState());

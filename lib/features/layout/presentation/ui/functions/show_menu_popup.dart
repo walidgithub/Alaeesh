@@ -15,10 +15,11 @@ import '../../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../../core/utils/style/app_colors.dart';
 import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
+import '../../../../dashboard/presentation/ui/widgets/add_user_dialog.dart';
 import '../../../../welcome/presentation/bloc/welcome_cubit.dart';
 import '../../../../welcome/presentation/bloc/welcome_state.dart';
 
-Future<void> showMenuPopupMenu(BuildContext context, SecureStorageLoginHelper appSecureDataHelper, AppPreferences appPreferences, bool addPost,var scaffoldKey, Function updateSearching) async {
+Future<void> showMenuPopupMenu(BuildContext context, SecureStorageLoginHelper appSecureDataHelper, AppPreferences appPreferences, bool addPost,var scaffoldKey, Function updateSearching, String role) async {
   await showMenu(
       context: context,
       color: AppColors.cWhite,
@@ -100,6 +101,44 @@ Future<void> showMenuPopupMenu(BuildContext context, SecureStorageLoginHelper ap
                           ],
                         )
                             : Container(),
+                        role == "admin"
+                            ?
+                        Bounceable(
+                          onTap: () {
+                            Navigator.pop(context);
+                            AddUserDialog.show(
+                                context);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SvgPicture.asset(
+                                AppAssets.profileIcon,
+                                width: 30.w,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Text(
+                                AppStrings.addUser,
+                                style: AppTypography.kLight12,
+                              ),
+                            ],
+                          ),
+                        )
+                            : Container(),
+                        role == "admin"
+                            ? Column(
+                          children: [
+                            SizedBox(
+                              height: 7.h,
+                            ),
+                            Divider(),
+                            SizedBox(
+                              height: 7.h,
+                            ),
+                          ],
+                        ): Container(),
                         Bounceable(
                           onTap: () {
                             Navigator.pop(context);

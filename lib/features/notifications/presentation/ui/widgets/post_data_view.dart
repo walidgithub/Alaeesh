@@ -146,6 +146,7 @@ class _PostDataViewState extends State<PostDataView> {
                         return Directionality(
                           textDirection: ui.TextDirection.rtl,
                           child: CommentsBottomSheet(
+                            role: role,
                             getUserPosts: (String userName) {
                               HomePageCubit.get(context).getPostData(GetPostDataRequest(
                                   postId: widget.arguments.postId!,username: widget.arguments.username!,postAuther: widget.arguments.postAuther!));
@@ -302,6 +303,7 @@ class _PostDataViewState extends State<PostDataView> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return PostView(
+                          role: role,
                           getUserPosts: (String userName) {},
                           addOrRemoveSubscriber: (int status) {
                             if (status == -1) {

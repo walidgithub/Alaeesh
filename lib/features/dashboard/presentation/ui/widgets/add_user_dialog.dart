@@ -14,22 +14,22 @@ import '../../../../../core/utils/ui_components/loading_dialog.dart';
 import '../../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../../core/utils/ui_components/snackbar.dart';
 import '../../../data/model/requests/send_reply_request.dart';
+import '../../../data/model/user_model.dart';
 import '../../bloc/dashboard_cubit.dart';
 import 'dart:ui' as ui;
 
 import '../../bloc/dashboard_state.dart';
 
-class SendMessageDialog extends StatefulWidget {
-  String username;
-  SendMessageDialog({super.key, required this.username});
+class AddUserDialog extends StatefulWidget {
+  const AddUserDialog({super.key});
 
-  static Future<void> show(BuildContext context, String username) async {
+  static Future<void> show(BuildContext context) async {
     final navigator = Navigator.of(context);
     await showDialog<void>(
       context: context,
       useRootNavigator: false,
       barrierDismissible: false,
-      builder: (_) => SendMessageDialog(username: username),
+      builder: (_) => AddUserDialog(),
     );
 
     if (navigator.mounted) {
@@ -40,11 +40,11 @@ class SendMessageDialog extends StatefulWidget {
   static void hide(BuildContext context) => Navigator.of(context).pop();
 
   @override
-  State<SendMessageDialog> createState() => _SendMessageDialogState();
+  State<AddUserDialog> createState() => _AddUserDialogState();
 }
 
-class _SendMessageDialogState extends State<SendMessageDialog> {
-  TextEditingController messageEditingController = TextEditingController();
+class _AddUserDialogState extends State<AddUserDialog> {
+  TextEditingController userEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _SendMessageDialogState extends State<SendMessageDialog> {
             children: [
               const CustomDivider(),
               SizedBox(height: 20.h),
-              Text(AppStrings.sendMessage, style: AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
+              Text(AppStrings.addUser, style: AppTypography.kBold24.copyWith(color: AppColors.cTitle)),
               SizedBox(height: 20.h),
               Row(
                 children: [
@@ -73,13 +73,13 @@ class _SendMessageDialogState extends State<SendMessageDialog> {
                       child: TextField(
                           autofocus: true,
                           keyboardType: TextInputType.text,
-                          controller: messageEditingController,
+                          controller: userEditingController,
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: AppColors.cTitle),
                                 borderRadius: BorderRadius.circular(AppConstants.radius),
                               ),
-                              labelText: AppStrings.message,
+                              labelText: AppStrings.email,
                               border: InputBorder.none)),
                     ),
                   )
@@ -92,13 +92,13 @@ class _SendMessageDialogState extends State<SendMessageDialog> {
                     create: (context) => sl<DashboardCubit>(),
                     child: BlocConsumer<DashboardCubit, DashboardState>(
                         listener: (context, state) {
-                          if (state is DashboardSendReplyLoadingState) {
+                          if (state is AddUserLoadingState) {
                             showLoading();
-                          } else if (state is DashboardSendReplySuccessState) {
+                          } else if (state is AddUserSuccessState) {
                             hideLoading();
                             showSnackBar(context, AppStrings.addSuccess);
-                            SendMessageDialog.hide(context);
-                          } else if (state is DashboardSendReplyErrorState) {
+                            AddUserDialog.hide(context);
+                          } else if (state is AddUserErrorState) {
                             hideLoading();
                             showSnackBar(context, state.errorMessage);
                           } else if (state is DashboardNoInternetState) {
@@ -108,23 +108,14 @@ class _SendMessageDialogState extends State<SendMessageDialog> {
                         }, builder: (context, state) {
                       return PrimaryButton(
                         onTap: () {
-                          if (messageEditingController.text.trim() == "") return;
-                          DateTime now = DateTime.now();
-                          String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(now);
-                          String formattedTime =
-                          DateFormat('hh:mm a').format(now);
-
-                          SendReplyRequest sendReplyRequest =
-                          SendReplyRequest(
-                              seen: false,
-                              username: widget.username,
-                              time: '$formattedDate $formattedTime',
-                              message: messageEditingController.text.trim());
+                          if (userEditingController.text.trim() == "") return;
+                          AllowedUserModel allowedUserModel =
+                          AllowedUserModel(
+                              email: userEditingController.text);
                           DashboardCubit.get(context)
-                              .sendReply(sendReplyRequest);
+                              .addUser(allowedUserModel);
                         },
-                        text: AppStrings.send,
+                        text: AppStrings.add,
                         width: 160.w,
                         gradient: true,
                       );
@@ -133,7 +124,7 @@ class _SendMessageDialogState extends State<SendMessageDialog> {
                   const Spacer(),
                   PrimaryButton(
                     onTap: () {
-                      SendMessageDialog.hide(context);
+                      AddUserDialog.hide(context);
                     },
                     text: AppStrings.closeDialog,
                     width: 120.w,

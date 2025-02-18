@@ -13,6 +13,7 @@ import '../../../home_page/data/model/requests/get_posts_request.dart';
 import '../../../welcome/data/data_source/welcome_datasource.dart';
 import '../../domain/repository/dashboard_repository.dart';
 import '../data_source/dashboard_datasource.dart';
+import '../model/user_model.dart';
 
 class DashboardRepositoryImpl extends DashboardRepository{
   final DashboardDataSource _dashboardDataSource;
@@ -110,6 +111,20 @@ class DashboardRepositoryImpl extends DashboardRepository{
   Future<Either<FirebaseFailure, void>> sendReply(SendReplyRequest sendReplyRequest) async {
     try {
       final result = await _dashboardDataSource.sendReply(sendReplyRequest);
+      return Right(result);
+    } on FirebaseAuthException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(FirebaseFailure(FirebaseErrorHandler.handleGenericError(e)));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseFailure, void>> addUser(AllowedUserModel allowedUserModel) async {
+    try {
+      final result = await _dashboardDataSource.addUSer(allowedUserModel);
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(FirebaseFailure(FirebaseErrorHandler.handleAuthError(e)));

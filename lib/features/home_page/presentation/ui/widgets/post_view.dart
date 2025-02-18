@@ -47,6 +47,7 @@ class PostView extends StatefulWidget {
   final String loggedInUserImage;
   final String loggedInUserEmail;
   final String time;
+  final String role;
   final List<EmojiModel> emojisList;
   final List<CommentsModel> commentsList;
   final List<PostSubscribersModel> postSubscribersList;
@@ -75,6 +76,7 @@ class PostView extends StatefulWidget {
     required this.addNewComment,
     required this.addNewEmoji,
     required this.time,
+    required this.role,
     required this.index,
     required this.postUpdated,
     required this.userSubscribed,
@@ -144,6 +146,7 @@ class _PostViewState extends State<PostView> {
                           borderRadius: BorderRadius.all(Radius.circular(5.r))),
                       child: Column(
                         children: [
+                          widget.loggedInUserName == widget.postUsername ?
                           Bounceable(
                             onTap: () {
                               HomePageCubit.get(context).deletePost(widget.id);
@@ -164,14 +167,20 @@ class _PostViewState extends State<PostView> {
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
+                          ) : Container(),
+                          widget.loggedInUserName == widget.postUsername ?
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                            ],
+                          ) : Container(),
+                          widget.loggedInUserName == widget.postUsername ?
                           BlocProvider(
                             create: (context) => sl<WelcomeCubit>()
                               ..getUserPermissions(widget.loggedInUserName),
@@ -267,7 +276,7 @@ class _PostViewState extends State<PostView> {
                                 }
                               },
                             ),
-                          ),
+                          ) : Container(),
                           // Bounceable(
                           //   onTap: () {
                           //     Navigator.pop(context);
@@ -290,13 +299,19 @@ class _PostViewState extends State<PostView> {
                           //     ],
                           //   ),
                           // )
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
+                          widget.loggedInUserName == widget.postUsername ?
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                            ],
+                          ) : Container(),
+                          widget.loggedInUserName != widget.postUsername ?
                           Bounceable(
                             onTap: () {
                               Navigator.pop(context);
@@ -320,7 +335,7 @@ class _PostViewState extends State<PostView> {
                                 ),
                               ],
                             ),
-                          ),
+                          ) : Container(),
                         ],
                       ),
                     );
@@ -562,13 +577,15 @@ class _PostViewState extends State<PostView> {
                                           width: 25.w,
                                         ))
                                     : Container(),
-                                widget.loggedInUserName == widget.postUsername
-                                    ? SizedBox(
+                                // widget.loggedInUserName == widget.postUsername
+                                //     ?
+                                SizedBox(
                                         width: 10.w,
-                                      )
-                                    : Container(),
-                                widget.loggedInUserName == widget.postUsername
-                                    ? GestureDetector(
+                                      ),
+                                    // : Container(),
+                                // widget.loggedInUserName == widget.postUsername
+                                //     ?
+                                GestureDetector(
                                         onTapDown: (TapDownDetails details) {
                                           _showPostPopupMenu(
                                               context,
@@ -579,7 +596,7 @@ class _PostViewState extends State<PostView> {
                                           AppAssets.menu,
                                           width: 25.w,
                                         ))
-                                    : Container()
+                                    // : Container()
                               ],
                             )
                           ],
@@ -636,6 +653,7 @@ class _PostViewState extends State<PostView> {
                                         addOrRemoveSubscriber: (int status) {
                                           widget.addOrRemoveSubscriber(status);
                                         },
+                                        role: widget.role,
                                         postAlsha: widget.postAlsha,
                                         userImage: widget.loggedInUserImage,
                                         userName: widget.loggedInUserName,
@@ -822,6 +840,10 @@ class _PostViewState extends State<PostView> {
                             } else if (state
                                 is GetUserPermissionsSuccessState) {
                               hideLoading();
+                              if (widget.role == "guest") {
+                                onError(context, AppStrings.guest);
+                                return;
+                              }
                               if (state.userPermissionsModel.enableAdd ==
                                   "yes") {
                                 showModalBottomSheet(

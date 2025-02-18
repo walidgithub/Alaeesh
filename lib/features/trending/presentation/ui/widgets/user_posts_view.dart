@@ -169,6 +169,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                         return Directionality(
                           textDirection: ui.TextDirection.rtl,
                           child: CommentsBottomSheet(
+                            role: role,
                             getUserPosts: (String userName) {},
                             userEmail: email,
                             addOrRemoveSubscriber: (int status) {
@@ -366,6 +367,7 @@ class _UserPostsViewState extends State<UserPostsView> {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               return PostView(
+                                role: role,
                                 getUserPosts: (String userName) {},
                                 addOrRemoveSubscriber: (int status) {
                                   if (status == -1) {

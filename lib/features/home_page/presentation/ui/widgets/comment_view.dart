@@ -39,6 +39,7 @@ class CommentView extends StatefulWidget {
   final String userImage;
   final String userEmail;
   final String time;
+  final String role;
   final String postId;
   final List<CommentEmojiModel> commentEmojisModel;
   double statusBarHeight;
@@ -50,26 +51,26 @@ class CommentView extends StatefulWidget {
   Function addOrRemoveSubscriber;
   Function getUserPosts;
   int index;
-  CommentView({
-    super.key,
-    required this.id,
-    required this.comment,
-    required this.username,
-    required this.userImage,
-    required this.userEmail,
-    required this.time,
-    required this.commentEmojisModel,
-    required this.statusBarHeight,
-    required this.postId,
-    required this.addNewCommentEmoji,
-    required this.index,
-    required this.updateComment,
-    required this.loggedInUserName,
-    required this.loggedInUserImage,
-    required this.loggedInUserEmail,
-    required this.getUserPosts,
-    required this.addOrRemoveSubscriber
-  });
+  CommentView(
+      {super.key,
+      required this.id,
+      required this.comment,
+      required this.username,
+      required this.userImage,
+      required this.userEmail,
+      required this.time,
+      required this.role,
+      required this.commentEmojisModel,
+      required this.statusBarHeight,
+      required this.postId,
+      required this.addNewCommentEmoji,
+      required this.index,
+      required this.updateComment,
+      required this.loggedInUserName,
+      required this.loggedInUserImage,
+      required this.loggedInUserEmail,
+      required this.getUserPosts,
+      required this.addOrRemoveSubscriber});
 
   @override
   State<CommentView> createState() => _CommentViewState();
@@ -89,7 +90,6 @@ class _CommentViewState extends State<CommentView> {
     reactionsCount = widget.commentEmojisModel.length;
     super.initState();
   }
-
 
   OverlayEntry? _overlayEntry;
 
@@ -120,7 +120,7 @@ class _CommentViewState extends State<CommentView> {
                     } else if (state is DeleteCommentEmojiErrorState) {
                       hideLoading();
                       _removePopup();
-showSnackBar(context, state.errorMessage);
+                      showSnackBar(context, state.errorMessage);
                       _removePopup();
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
@@ -161,7 +161,7 @@ showSnackBar(context, state.errorMessage);
                           },
                           showSkip: widget.commentEmojisModel
                               .where((element) =>
-                          element.username == widget.loggedInUserName)
+                                  element.username == widget.loggedInUserName)
                               .isNotEmpty,
                         ));
                   },
@@ -208,7 +208,7 @@ showSnackBar(context, state.errorMessage);
                     } else if (state is DeleteCommentErrorState) {
                       hideLoading();
                       _removePopup();
-showSnackBar(context, state.errorMessage);
+                      showSnackBar(context, state.errorMessage);
                       Navigator.pop(context);
                     } else if (state is HomePageNoInternetState) {
                       hideLoading();
@@ -224,146 +224,203 @@ showSnackBar(context, state.errorMessage);
                           borderRadius: BorderRadius.all(Radius.circular(5.r))),
                       child: Column(
                         children: [
-                          Bounceable(
-                            onTap: () {
-                              DateTime now = DateTime.now();
-                              String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(now);
-                              String formattedTime =
-                              DateFormat('hh:mm a').format(now);
+                          widget.loggedInUserName == widget.username
+                              ? Bounceable(
+                                  onTap: () {
+                                    DateTime now = DateTime.now();
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd').format(now);
+                                    String formattedTime =
+                                        DateFormat('hh:mm a').format(now);
 
-                              DeleteCommentRequest deleteCommentRequest =
-                                  DeleteCommentRequest(
-                                    lastTimeUpdate: '$formattedDate $formattedTime',
-                                      postId: widget.postId,
-                                      commentId: widget.id);
-                              HomePageCubit.get(context)
-                                  .deleteComment(deleteCommentRequest);
-                            },
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.delete,
-                                  width: 18.w,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  AppStrings.delete,
-                                  style: AppTypography.kLight12,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          BlocProvider(
-                            create: (context) =>
-                            sl<WelcomeCubit>()..getUserPermissions(widget.loggedInUserName),
-                            child: BlocBuilder<WelcomeCubit, WelcomeState>(
-                              builder: (context, state) {
-                                if (state is GetUserPermissionsLoadingState) {
-                                  return Center(child: CircularProgressIndicator(
-                                    strokeWidth: 2.w,
-
-                                    color: AppColors.cTitle,
-                                  ));
-                                } else if (state is GetUserPermissionsSuccessState) {
-                                  if (state.userPermissionsModel.enableAdd == "yes") {
-                                    return Bounceable(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          constraints: BoxConstraints.expand(
-                                              height: MediaQuery.sizeOf(context).height -
-                                                  widget.statusBarHeight -
-                                                  100.h,
-                                              width: MediaQuery.sizeOf(context).width),
-                                          isScrollControlled: true,
-                                          barrierColor: AppColors.cTransparent,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(30.r),
-                                            ),
-                                          ),
-                                          builder: (context2) {
-                                            return Directionality(
-                                                textDirection: ui.TextDirection.rtl,
-                                                child: UpdateCommentBottomSheet(
-                                                    statusBarHeight:
-                                                    widget.statusBarHeight,
-                                                    updateComment: (int status, String returnedId) {
-                                                      widget.updateComment(status, returnedId);
-                                                      Navigator.pop(context);
-                                                    },
-                                                    commentModel: CommentsModel(
-                                                        id: widget.id,
-                                                        postId: widget.postId,
-                                                        username: widget.loggedInUserName,
-                                                        userImage:
-                                                        widget.loggedInUserImage,
-                                                        time: widget.time,
-                                                        comment: widget.comment,
-                                                        userEmail: widget.loggedInUserEmail,
-                                                        commentEmojiModel:
-                                                        widget.commentEmojisModel)));
-                                          },
-                                        );
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
+                                    DeleteCommentRequest deleteCommentRequest =
+                                        DeleteCommentRequest(
+                                            lastTimeUpdate:
+                                                '$formattedDate $formattedTime',
+                                            postId: widget.postId,
+                                            commentId: widget.id);
+                                    HomePageCubit.get(context)
+                                        .deleteComment(deleteCommentRequest);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppAssets.edit,
-                                            width: 15.w,
-                                          ),
-                                          SizedBox(
-                                            width: 10.w,
-                                          ),
-                                          Text(
-                                            AppStrings.edit,
-                                            style: AppTypography.kLight13,
-                                          ),
-                                        ],
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.delete,
+                                        width: 18.w,
                                       ),
-                                    );
-                                  } else {
-                                    return SizedBox.shrink();
-                                  }
-                                } else if (state is GetUserPermissionsErrorState ||
-                                    state is WelcomeNoInternetState) {
-                                  return SizedBox.shrink();
-                                } else {
-                                  return SizedBox.shrink();
-                                }
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        AppStrings.delete,
+                                        style: AppTypography.kLight12,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                          widget.loggedInUserName == widget.username
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          widget.loggedInUserName == widget.username
+                              ? BlocProvider(
+                                  create: (context) => sl<WelcomeCubit>()
+                                    ..getUserPermissions(
+                                        widget.loggedInUserName),
+                                  child:
+                                      BlocBuilder<WelcomeCubit, WelcomeState>(
+                                    builder: (context, state) {
+                                      if (state
+                                          is GetUserPermissionsLoadingState) {
+                                        return Center(
+                                            child: CircularProgressIndicator(
+                                          strokeWidth: 2.w,
+                                          color: AppColors.cTitle,
+                                        ));
+                                      } else if (state
+                                          is GetUserPermissionsSuccessState) {
+                                        if (widget.role == "guest") {
+                                          return SizedBox.shrink();
+                                        }
+                                        if (state.userPermissionsModel
+                                                .enableAdd ==
+                                            "yes") {
+                                          return Bounceable(
+                                            onTap: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                constraints:
+                                                    BoxConstraints.expand(
+                                                        height: MediaQuery
+                                                                    .sizeOf(
+                                                                        context)
+                                                                .height -
+                                                            widget
+                                                                .statusBarHeight -
+                                                            100.h,
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                    context)
+                                                                .width),
+                                                isScrollControlled: true,
+                                                barrierColor:
+                                                    AppColors.cTransparent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                    top: Radius.circular(30.r),
+                                                  ),
+                                                ),
+                                                builder: (context2) {
+                                                  return Directionality(
+                                                      textDirection:
+                                                          ui.TextDirection.rtl,
+                                                      child:
+                                                          UpdateCommentBottomSheet(
+                                                              statusBarHeight:
+                                                                  widget
+                                                                      .statusBarHeight,
+                                                              updateComment:
+                                                                  (int status,
+                                                                      String
+                                                                          returnedId) {
+                                                                widget.updateComment(
+                                                                    status,
+                                                                    returnedId);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              commentModel: CommentsModel(
+                                                                  id: widget.id,
+                                                                  postId: widget
+                                                                      .postId,
+                                                                  username: widget
+                                                                      .loggedInUserName,
+                                                                  userImage: widget
+                                                                      .loggedInUserImage,
+                                                                  time: widget
+                                                                      .time,
+                                                                  comment: widget
+                                                                      .comment,
+                                                                  userEmail: widget
+                                                                      .loggedInUserEmail,
+                                                                  commentEmojiModel:
+                                                                      widget
+                                                                          .commentEmojisModel)));
+                                                },
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppAssets.edit,
+                                                  width: 15.w,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.w,
+                                                ),
+                                                Text(
+                                                  AppStrings.edit,
+                                                  style: AppTypography.kLight13,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return SizedBox.shrink();
+                                        }
+                                      } else if (state
+                                              is GetUserPermissionsErrorState ||
+                                          state is WelcomeNoInternetState) {
+                                        return SizedBox.shrink();
+                                      } else {
+                                        return SizedBox.shrink();
+                                      }
+                                    },
+                                  ),
+                                )
+                              : Container(),
+                          widget.loggedInUserName != widget.username
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          widget.loggedInUserName != widget.username ?
                           Bounceable(
                             onTap: () {
                               Navigator.pop(context);
                               ReportComplaintDialog.show(
-                                  context, AppStrings.adminName, widget.postId, widget.id, AppStrings.comment);
+                                  context,
+                                  AppStrings.adminName,
+                                  widget.postId,
+                                  widget.id,
+                                  AppStrings.comment);
                             },
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SvgPicture.asset(
                                   AppAssets.flag,
@@ -378,7 +435,7 @@ showSnackBar(context, state.errorMessage);
                                 ),
                               ],
                             ),
-                          ),
+                          ) : Container(),
                         ],
                       ),
                     );
@@ -409,106 +466,105 @@ showSnackBar(context, state.errorMessage);
                       ),
                       Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Bounceable(
-                                    onTap: () {
-                                      widget.getUserPosts(widget.username);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                            radius: 25.r,
-                                            backgroundColor: AppColors.cWhite,
-                                            child: Container(
-                                                padding: EdgeInsets.all(2.w),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: AppColors.cTitle,
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                                child: ClipOval(
-                                                  child: CachedNetworkImage(
-                                                    placeholder: (context, url) =>
-                                                        CircularProgressIndicator(
-                                                          strokeWidth: 2.w,
-                                                          color: AppColors.cTitle,
-                                                        ),
-                                                    errorWidget: (context, url,
-                                                        error) =>
-                                                        Image.asset(
-                                                            AppAssets.profile),
-                                                    imageUrl: widget.userImage,
-                                                  ),
-                                                ))),
-                                        SizedBox(
-                                          width: 10.w,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.username,
-                                              style: AppTypography.kBold14
-                                                  .copyWith(
-                                                  color: AppColors.cTitle),
-                                            ),
-                                            Directionality(
-                                              textDirection: ui.TextDirection.ltr,
-                                              child: Text(
-                                                timeAgoText,
-                                                style: AppTypography.kLight12
-                                                    .copyWith(
-                                                    color: AppColors.greyDark),
+                              Bounceable(
+                                onTap: () {
+                                  widget.getUserPosts(widget.username);
+                                },
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 25.r,
+                                        backgroundColor: AppColors.cWhite,
+                                        child: Container(
+                                            padding: EdgeInsets.all(2.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.cTitle,
+                                                width: 2,
                                               ),
                                             ),
-                                          ],
+                                            child: ClipOval(
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2.w,
+                                                  color: AppColors.cTitle,
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Image.asset(
+                                                            AppAssets.profile),
+                                                imageUrl: widget.userImage,
+                                              ),
+                                            ))),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.username,
+                                          style: AppTypography.kBold14.copyWith(
+                                              color: AppColors.cTitle),
+                                        ),
+                                        Directionality(
+                                          textDirection: ui.TextDirection.ltr,
+                                          child: Text(
+                                            timeAgoText,
+                                            style: AppTypography.kLight12
+                                                .copyWith(
+                                                    color: AppColors.greyDark),
+                                          ),
                                         ),
                                       ],
                                     ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  // widget.loggedInUserName == widget.username
+                                  //     ?
+                                  SizedBox(
+                                    width: 10.w,
                                   ),
-                                  Row(
-                                    children: [
-                                      widget.loggedInUserName == widget.username
-                                          ? SizedBox(
-                                        width: 10.w,
-                                      )
-                                          : Container(),
-                                      widget.loggedInUserName == widget.username
-                                          ? GestureDetector(
-                                          onTapDown:
-                                              (TapDownDetails details) {
-                                            _showCommentPopupMenu(
-                                                context,
-                                                details.globalPosition,
-                                                widget.index);
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppAssets.menu,
-                                            width: 25.w,
-                                          ))
-                                          : Container()
-                                    ],
-                                  )
+                                  // : Container(),
+                                  // widget.loggedInUserName == widget.username
+                                  //     ?
+                                  GestureDetector(
+                                      onTapDown: (TapDownDetails details) {
+                                        _showCommentPopupMenu(
+                                            context,
+                                            details.globalPosition,
+                                            widget.index);
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppAssets.menu,
+                                        width: 25.w,
+                                      ))
+                                  // : Container()
                                 ],
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              Text(
-                                widget.comment,
-                                style: AppTypography.kLight14
-                                    .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
-                              ),
+                              )
                             ],
-                          )),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Text(
+                            widget.comment,
+                            style: AppTypography.kLight14.copyWith(
+                                color: AppColors.cBlack, fontFamily: "Cairo"),
+                          ),
+                        ],
+                      )),
                     ],
                   ),
                   const Divider(
@@ -535,98 +591,90 @@ showSnackBar(context, state.errorMessage);
                       ),
                       widget.commentEmojisModel.isNotEmpty
                           ? Row(
-                        children: [
-                          Bounceable(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                constraints: BoxConstraints.expand(
-                                    height: MediaQuery.sizeOf(context)
-                                        .height -
-                                        widget.statusBarHeight -
-                                        300.h,
-                                    width: MediaQuery.sizeOf(context)
-                                        .width),
-                                isScrollControlled: true,
-                                barrierColor: AppColors.cTransparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.r),
-                                  ),
-                                ),
-                                builder: (context2) {
-                                  return Directionality(
-                                    textDirection: ui.TextDirection.rtl,
-                                    child:
-                                    ReactionsCommentBottomSheet(
-                                        statusBarHeight: widget
-                                            .statusBarHeight,
-                                        commentEmojiModel: widget
-                                            .commentEmojisModel),
-                                  );
-                                },
-                              );
-                            },
-                            child: SizedBox(
-                              width:
-                              MediaQuery.sizeOf(context).width *
-                                  0.5,
-                              height: 30.h,
-                              child: Stack(
-                                children: widget.commentEmojisModel
-                                    .asMap()
-                                    .entries
-                                    .toList()
-                                    .fold<
-                                    List<
-                                        MapEntry<int,
-                                            dynamic>>>([],
-                                        (acc, entry) {
-                                      if (!acc.any((e) =>
-                                      e.value.emojiData ==
-                                          entry.value.emojiData)) {
-                                        acc.add(entry);
-                                      }
-                                      return acc;
-                                    }).map((entry) {
-                                  int index =
-                                      entry.key; // Original index
-                                  return Positioned(
-                                    left: index * reactPosition,
-                                    child: CircleAvatar(
-                                      radius: 15.r,
-                                      backgroundColor:
-                                      AppColors.cWhite,
-                                      child: Container(
-                                        padding: EdgeInsets.all(1.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color:
-                                            AppColors.cSecondary,
-                                            width: 1,
-                                          ),
-                                        ),
-                                        child: ClipOval(
-                                          child: Text(
-                                            entry.value.emojiData,
-                                            style: AppTypography
-                                                .kExtraLight18,
-                                          ),
+                              children: [
+                                Bounceable(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      constraints: BoxConstraints.expand(
+                                          height: MediaQuery.sizeOf(context)
+                                                  .height -
+                                              widget.statusBarHeight -
+                                              300.h,
+                                          width:
+                                              MediaQuery.sizeOf(context).width),
+                                      isScrollControlled: true,
+                                      barrierColor: AppColors.cTransparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(30.r),
                                         ),
                                       ),
+                                      builder: (context2) {
+                                        return Directionality(
+                                          textDirection: ui.TextDirection.rtl,
+                                          child: ReactionsCommentBottomSheet(
+                                              statusBarHeight:
+                                                  widget.statusBarHeight,
+                                              commentEmojiModel:
+                                                  widget.commentEmojisModel),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.5,
+                                    height: 30.h,
+                                    child: Stack(
+                                      children: widget.commentEmojisModel
+                                          .asMap()
+                                          .entries
+                                          .toList()
+                                          .fold<List<MapEntry<int, dynamic>>>(
+                                              [], (acc, entry) {
+                                        if (!acc.any((e) =>
+                                            e.value.emojiData ==
+                                            entry.value.emojiData)) {
+                                          acc.add(entry);
+                                        }
+                                        return acc;
+                                      }).map((entry) {
+                                        int index = entry.key; // Original index
+                                        return Positioned(
+                                          left: index * reactPosition,
+                                          child: CircleAvatar(
+                                            radius: 15.r,
+                                            backgroundColor: AppColors.cWhite,
+                                            child: Container(
+                                              padding: EdgeInsets.all(1.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: AppColors.cSecondary,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: Text(
+                                                  entry.value.emojiData,
+                                                  style: AppTypography
+                                                      .kExtraLight18,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(reactionsCount.toString()),
-                        ],
-                      )
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(reactionsCount.toString()),
+                              ],
+                            )
                           : Container(),
                     ],
                   ),

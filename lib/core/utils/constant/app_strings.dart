@@ -29,6 +29,7 @@ class AppStrings {
   static const String complaint = ' الشـكـوى هــى ';
   static const String alsha = 'الألــشـة';
   static const String addAlsha = 'إضـافـة';
+  static const String add = 'إضـافـة';
   static const String notifications = 'إشـعـارات';
   static const String logout = 'زقـهـت 😤';
   static const String switchUser = 'مـسـتـخـدم آخـر 🤖‍';
@@ -46,7 +47,7 @@ class AppStrings {
   static const String moreThan = "أكـثـر مــن";
   static const String suggestedUsers = "الـمـفـروض نـاس دمـهـا خـفـيـف 🤐";
   static const String someThingWentWrong = "فـى خـطـأ حـصـل مـمـكـن تـكـلـم الـدعـم الـفـنـى وتـشـرحـلـه الـتـفـاصـيـل عـشـان يـسـاعـدك 🤐";
-  static const String email = "walidmohamedbarakat@gmail.com";
+  static const String email = "الإيـمـيـل";
   static const String topPosts = "أعـلـى ألـشـات 🤣";
   static const String updatedSuccessfully = 'تـمـام كـده 👍';
   static const String noPosts = 'لـو مـفـيـش ألـشـات، ابـدأ أنـت 🤷‍';
@@ -68,12 +69,14 @@ class AppStrings {
   static const String preventAdd = 'حـظـر إضـافـة 🤐';
   static const String enableAdd = 'إتـاحـة إضـافـة 🤝';
   static const String sendMessage = 'إرسـال رسـالـة ✍️';
+  static const String addUser = 'إضـافـة مـسـتـخـدم ✍️';
   static const String message = 'الـرسـالـة';
   static const String newPostAddedNotification = ' ضـاف ألـشـة جـديـدة 🥳 ';
   static const String newCommentAddedNotification = ' ضـاف كـومـنـت جـديـد 🥳 ';
   static const String newEmojiAddedNotification = ' ضـاف إيـمـوجـى جـديـد 🥳 ';
   static const String closeDialog = 'لا خـلاص';
   static const String messageFromAdmin = 'رســالـة مـن الأدمــن';
+  static const String guest = 'تـواصـل مـع الأدمـن حـتـى تـتـمـكـن مـن الإضــافـة 🤝';
   static const String preventMessage = 'مـعـلـش انـت اتـمـنـعـت إنـك تـضـيـف أى ألـشـة أو كـومـنـت، شـويـة كـده وحـنـرجـعـك بـس خـد بـالـك الـمـرة الـجـايـة 🤝';
   static const String addMessage = 'تـم فـك الـحـظـر، مـتـعـنـا بـألـشـاتـك تـانـى 🥳';
   static const String searchForPost = 'ابـحـث عــن ألـشـة 🕵🏼‍';

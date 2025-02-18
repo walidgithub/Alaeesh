@@ -6,4 +6,5 @@ class AppConstants {
   static double radius = 50.r;
   static int durationOfSnackBar = 2500;
   static int animation = 700;
+  List<String> users = [];
 }

@@ -21,8 +21,9 @@ class AddPostButton extends StatelessWidget {
   String displayName;
   String photoUrl;
   String email;
+  String role;
   Function getHomePosts;
-  AddPostButton({super.key, required this.photoUrl, required this.displayName, required this.email, required this.statusBarHeight, required this.getHomePosts});
+  AddPostButton({super.key, required this.photoUrl, required this.displayName, required this.email, required this.role, required this.statusBarHeight, required this.getHomePosts});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,11 @@ class AddPostButton extends StatelessWidget {
             } else if (state
             is GetUserPermissionsSuccessState) {
               hideLoading();
+              if (role == "guest") {
+                onError(
+                    context, AppStrings.guest);
+                return;
+              }
               if (state
                   .userPermissionsModel.enableAdd ==
                   "yes") {

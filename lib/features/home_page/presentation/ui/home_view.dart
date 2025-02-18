@@ -184,6 +184,7 @@ class _HomeViewState extends State<HomeView> {
                                   return Directionality(
                                     textDirection: ui.TextDirection.rtl,
                                     child: CommentsBottomSheet(
+                                      role: role,
                                       getUserPosts: (String userName) {
                                         Navigator.pushNamed(
                                             context, Routes.userPostsRoute,
@@ -374,6 +375,7 @@ class _HomeViewState extends State<HomeView> {
                       return Directionality(
                         textDirection: ui.TextDirection.rtl,
                         child: CommentsBottomSheet(
+                          role: role,
                           getUserPosts: (String userName) {
                             Navigator.pushNamed(context, Routes.userPostsRoute,
                                 arguments: UserPostsArguments(
@@ -617,6 +619,7 @@ class _HomeViewState extends State<HomeView> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return PostView(
+                              role: role,
                               getUserPosts: (String userName) {
                                 Navigator.pushNamed(
                                     context, Routes.userPostsRoute,

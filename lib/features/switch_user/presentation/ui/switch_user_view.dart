@@ -15,6 +15,7 @@ import '../../../../core/utils/dialogs/error_dialog.dart';
 import '../../../../core/utils/ui_components/curved_clipper.dart';
 import '../../../../core/utils/ui_components/primary_button.dart';
 import '../../../../core/utils/ui_components/snackbar.dart';
+import '../../../dashboard/data/model/user_model.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
 import '../bloc/switch_user_cubit.dart';
 import '../bloc/switch_user_states.dart';
@@ -35,6 +36,7 @@ class _SwitchUserViewState extends State<SwitchUserView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  List<AllowedUserModel> allowedUsersList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +100,20 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 BlocProvider(
-                                  create: (context) => sl<SwitchUserCubit>(),
+                                  create: (context) => sl<SwitchUserCubit>()..getAllowedUsers(),
                                   child: BlocConsumer<SwitchUserCubit,
                                       SwitchUserState>(
                                     listener: (context, state) async {
+                                      if (state is GetAllowedUsersLoadingState) {
+                                        showLoading();
+                                      } else if (state is GetAllowedUsersSuccessState) {
+                                        hideLoading();
+                                        allowedUsersList.clear();
+                                        allowedUsersList.addAll(state.allowedUserList);
+                                      } else if (state is GetAllowedUsersErrorState) {
+                                        showSnackBar(context, state.errorMessage);
+                                        hideLoading();
+                                      } else
                                       if (state is SwitchUserLoadingState) {
                                         showLoading();
                                         await _appSecureDataHelper
@@ -133,7 +145,7 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                           email: email,
                                           displayName: displayName,
                                           photoUrl: photoUrl,
-                                          role: "user",
+                                          role: allowedUsersList.any((user) => user.email == email) ? "user" : "guest",
                                         );
                                         await _appPreferences.setUserLoggedIn();
                                         Navigator.pushReplacementNamed(
@@ -154,7 +166,7 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                           email: email,
                                           displayName: displayName,
                                           photoUrl: photoUrl,
-                                          role: state.userPermissionsModel.role,
+                                          role: allowedUsersList.any((user) => user.email == email) ? state.userPermissionsModel.role : "guest",
                                         );
                                         await _appPreferences.setUserLoggedIn();
                                         Navigator.pushReplacementNamed(
@@ -164,7 +176,7 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                         UserPermissionsModel userPermissionsModel =
                                         UserPermissionsModel(
                                             username: displayName,
-                                            role: "user",
+                                            role: allowedUsersList.any((user) => user.email == email) ? "user" : "guest",
                                             enableAdd: "yes");
                                         SwitchUserCubit.get(context)
                                             .addUserPermission(userPermissionsModel);

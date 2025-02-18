@@ -32,6 +32,7 @@ class CommentsBottomSheet extends StatefulWidget {
   String userName;
   String userImage;
   String userEmail;
+  String role;
   String postAlsha;
   double statusBarHeight;
   List<CommentsModel> commentsList;
@@ -44,6 +45,7 @@ class CommentsBottomSheet extends StatefulWidget {
       required this.commentsList,
       required this.postId,
       required this.userName,
+      required this.role,
       required this.userImage,
       required this.userEmail,
       required this.postAlsha,
@@ -164,6 +166,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       color: AppColors.cTitle,
                     ));
                   } else if (state is GetUserPermissionsSuccessState) {
+                    if (widget.role == "guest") {
+                      return SizedBox.shrink();
+                    }
                     if (state.userPermissionsModel.enableAdd == "yes") {
                       return Row(
                         children: [
@@ -320,6 +325,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             }
                           }, builder: (context, state) {
                             return CommentView(
+                              role: widget.role,
                               getUserPosts: (String userName) {
                                 widget.getUserPosts(userName);
                               },

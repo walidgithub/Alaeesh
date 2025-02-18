@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../../../core/di/di.dart';
 import '../../../layout/data/model/advice_model.dart';
-import '../../../welcome/data/model/user_permissions_model.dart';
 import '../model/requests/send_reply_request.dart';
+import '../model/user_model.dart';
 
 abstract class BaseDataSource {
   Future<List<AdviceModel>> getUserAdvices();
   Future<void> sendReply(SendReplyRequest sendReplyRequest);
+  Future<void> addUSer(AllowedUserModel allowedUserModel);
 }
 
 class DashboardDataSource extends BaseDataSource {
@@ -37,6 +37,18 @@ class DashboardDataSource extends BaseDataSource {
       final docRef = collection.doc();
       sendReplyRequest.id = docRef.id;
       await docRef.set(sendReplyRequest.toMap());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addUSer(AllowedUserModel allowedUserModel) async {
+    try {
+      final collection = firestore.collection('allowedUsers');
+      final docRef = collection.doc();
+      allowedUserModel.id = docRef.id;
+      await docRef.set(allowedUserModel.toMap());
     } catch (e) {
       rethrow;
     }

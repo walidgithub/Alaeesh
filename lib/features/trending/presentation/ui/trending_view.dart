@@ -143,6 +143,7 @@ class _TrendingViewState extends State<TrendingView> {
                 return Directionality(
                   textDirection: ui.TextDirection.rtl,
                   child: CommentsBottomSheet(
+                    role: role,
                     getUserPosts: (String userName) {
                       TrendingCubit.get(context).getTopPosts(
                           GetTopPostsRequest(currentUser: displayName));
@@ -498,6 +499,7 @@ class _TrendingViewState extends State<TrendingView> {
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return PostView(
+                            role: role,
                             addNewComment: (int status, String returnedId) {
                               setState(() {
                                 selectedId = returnedId;

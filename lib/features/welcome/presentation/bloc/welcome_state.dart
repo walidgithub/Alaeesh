@@ -1,3 +1,5 @@
+import 'package:last/features/dashboard/data/model/user_model.dart';
+
 import '../../data/model/user_model.dart';
 import '../../data/model/user_permissions_model.dart';
 
@@ -58,6 +60,17 @@ class SendReplyErrorState extends WelcomeState{
   final String errorMessage;
 
   SendReplyErrorState(this.errorMessage);
+}
+
+class GetAllowedUsersLoadingState extends WelcomeState{}
+class GetAllowedUsersSuccessState extends WelcomeState{
+  List<AllowedUserModel> allowedUserList;
+  GetAllowedUsersSuccessState(this.allowedUserList);
+}
+class GetAllowedUsersErrorState extends WelcomeState{
+  final String errorMessage;
+
+  GetAllowedUsersErrorState(this.errorMessage);
 }
 
 class WelcomeNoInternetState extends WelcomeState{}

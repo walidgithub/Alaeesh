@@ -1,3 +1,4 @@
+import '../../../dashboard/data/model/user_model.dart';
 import '../../../welcome/data/model/user_model.dart';
 import '../../../welcome/data/model/user_permissions_model.dart';
 
@@ -34,6 +35,17 @@ class GetUserPermissionsErrorState extends SwitchUserState{
   final String errorMessage;
 
   GetUserPermissionsErrorState(this.errorMessage);
+}
+
+class GetAllowedUsersLoadingState extends SwitchUserState{}
+class GetAllowedUsersSuccessState extends SwitchUserState{
+  List<AllowedUserModel> allowedUserList;
+  GetAllowedUsersSuccessState(this.allowedUserList);
+}
+class GetAllowedUsersErrorState extends SwitchUserState{
+  final String errorMessage;
+
+  GetAllowedUsersErrorState(this.errorMessage);
 }
 
 class SwitchUserNoInternetState extends SwitchUserState{}

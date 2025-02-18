@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/core/utils/ui_components/loading_dialog.dart';
+import 'package:last/features/dashboard/data/model/user_model.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_cubit.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_state.dart';
 import '../../../../core/di/di.dart';
@@ -38,6 +39,7 @@ class _WelcomeViewState extends State<WelcomeView> {
   String email = "";
   String displayName = "";
   String photoUrl = "";
+  List<AllowedUserModel> allowedUsersList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +118,20 @@ class _WelcomeViewState extends State<WelcomeView> {
                           duration:
                               Duration(milliseconds: AppConstants.animation),
                           child: BlocProvider(
-                            create: (context) => sl<WelcomeCubit>(),
+                            create: (context) =>
+                                sl<WelcomeCubit>()..getAllowedUsers(),
                             child: BlocConsumer<WelcomeCubit, WelcomeState>(
                               listener: (context, state) async {
-                                if (state is LoginLoadingState) {
+                                if (state is GetAllowedUsersLoadingState) {
+                                  showLoading();
+                                } else if (state is GetAllowedUsersSuccessState) {
+                                  hideLoading();
+                                  allowedUsersList.clear();
+                                  allowedUsersList.addAll(state.allowedUserList);
+                                } else if (state is GetAllowedUsersErrorState) {
+                                  showSnackBar(context, state.errorMessage);
+                                  hideLoading();
+                                } else if (state is LoginLoadingState) {
                                   showLoading();
                                 } else if (state is LoginSuccessState) {
                                   hideLoading();
@@ -143,7 +155,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                                     email: email,
                                     displayName: displayName,
                                     photoUrl: photoUrl,
-                                    role: "user",
+                                    role: allowedUsersList.any((user) => user.email == email) ? "user" : "guest",
                                   );
                                   await _appPreferences.setUserLoggedIn();
                                   Navigator.pushReplacementNamed(
@@ -164,7 +176,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                                     email: email,
                                     displayName: displayName,
                                     photoUrl: photoUrl,
-                                    role: state.userPermissionsModel.role,
+                                    role: allowedUsersList.any((user) => user.email == email) ? state.userPermissionsModel.role : "guest",
                                   );
                                   await _appPreferences.setUserLoggedIn();
                                   Navigator.pushReplacementNamed(
@@ -174,7 +186,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   UserPermissionsModel userPermissionsModel =
                                       UserPermissionsModel(
                                           username: displayName,
-                                          role: "user",
+                                          role: allowedUsersList.any((user) => user.email == email) ? "user" : "guest",
                                           enableAdd: "yes");
                                   WelcomeCubit.get(context)
                                       .addUserPermission(userPermissionsModel);

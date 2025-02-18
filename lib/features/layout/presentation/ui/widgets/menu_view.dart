@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../../../core/utils/constant/app_assets.dart';
 import '../../../../../core/utils/constant/app_constants.dart';
 import 'add_post_button.dart';
@@ -13,10 +12,11 @@ class MenuView extends StatelessWidget {
   bool addPost;
   double statusBarHeight;
   String displayName;
+  String role;
   String email;
   String photoUrl;
   Function getHomePosts;
-  MenuView({super.key,required this.displayName,required this.photoUrl, required this.email, required this.statusBarHeight, required this.getHomePosts, required this.addPost, required this.showMenuPopupMenu});
+  MenuView({super.key,required this.displayName,required this.role,required this.photoUrl, required this.email, required this.statusBarHeight, required this.getHomePosts, required this.addPost, required this.showMenuPopupMenu});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +37,7 @@ class MenuView extends StatelessWidget {
           ),
           addPost
               ? AddPostButton(
+            role: role,
             statusBarHeight: statusBarHeight,
             displayName: displayName,
             email: email,

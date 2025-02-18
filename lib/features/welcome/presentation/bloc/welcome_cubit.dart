@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:last/core/base_usecase/firebase_base_usecase.dart';
+import 'package:last/features/welcome/domain/usecases/get_allowed_users_usecase.dart';
 import 'package:last/features/welcome/domain/usecases/login_usecase.dart';
 import 'package:last/features/welcome/presentation/bloc/welcome_state.dart';
 import '../../../../core/di/di.dart';
@@ -13,7 +14,7 @@ import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/update_user_permissions_usecase.dart';
 
 class WelcomeCubit extends Cubit<WelcomeState> {
-  WelcomeCubit(this.sendReplyUseCase, this.updateUserPermissionsUseCase, this.loginUseCase, this.logoutUseCase, this.addUserPermissionsUseCase, this.getUserPermissionsUseCase) : super(WelcomeInitial());
+  WelcomeCubit(this.sendReplyUseCase, this.getAllowedUsersUseCase, this.updateUserPermissionsUseCase, this.loginUseCase, this.logoutUseCase, this.addUserPermissionsUseCase, this.getUserPermissionsUseCase) : super(WelcomeInitial());
 
   final LoginUseCase loginUseCase;
   final LogoutUseCase logoutUseCase;
@@ -21,6 +22,7 @@ class WelcomeCubit extends Cubit<WelcomeState> {
   final GetUserPermissionsUseCase getUserPermissionsUseCase;
   final UpdateUserPermissionsUseCase updateUserPermissionsUseCase;
   final SendReplyUseCase sendReplyUseCase;
+  final GetAllowedUsersUseCase getAllowedUsersUseCase;
 
   static WelcomeCubit get(context) => BlocProvider.of(context);
 
@@ -99,6 +101,19 @@ class WelcomeCubit extends Cubit<WelcomeState> {
       result.fold(
             (failure) => emit(SendReplyErrorState(failure.message)),
             (replySent) => emit(SendReplySuccessState()),
+      );
+    } else {
+      emit(WelcomeNoInternetState());
+    }
+  }
+
+  Future<void> getAllowedUsers() async {
+    emit(GetAllowedUsersLoadingState());
+    if (await _networkInfo.isConnected) {
+      final result = await getAllowedUsersUseCase.call(const FirebaseNoParameters());
+      result.fold(
+            (failure) => emit(GetAllowedUsersErrorState(failure.message)),
+            (allowedUsers) => emit(GetAllowedUsersSuccessState(allowedUsers)),
       );
     } else {
       emit(WelcomeNoInternetState());
