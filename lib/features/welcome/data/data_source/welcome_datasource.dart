@@ -105,8 +105,12 @@ class WelcomeDataSource extends BaseDataSource {
           .where('username', isEqualTo: username)
           .get();
 
-      final doc = querySnapshot.docs.first;
-      return UserPermissionsModel.fromMap(doc.data());
+      if (querySnapshot.docs.isNotEmpty){
+        final doc = querySnapshot.docs.first;
+        return UserPermissionsModel.fromMap(doc.data());
+      } else {
+        throw "";
+      }
     } catch (e) {
       rethrow;
     }

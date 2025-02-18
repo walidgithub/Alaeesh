@@ -473,27 +473,19 @@ class _DashboardPostViewState extends State<DashboardPostView> {
                                     role = state.userPermissionsModel.role;
                                     if (state.userPermissionsModel.enableAdd ==
                                         "yes") {
-                                      setState(() {
                                         isEnabled = true;
-                                      });
                                     } else if (state
                                             .userPermissionsModel.enableAdd ==
                                         "no") {
-                                      setState(() {
                                         isEnabled = false;
-                                      });
                                     }
                                     if (state.userPermissionsModel.role ==
                                         "admin") {
-                                      setState(() {
                                         isUser = false;
-                                      });
                                     } else if (state
                                             .userPermissionsModel.role ==
                                         "user") {
-                                      setState(() {
                                         isUser = true;
-                                      });
                                     }
                                     _showPostPopupMenu(
                                         context,

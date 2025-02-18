@@ -1,7 +1,7 @@
 class UserModel {
-  String? name, id, email, photoUrl;
+  String name, id, email, photoUrl;
 
-  UserModel({this.name, this.email, this.id, this.photoUrl});
+  UserModel({required this.name, required this.email, required this.id, required this.photoUrl});
 
   static UserModel fromJson(Map<String, dynamic> map) {
     UserModel user = UserModel(

@@ -62,7 +62,7 @@ class _MineCommentViewState extends State<MineCommentView> {
   double reactPosition = 20.0;
   int reactionsCount = 0;
   String timeAgoText = "";
-  
+
 
   @override
   void initState() {
@@ -125,10 +125,10 @@ class _MineCommentViewState extends State<MineCommentView> {
                               String formattedTime =
                               DateFormat('hh:mm a').format(now);
                               DeleteCommentRequest deleteCommentRequest =
-                                  DeleteCommentRequest(
-                                    lastTimeUpdate: '$formattedDate $formattedTime',
-                                      postId: widget.postId,
-                                      commentId: widget.id);
+                              DeleteCommentRequest(
+                                  lastTimeUpdate: '$formattedDate $formattedTime',
+                                  postId: widget.postId,
+                                  commentId: widget.id);
                               MineCubit.get(context)
                                   .deleteComment(deleteCommentRequest);
                             },
@@ -179,73 +179,73 @@ class _MineCommentViewState extends State<MineCommentView> {
                       ),
                       Expanded(
                           child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CircleAvatar(
-                                      radius: 25.r,
-                                      backgroundColor: AppColors.cWhite,
-                                      child: Container(
-                                          padding: EdgeInsets.all(2.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors.cTitle,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: ClipOval(
-                                            child: CachedNetworkImage(
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(
-                                                strokeWidth: 2.w,
-                                                color: AppColors.cTitle,
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                          radius: 25.r,
+                                          backgroundColor: AppColors.cWhite,
+                                          child: Container(
+                                              padding: EdgeInsets.all(2.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: AppColors.cTitle,
+                                                  width: 2,
+                                                ),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
+                                              child: ClipOval(
+                                                child: CachedNetworkImage(
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2.w,
+                                                        color: AppColors.cTitle,
+                                                      ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
                                                       Image.asset(
                                                           AppAssets.profile),
-                                              imageUrl: widget.userImage,
-                                            ),
-                                          ))),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.username,
-                                        style: AppTypography.kBold14
-                                            .copyWith(color: AppColors.cTitle),
+                                                  imageUrl: widget.userImage,
+                                                ),
+                                              ))),
+                                      SizedBox(
+                                        width: 10.w,
                                       ),
-                                      Directionality(
-                                        textDirection: ui.TextDirection.ltr,
-                                        child: Text(
-                                          timeAgoText,
-                                          style: AppTypography.kLight12
-                                              .copyWith(
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.username,
+                                            style: AppTypography.kBold14
+                                                .copyWith(color: AppColors.cTitle),
+                                          ),
+                                          Directionality(
+                                            textDirection: ui.TextDirection.ltr,
+                                            child: Text(
+                                              timeAgoText,
+                                              style: AppTypography.kLight12
+                                                  .copyWith(
                                                   color: AppColors.greyDark),
-                                        ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  widget.loggedInUserName == widget.username
-                                      ? SizedBox(
-                                          width: 10.w,
-                                        )
-                                      : Container(),
-                                  widget.loggedInUserName == widget.username
-                                      ? GestureDetector(
+                                  Row(
+                                    children: [
+                                      widget.loggedInUserName == widget.username
+                                          ? SizedBox(
+                                        width: 10.w,
+                                      )
+                                          : Container(),
+                                      widget.loggedInUserName == widget.username
+                                          ? GestureDetector(
                                           onTapDown: (TapDownDetails details) {
                                             _showCommentPopupMenu(
                                                 context,
@@ -256,159 +256,159 @@ class _MineCommentViewState extends State<MineCommentView> {
                                             AppAssets.menu,
                                             width: 25.w,
                                           ))
-                                      : Container()
+                                          : Container()
+                                    ],
+                                  )
                                 ],
-                              )
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Text(
+                                widget.comment,
+                                style: AppTypography.kLight14
+                                    .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
+                              ),
                             ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          Text(
-                            widget.comment,
-                            style: AppTypography.kLight14
-                                .copyWith(color: AppColors.cBlack,fontFamily: "Cairo"),
-                          ),
-                        ],
-                      )),
+                          )),
                     ],
                   ),
                   widget.commentEmojisModel.isNotEmpty
                       ? const Divider(
-                          color: AppColors.grey,
-                        )
+                    color: AppColors.grey,
+                  )
                       : Container(),
                   SizedBox(
                     height: 5.h,
                   ),
                   widget.commentEmojisModel.isNotEmpty
                       ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BlocProvider(
-                                create: (context) => sl<MineCubit>(),
-                                child: BlocConsumer<MineCubit, MineState>(
-                                  listener: (context, state) {
-                                    if (state
-                                        is DeleteCommentEmojiLoadingState) {
-                                      showLoading();
-                                    } else if (state
-                                        is DeleteCommentEmojiSuccessState) {
-                                      hideLoading();
-                                      widget.updateComment(-1);
-                                    } else if (state
-                                        is DeleteCommentEmojiErrorState) {
-                                      hideLoading();
-                                      showSnackBar(context, state.errorMessage);
-                                    } else if (state is MineNoInternetState) {
-                                      hideLoading();
-                                      onError(context, AppStrings.noInternet);
-                                    }
-                                  },
-                                  builder: (context, state) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        DeleteCommentEmojiRequest
-                                            deleteCommentEmojiRequest =
-                                            DeleteCommentEmojiRequest(
-                                                postId: widget.postId,
-                                                emojiId: widget
-                                                    .commentEmojisModel[0].id!,
-                                                commentId: widget.id);
-                                        MineCubit.get(context)
-                                            .deleteCommentEmoji(
-                                                deleteCommentEmojiRequest);
-                                      },
-                                      child: Text(
-                                        AppStrings.skip,
-                                        style: AppTypography.kLight16
-                                            .copyWith(color: AppColors.cTitle),
-                                      ),
-                                    );
-                                  },
-                                )),
-                            Row(
-                              children: [
-                                Bounceable(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      constraints: BoxConstraints.expand(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height -
-                                              widget.statusBarHeight -
-                                              300.h,
-                                          width:
-                                              MediaQuery.sizeOf(context).width),
-                                      isScrollControlled: true,
-                                      barrierColor: AppColors.cTransparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(30.r),
-                                        ),
-                                      ),
-                                      builder: (context2) {
-                                        return Directionality(
-                                          textDirection: ui.TextDirection.rtl,
-                                          child: ReactionsCommentBottomSheet(
-                                              statusBarHeight:
-                                                  widget.statusBarHeight,
-                                              commentEmojiModel:
-                                                  widget.commentEmojisModel),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    width: 30.w,
-                                    height: 30.h,
-                                    child: Stack(
-                                      children: widget.commentEmojisModel
-                                          .asMap()
-                                          .entries
-                                          .toList()
-                                          .fold<List<MapEntry<int, dynamic>>>(
-                                              [], (acc, entry) {
-                                        if (!acc.any((e) =>
-                                            e.value.emojiData ==
-                                            entry.value.emojiData)) {
-                                          acc.add(entry);
-                                        }
-                                        return acc;
-                                      }).map((entry) {
-                                        int index = entry.key; // Original index
-                                        return Positioned(
-                                          left: index * reactPosition,
-                                          child: CircleAvatar(
-                                            radius: 15.r,
-                                            backgroundColor: AppColors.cWhite,
-                                            child: Container(
-                                              padding: EdgeInsets.all(1.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: AppColors.cSecondary,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: ClipOval(
-                                                child: Text(
-                                                  entry.value.emojiData,
-                                                  style: AppTypography
-                                                      .kExtraLight18,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      BlocProvider(
+                          create: (context) => sl<MineCubit>(),
+                          child: BlocConsumer<MineCubit, MineState>(
+                            listener: (context, state) {
+                              if (state
+                              is DeleteCommentEmojiLoadingState) {
+                                showLoading();
+                              } else if (state
+                              is DeleteCommentEmojiSuccessState) {
+                                hideLoading();
+                                widget.updateComment(-1);
+                              } else if (state
+                              is DeleteCommentEmojiErrorState) {
+                                hideLoading();
+                                showSnackBar(context, state.errorMessage);
+                              } else if (state is MineNoInternetState) {
+                                hideLoading();
+                                onError(context, AppStrings.noInternet);
+                              }
+                            },
+                            builder: (context, state) {
+                              return GestureDetector(
+                                onTap: () {
+                                  DeleteCommentEmojiRequest
+                                  deleteCommentEmojiRequest =
+                                  DeleteCommentEmojiRequest(
+                                      postId: widget.postId,
+                                      emojiId: widget
+                                          .commentEmojisModel[0].id!,
+                                      commentId: widget.id);
+                                  MineCubit.get(context)
+                                      .deleteCommentEmoji(
+                                      deleteCommentEmojiRequest);
+                                },
+                                child: Text(
+                                  AppStrings.skip,
+                                  style: AppTypography.kLight16
+                                      .copyWith(color: AppColors.cTitle),
+                                ),
+                              );
+                            },
+                          )),
+                      Row(
+                        children: [
+                          Bounceable(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                constraints: BoxConstraints.expand(
+                                    height: MediaQuery.sizeOf(context)
+                                        .height -
+                                        widget.statusBarHeight -
+                                        300.h,
+                                    width:
+                                    MediaQuery.sizeOf(context).width),
+                                isScrollControlled: true,
+                                barrierColor: AppColors.cTransparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30.r),
                                   ),
                                 ),
-                              ],
-                            )
-                          ],
-                        )
+                                builder: (context2) {
+                                  return Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: ReactionsCommentBottomSheet(
+                                        statusBarHeight:
+                                        widget.statusBarHeight,
+                                        commentEmojiModel:
+                                        widget.commentEmojisModel),
+                                  );
+                                },
+                              );
+                            },
+                            child: SizedBox(
+                              width: 30.w,
+                              height: 30.h,
+                              child: Stack(
+                                children: widget.commentEmojisModel
+                                    .asMap()
+                                    .entries
+                                    .toList()
+                                    .fold<List<MapEntry<int, dynamic>>>(
+                                    [], (acc, entry) {
+                                  if (!acc.any((e) =>
+                                  e.value.emojiData ==
+                                      entry.value.emojiData)) {
+                                    acc.add(entry);
+                                  }
+                                  return acc;
+                                }).map((entry) {
+                                  int index = entry.key; // Original index
+                                  return Positioned(
+                                    left: index * reactPosition,
+                                    child: CircleAvatar(
+                                      radius: 15.r,
+                                      backgroundColor: AppColors.cWhite,
+                                      child: Container(
+                                        padding: EdgeInsets.all(1.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: AppColors.cSecondary,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Text(
+                                            entry.value.emojiData,
+                                            style: AppTypography
+                                                .kExtraLight18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
                       : Container(),
                   SizedBox(
                     height: 5.h,

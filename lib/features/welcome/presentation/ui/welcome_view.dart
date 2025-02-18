@@ -34,8 +34,6 @@ class _WelcomeViewState extends State<WelcomeView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
-  
-
   String id = "";
   String email = "";
   String displayName = "";
@@ -125,10 +123,10 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   showLoading();
                                 } else if (state is LoginSuccessState) {
                                   hideLoading();
-                                  id = state.user.id!;
-                                  email = state.user.email!;
-                                  displayName = state.user.name!;
-                                  photoUrl = state.user.photoUrl!;
+                                  id = state.user.id;
+                                  email = state.user.email;
+                                  displayName = state.user.name;
+                                  photoUrl = state.user.photoUrl;
                                   WelcomeCubit.get(context)
                                       .getUserPermissions(displayName);
                                 } else if (state is LoginErrorState) {
@@ -181,7 +179,9 @@ class _WelcomeViewState extends State<WelcomeView> {
                                   WelcomeCubit.get(context)
                                       .addUserPermission(userPermissionsModel);
                                   hideLoading();
-                                  showSnackBar(context, state.errorMessage);
+                                  if (state.errorMessage != "") {
+                                    showSnackBar(context, state.errorMessage);
+                                  }
                                 } else if (state is WelcomeNoInternetState) {
                                   hideLoading();
                                   onError(context, AppStrings.noInternet);

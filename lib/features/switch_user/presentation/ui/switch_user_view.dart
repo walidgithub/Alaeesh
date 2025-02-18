@@ -31,8 +31,6 @@ class _SwitchUserViewState extends State<SwitchUserView> {
   final SecureStorageLoginHelper _appSecureDataHelper =
       sl<SecureStorageLoginHelper>();
 
-  
-
   String id = "";
   String email = "";
   String displayName = "";
@@ -113,10 +111,10 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                       } else if (state
                                           is SwitchUserSuccessState) {
                                         hideLoading();
-                                        id = state.user.id!;
-                                        email = state.user.email!;
-                                        displayName = state.user.name!;
-                                        photoUrl = state.user.photoUrl!;
+                                        id = state.user.id;
+                                        email = state.user.email;
+                                        displayName = state.user.name;
+                                        photoUrl = state.user.photoUrl;
                                         SwitchUserCubit.get(context)
                                             .getUserPermissions(displayName);
                                       } else if (state
@@ -171,7 +169,9 @@ class _SwitchUserViewState extends State<SwitchUserView> {
                                         SwitchUserCubit.get(context)
                                             .addUserPermission(userPermissionsModel);
                                         hideLoading();
-                                        showSnackBar(context, state.errorMessage);
+                                        if (state.errorMessage != "") {
+                                          showSnackBar(context, state.errorMessage);
+                                        }
                                       } else if (state is SwitchUserNoInternetState) {
                                         hideLoading();
                                         onError(context, AppStrings.noInternet);
